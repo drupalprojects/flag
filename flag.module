@@ -86,7 +86,7 @@ function flag_init() {
       include_once $path .'/includes/flag.views.inc';
     }
     if (module_exists('actions')) {
-      include_once $path .'/flag.actions.inc';
+      include_once $path .'/includes/flag.actions.inc';
     }
     if (module_exists('token')) {
       include_once $path .'/includes/flag.token.inc';
