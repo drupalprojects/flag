@@ -362,8 +362,9 @@ function flag_user($op, &$edit, &$account, $category = NULL) {
           // Flag not set to appear on profile.
           continue;
         }
-        $items[$flag->get_title($account->uid)] = array(
+        $items[t('Actions')] = array(
           array(
+            'title' => $flag->get_title($account->uid),
             'value' => $flag->theme($flag->is_flagged($account->uid) ? 'unflag' : 'flag', $account->uid),
             'class' => 'profile-' . $flag->name,
           ),
