@@ -119,7 +119,7 @@ function flag_actions_get_actions($flag_name = NULL, $reset = FALSE) {
  */
 function flag_actions_insert_action($fid, $event, $threshold, $callback, $parameters) {
   $aid = db_next_id('flag_actions_{aid}');
-  db_query('INSERT INTO {flag_actions} (aid, fid, event, threshold, callback, parameters) VALUES (%d, %d, "%s", %d, "%s", "%s")', $aid, $fid, $event, $threshold, $callback, serialize($parameters));
+  db_query("INSERT INTO {flag_actions} (aid, fid, event, threshold, callback, parameters) VALUES (%d, %d, '%s', %d, '%s', '%s')", $aid, $fid, $event, $threshold, $callback, serialize($parameters));
   return $aid;
 }
 
@@ -134,7 +134,7 @@ function flag_actions_insert_action($fid, $event, $threshold, $callback, $parame
  *   The action parameters.
  */
 function flag_actions_update_action($aid, $event, $threshold, $parameters) {
-  return db_query('UPDATE {flag_actions} SET event = "%s", threshold = %d, parameters = "%s" WHERE aid = %d', $event, $threshold, serialize($parameters), $aid);
+  return db_query("UPDATE {flag_actions} SET event = '%s', threshold = %d, parameters = '%s' WHERE aid = %d", $event, $threshold, serialize($parameters), $aid);
 }
 
 /**
