@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 /**
  * @file flag.view_bookmark.inc
