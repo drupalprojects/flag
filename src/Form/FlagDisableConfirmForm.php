@@ -49,7 +49,7 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('flag.list');
+    return new Url('entity.flag.collection');
   }
 
   /**
@@ -95,7 +95,7 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
     $this->flag->save();
 
     // Redirect to the flag admin page.
-    $form_state->setRedirect('flag.list');
+    $form_state->setRedirect('entity.flag.collection');
   }
 
 }

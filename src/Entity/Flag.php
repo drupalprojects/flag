@@ -27,7 +27,7 @@ use Drupal\flag\FlagInterface;
  *     "form" = {
  *       "add" = "Drupal\flag\Form\FlagAddForm",
  *       "edit" = "Drupal\flag\Form\FlagEditForm",
- *       "delete" = "Drupal\flag\Form\FlagDeleteForm"
+ *       "delete" = "Drupal\Core\Entity\EntityDeleteForm"
  *     }
  *   },
  *   bundle_of = "flagging",
@@ -58,6 +58,7 @@ use Drupal\flag\FlagInterface;
  *   links = {
  *     "edit-form" = "/admin/structure/flags/manage/{flag}",
  *     "delete-form" = "/admin/structure/flags/manage/{flag}/delete",
+ *     "collection" = "/admin/structure/flags",
  *     "enable" = "/admin/structure/flags/manage/{flag}/enable",
  *     "disable" = "/admin/structure/flags/manage/{flag}/disable",
  *     "reset" = "/admin/structure/flags/manage/{flag}/reset"

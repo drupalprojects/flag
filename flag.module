@@ -20,7 +20,7 @@ use Drupal\flag\FlagInterface;
  */
 function flag_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    case 'flag.list':
+    case 'entity.flag.collection':
       $output = '<p>' . t('This page lists all the <em>flags</em> that are currently defined on this system.') . '</p>';
       return $output;
     case 'flag.add_page':

@@ -334,7 +334,7 @@ abstract class FlagFormBase extends EntityForm {
     // @todo: when we add database caching for flags we'll have to clear the
     // cache again here.
 
-    $form_state->setRedirect('flag.list');
+    $form_state->setRedirect('entity.flag.collection');
   }
 
   /**
