@@ -29,6 +29,8 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   public function disable();
 
   /**
+   * Returns the status of the flag.
+   *
    * @return bool
    *  TRUE if the flag is enabled, FALSE otherwise.
    */
