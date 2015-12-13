@@ -95,7 +95,7 @@ class FlagResetForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.flag.collection');
+    return $this->flag->toUrl('collection');
   }
 
   /**

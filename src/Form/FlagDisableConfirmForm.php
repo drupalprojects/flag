@@ -16,6 +16,11 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class FlagDisableConfirmForm extends ConfirmFormBase {
 
+  /**
+   * The flag to be enabled or disabled.
+   *
+   * @var Drupal\flag\FlagInterface
+   */
   protected $flag;
 
   /**
@@ -49,7 +54,7 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.flag.collection');
+    return $this->flag->toUrl('collection');
   }
 
   /**
