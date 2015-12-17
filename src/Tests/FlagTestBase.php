@@ -34,7 +34,7 @@ abstract class FlagTestBase extends WebTestBase {
     parent::setUp();
 
     $this->flagService = \Drupal::service('flag');
-    $this->drupalPlaceBlock('page_title_block');
+    $this->drupalPlaceBlock('page_title_block', ['region' => 'content']);
   }
 
   /**
