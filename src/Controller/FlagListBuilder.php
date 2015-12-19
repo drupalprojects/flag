@@ -43,7 +43,7 @@ class FlagListBuilder extends DraggableListBuilder {
   /**
    * Creates a displayable string of roles that may use the flag.
    *
-   * @param FlagInterface $flag
+   * @param \Drupal\flag\FlagInterface $flag
    *   The flag entity.
    *
    * @return string
@@ -52,7 +52,7 @@ class FlagListBuilder extends DraggableListBuilder {
   protected function getFlagRoles(FlagInterface $flag) {
     $all_roles = [];
 
-    foreach ($flag->getPermissions() as $perm => $pinfo) {
+    foreach (array_keys($flag->getPermissions()) as $perm) {
       $roles = user_roles(FALSE, $perm);
 
       foreach ($roles as $rid => $role) {
