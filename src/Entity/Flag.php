@@ -94,7 +94,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    *
    * @var string
    */
-  public $label;
+  public $label = '';
 
   /**
    * Whether this flag state should act as a single toggle to all users.
