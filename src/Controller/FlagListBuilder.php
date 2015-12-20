@@ -79,7 +79,7 @@ class FlagListBuilder extends DraggableListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
 
-    $row['label'] = $this->getLabel($entity);
+    $row['label'] = $entity->label();
 
     $row['roles'] = $this->getFlagRoles($entity);
 
