@@ -100,6 +100,7 @@ class FlagListBuilder extends DraggableListBuilder {
   // We override the render() method to add helpful text below the entity list.
   public function render() {
     $build['table'] = parent::render();
+    $build['table']['flags']['#empty'] = t('No flags available. <a href=":link">Add flag</a>.', array(':link' => \Drupal::url('flag.add_page')));
 
     $output = "";
 
