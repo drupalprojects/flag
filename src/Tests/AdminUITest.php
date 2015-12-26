@@ -124,8 +124,7 @@ class AdminUITest extends FlagTestBase {
 
     $this->doFlagChangeWeights();
 
-    // TODO: add test for flag deletion.
-    //$this->doFlagDelete();
+    $this->doFlagDelete();
   }
 
   /**
@@ -253,6 +252,23 @@ class AdminUITest extends FlagTestBase {
     foreach ($updated_flags as $id => $flag) {
       $this->assertEqual($updated_flags[$id]->get('weight'), $flag_weights_to_set[$id], 'The flag weight was changed.');
     }
+  }
+
+  /**
+   * Delete the flag.
+   */
+  public function doFlagDelete() {
+    // Go to the delete form for the flag.
+    $this->drupalGet('admin/structure/flags/manage/' . $this->flag->id() . '/delete');
+
+    $this->assertText($this->t('Are you sure you want to delete the flag @this_label?', ['@this_label' => $this->label]));
+
+    $this->drupalPostForm(NULL, [], $this->t('Delete'));
+
+    // Check the flag has been deleted.
+    $result = $this->flagService->getFlagById($this->flagId);
+
+    $this->assertNull($result, 'The flag was deleted.');
   }
 
 }
