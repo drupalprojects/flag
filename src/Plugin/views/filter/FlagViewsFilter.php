@@ -31,6 +31,8 @@ class FlagViewsFilter extends BooleanOperator {
    * {@inheritdoc}
    */
   public function buildOptionsForm(&$form, FormStateInterface $form_state) {
+    parent::buildOptionsForm($form, $form_state);
+
     $form['value']['#type'] = 'radios';
     $form['value']['#title'] = t('Status');
     $form['value']['#options'] = [
@@ -39,12 +41,10 @@ class FlagViewsFilter extends BooleanOperator {
       // @todo Find out what in the hell filter type ALL is supposed to do.
       // 'All' => t('All'),
     ];
-    $form['value']['#default_value'] = empty($this->options['value']) ? '0' : $this->options['value'];
+    $form['value']['#default_value'] = empty($this->options['value']) ? FALSE : $this->options['value'];
     $form['value']['#description'] = '<p>' . t('This filter is only needed if the relationship used has the "Include only flagged content" option <strong>unchecked</strong>. Otherwise, this filter is useless, because all records are already limited to flagged content.') . '</p><p>' . t('By choosing <em>Not flagged</em>, it is possible to create a list of content <a href="@unflagged-url">that is specifically not flagged</a>.', array('@unflagged-url' => 'http://drupal.org/node/299335')) . '</p>';
 
     $form['relationship']['#default_value'] = $this->options['relationship'];
-
-    parent::buildOptionsForm($form, $form_state);
   }
 
   /**
@@ -58,4 +58,5 @@ class FlagViewsFilter extends BooleanOperator {
 
     $this->query->addWhere($this->options['group'], "$this->tableAlias.uid", NULL, $operator);
   }
+
 }
