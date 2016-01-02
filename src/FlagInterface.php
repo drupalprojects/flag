@@ -13,6 +13,24 @@ use Drupal\Core\Session\AccountInterface;
 
 /**
  * Defines the interface for Flag entities.
+ *
+ * You can create a Flag either through the Admin UI or programmatically. For
+ * example, to create a flag for 'article' nodes using the 'reload' link type:
+ *
+ * @code
+ *    $flag = Flag::create([
+ *       'id' => 'New flag',
+ *       'entity_type' => 'node',
+ *       'bundles' => [
+ *         'article',
+ *       ],
+ *       'flag_type' => 'entity:node',
+ *       'link_type' => 'reload',
+ *       'flagTypeConfig' => [],
+ *       'linkTypeConfig' => [],
+ *   ]);
+ *   $flag->save();
+ * @endcode
  */
 interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectionInterface {
 

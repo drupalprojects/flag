@@ -17,6 +17,12 @@ interface FlagServiceInterface {
   /**
    * List all flags available.
    *
+   * For example to list all flags operating on articles:
+   *
+   * @code
+   *   $this->flagService->getFlags('node', 'article');
+   * @endcode
+   *
    * If all the parameters are omitted, a list of all flags will be returned.
    *
    * @param string $entity_type
@@ -33,7 +39,17 @@ interface FlagServiceInterface {
   public function getFlags($entity_type = NULL, $bundle = NULL, AccountInterface $account = NULL);
 
   /**
-   * Get a flagging that already exists.
+   * Get a single flagging for given a flag and  entity.
+   *
+   * Use this method to check if a given entity is flagged or not.
+   *
+   * For example, to get a bookmark flagging for a node:
+   *
+   * @code
+   *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
+   *   $node = Node::load($node_id);
+   *   $flagging = \Drupal::service('flag')->getFlagging($flag, $node);
+   * @endcode
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag.
@@ -43,13 +59,28 @@ interface FlagServiceInterface {
    *   (optional) The account of the flagging user. If omitted, the flagging for
    *   the current user will be returned.
    *
-   * @return \Drupal\flag\FlagInterface|null
+   * @return \Drupal\flag\FlaggingInterface|null
    *   The flagging or NULL if the flagging is not found.
+   *
+   * @see \Drupal\flag\FlagServiceInterface::getFlaggings()
    */
   public function getFlagging(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL);
 
   /**
    * Get all flaggings for the given entity, flag, and optionally, user.
+   *
+   * This method works very much like FlagServiceInterface::getFlagging() only
+   * it returns all flaggings matching the given parameters.
+   *
+   * @code
+   *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
+   *   $node = Node::load($node_id);
+   *   $flaggings = \Drupal::service('flag')->getFlaggings($flag, $node);
+   *
+   *   foreach ($flaggings as $flagging) {
+   *     // Do something with each flagging.
+   *   }
+   * @endcode
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   (optional) The flag entity. If NULL, flaggings for any flag will be
@@ -69,6 +100,10 @@ interface FlagServiceInterface {
   /**
    * Load the flag entity given the ID.
    *
+   * @code
+   *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
+   * @endcode
+   *
    * @param int $flag_id
    *   The ID of the flag to load.
    *
@@ -79,6 +114,11 @@ interface FlagServiceInterface {
 
   /**
    * Loads the flaggable entity given the flag entity and entity ID.
+   *
+   * @code
+   *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
+   *   $flaggable = \Drupal::service('flag')->getFlaggableById($flag, $entity_id);
+   * @endcode
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag entity.
@@ -93,6 +133,17 @@ interface FlagServiceInterface {
   /**
    * Get a list of users that have flagged an entity.
    *
+   * @code
+   *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
+   *   $node = Node::load($node_id);
+   *   $flagging_users = \Drupal::service('flag')->getFlaggingUsers($node, $flag);
+   *
+   *   foreach ($flagging_users as $user) {
+   *     // Do something.
+   *   }
+   * @endcode
+   *
+   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    * @param \Drupal\flag\FlagInterface $flag
@@ -105,6 +156,15 @@ interface FlagServiceInterface {
 
   /**
    * Flags the given entity given the flag and entity objects.
+   *
+   * To programatically create a flagging between a flag and an article:
+   *
+   * @code
+   *   $flag_service = \Drupal::service('flag');
+   *   $flag = $flag_service->getFlagById('bookmark');
+   *   $node = Node::load($node_id);
+   *   $flag_service->flag($flag, $node);
+   * @endcode
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag entity.
@@ -129,9 +189,16 @@ interface FlagServiceInterface {
   /**
    * Unflags the given entity for the given flag.
    *
-   * @param FlagInterface $flag
+   * @code
+   *   $flag_service = \Drupal::service('flag');
+   *   $flag = $flag_service->getFlagById('bookmark');
+   *   $node = Node::load($node_id);
+   *   $flag_service->unflag($flag, $node);
+   * @endcode
+   *
+   * @param \Drupal\flag\FlagInterface $flag
    *   The flag being unflagged.
-   * @param EntityInterface $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to unflag.
    * @param AccountInterface $account
    *   (optional) The account of the user that created the flagging.
