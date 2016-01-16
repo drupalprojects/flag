@@ -63,7 +63,7 @@ function flag_views_data_alter(array &$data) {
     if ($entity_type->hasHandlerClass('views_data')) {
       $base_table = $entity_manager->getHandler($entity_type_id, 'views_data')->getViewsTableForEntityType($entity_type);
       $data[$base_table]['flag_content_rel'] = [
-        'title' => t('@entity_label flag', ['@entity_label' => $entity_type_id]),
+        'title' => t('@entity_label flag', ['@entity_label' => $entity_type->getLabel()]),
         'help' => t('Limit results to only those entity flagged by a certain flag; Or display information about the flag set on a entity.'),
         'relationship' => [
           'group' => t('Flag'),
