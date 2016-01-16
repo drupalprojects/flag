@@ -97,6 +97,14 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   public function getApplicableBundles();
 
   /**
+   * Get the flag type plugin.
+   *
+   * @return \Drupal\flag\FlagTypePluginInterface
+   *   The flag type plugin for the flag.
+   */
+  public function getFlagTypePlugin();
+
+  /**
    * Set the flag type plugin.
    *
    * @param string $plugin_id
