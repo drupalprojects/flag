@@ -8,7 +8,7 @@ dependencies:
     - node
     - user
 id: flag_bookmark
-label: flag_bookmark
+label: 'Flag Bookmark list'
 module: views
 description: ''
 tag: ''
@@ -26,23 +26,16 @@ display:
         type: perm
         options:
           perm: 'access content'
-        provider: user
-        dependencies: {  }
       cache:
         type: none
         options: {  }
-        provider: views
-        dependencies: {  }
       query:
         type: views_query
         options:
           disable_sql_rewrite: false
           distinct: false
-          slave: false
           query_comment: ''
           query_tags: {  }
-        provider: views
-        dependencies: {  }
       exposed_form:
         type: basic
         options:
@@ -53,8 +46,6 @@ display:
           expose_sort_order: true
           sort_asc_label: Asc
           sort_desc_label: Desc
-        provider: views
-        dependencies: {  }
       pager:
         type: full
         options:
@@ -133,9 +124,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - node
           label: Type
           exclude: false
           alter:
@@ -177,15 +165,11 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_node: false
-          machine_name: '0'
           plugin_id: node_type
-          provider: node
         title:
           id: title
           table: node_field_data
           field: title
-          provider: node
           alter:
             alter_text: false
             make_link: false
@@ -197,11 +181,9 @@ display:
             html: false
           hide_empty: false
           empty_zero: false
-          link_to_node: 1
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies: {  }
           label: Title
           exclude: false
           element_type: ''
@@ -221,9 +203,6 @@ display:
           relationship: uid
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - user
           label: Author
           exclude: false
           alter:
@@ -265,12 +244,7 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          link_to_user: true
-          overwrite_anonymous: false
-          anonymous_text: ''
-          format_username: true
           plugin_id: user_name
-          provider: user
         comment_count:
           id: comment_count
           table: comment_entity_statistics
@@ -278,11 +252,6 @@ display:
           relationship: none
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - views
-              - views
-              - views
           label: Replies
           exclude: false
           alter:
@@ -329,12 +298,10 @@ display:
           decimal: .
           separator: ','
           format_plural: false
-          format_plural_singular: '1'
-          format_plural_plural: '@count'
+          format_plural_string: '1\x03@count'
           prefix: ''
           suffix: ''
           plugin_id: numeric
-          provider: views
         link_flag:
           id: link_flag
           table: flagging
@@ -342,10 +309,6 @@ display:
           relationship: flag_content_rel
           group_type: group
           admin_label: ''
-          dependencies:
-            module:
-              - flag
-              - flag
           label: Ops
           exclude: false
           alter:
@@ -387,19 +350,17 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          text: ''
           plugin_id: flag_link
-          provider: flag
       filters:
         status:
           value: true
           table: node_field_data
           field: status
-          provider: node
           id: status
           expose:
             operator: ''
           group: 1
+          plugin_id: boolean
       sorts: {  }
       title: 'My Bookmarks'
       header: {  }
@@ -423,12 +384,7 @@ display:
           required: true
           flag: bookmark
           user_scope: current
-          dependencies:
-            module:
-              - flag
-              - flag
           plugin_id: flag_relationship
-          provider: flag
         uid:
           id: uid
           table: node_field_data
@@ -436,12 +392,8 @@ display:
           relationship: none
           group_type: group
           admin_label: author
-          dependencies:
-            module:
-              - views
           required: true
           plugin_id: standard
-          provider: views
       arguments: {  }
       display_extenders: {  }
     cache_metadata:
@@ -458,14 +410,12 @@ display:
     id: page_1
     display_title: Page
     position: 1
-    provider: views
     display_options:
       path: bookmarks
       menu:
         type: normal
         title: 'My Bookmarks'
         description: ''
-        name: main
         weight: 0
         context: '0'
       display_extenders: {  }

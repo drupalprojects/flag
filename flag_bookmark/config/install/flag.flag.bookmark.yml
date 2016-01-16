@@ -22,9 +22,9 @@ flagTypeConfig:
   show_in_links:
     full: full
     teaser: teaser
-    rss: 0
-    search_index: 0
-    search_result: 0
+    rss: ''
+    search_index: ''
+    search_result: ''
   show_as_field: 1
   show_on_form: 0
   show_contextual_link: 0

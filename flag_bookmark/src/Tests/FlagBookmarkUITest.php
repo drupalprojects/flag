@@ -20,18 +20,11 @@ class FlagBookmarkUITest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'views',
     'flag',
     'flag_bookmark',
-  );
-
-  /**
-   * {@inheritdoc}
-   *
-   * @todo Remove after this issue is fixed: https://www.drupal.org/node/2555365
-   */
-  protected $strictConfigSchema = FALSE;
+  ];
 
   /**
    * Administrator user.
