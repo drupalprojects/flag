@@ -217,34 +217,14 @@ function flag_flag_delete(FlagInterface $entity) {
  * Implements hook_user_cancel().
  */
 function flag_user_cancel($edit, $account, $method) {
-  flag_user_account_removal($account);
+  \Drupal::service('flag')->userFlagRemoval($account);
 }
 
 /**
  * Implements hook_user_delete().
  */
 function flag_user_delete(UserInterface $account) {
-  flag_user_account_removal($account);
-}
-
-/**
- * Shared helper for user account cancellation or deletion.
- */
-function flag_user_account_removal(UserInterface $account) {
-  /** var \Drupal\flag\FlagServiceInterface $flag_service */
-  $flag_service = \Drupal::service('flag');
-
-  // Remove flags by this user.
-  $flaggings = $flag_service->getFlaggings(NULL, NULL, $account);
-  foreach ($flaggings as $flagging_id => $flagging) {
-    $flag_service->unflag($flagging->getFlag(), $flagging->getFlaggable(), $account);
-  }
-
-  // Remove flags that have been done to this user.
-  $flaggings = $flag_service->getFlaggings(NULL, $account);
-  foreach ($flaggings as $flagging_id => $flagging) {
-    $flag_service->unflag($flagging->getFlag(), $flagging->getFlaggable());
-  }
+  \Drupal::service('flag')->userFlagRemoval($account);
 }
 
 /**

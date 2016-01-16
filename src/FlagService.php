@@ -13,6 +13,8 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
+use Drupal\user\Entity\User;
+use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -269,6 +271,36 @@ class FlagService implements FlagServiceInterface {
     $this->eventDispatcher->dispatch(FlagEvents::ENTITY_UNFLAGGED, new FlaggingEvent($flag, $entity));
 
     $flagging->delete();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unflagAll(EntityInterface $entity = NULL, AccountInterface $account = NULL) {
+    $flaggings = $this->getFlaggings(NULL, $entity, $account);
+
+    /** @var \Drupal\flag\FlaggingInterface $flagging */
+    foreach ($flaggings as $flagging_id => $flagging) {
+      // We're working around the potential situation where the flagging
+      // is already gone and the unflag event won't get fired.
+      if ($entity ? $flaggable = $entity : $flaggable = $flagging->getFlaggable()) {
+        $this->unflag($flagging->getFlag(), $flaggable, $account ? $account : $flagging->get('uid')->entity);
+      }
+      else {
+        $flagging->delete();
+      }
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function userFlagRemoval(UserInterface $account) {
+    // Remove flags by this user.
+    $this->unflagAll(NULL, $account);
+
+    // Remove flags that have been done to this user.
+    $this->unflagAll($account);
   }
 
   /**

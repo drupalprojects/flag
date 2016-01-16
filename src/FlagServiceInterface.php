@@ -8,6 +8,7 @@ namespace Drupal\flag;
 
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Flag service interface.
@@ -201,7 +202,8 @@ interface FlagServiceInterface {
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to unflag.
    * @param AccountInterface $account
-   *   (optional) The account of the user that created the flagging.
+   *   (optional) The account of the user that created the flagging. Defaults
+   *   to the current user.
    *
    * @throws \LogicException
    *   An exception is thrown if the given flag, entity, and account are not
@@ -211,5 +213,31 @@ interface FlagServiceInterface {
    *   - The entity is not currently flagged with this flag by the user.
    */
   public function unflag(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL);
+
+  /**
+   * Remove all flaggings from an entity / made by an account.
+   *
+   * If no parameters are provided, all flaggings will be removed.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
+   *   (Optional) If provided, will remove all flaggings done to this entity.
+   *   If NULL, flaggings for any entity will be removed.
+   * @param \Drupal\Core\Session\AccountInterface|NULL $account
+   *   (Optional) If provided, will remove all flaggings by this account.
+   *   If NULL, flaggings for any account will be removed.
+   */
+  public function unflagAll(EntityInterface $entity = NULL, AccountInterface $account = NULL);
+
+  /**
+   * Shared helper for user account cancellation or deletion.
+   *
+   * Removes:
+   *   All flags by the user.
+   *   All flaggings of the user.
+   *
+   * @param \Drupal\user\UserInterface $account
+   *   The account of the user being cancelled or deleted.
+   */
+  public function userFlagRemoval(UserInterface $account);
 
 }
