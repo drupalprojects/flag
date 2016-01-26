@@ -73,8 +73,8 @@ class FlagViewsLinkField extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    $entity = $this->getEntity($values);
-    return $this->renderLink($entity, $values);
+    // $entity = $this->getEntity($values);
+    return $this->renderLink($values->_entity, $values);
   }
 
   /**
