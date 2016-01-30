@@ -17,6 +17,7 @@ function flag_schema() {
       'flag_id' => [
         'type' => 'varchar',
         'length' => '32',
+        'not null' => TRUE,
       ],
       'entity_type' => [
         'description' => 'The flag type, for example "node", "comment", or "user".',
@@ -28,6 +29,7 @@ function flag_schema() {
         'type' => 'int',
         'unsigned' => TRUE,
         'disp-width' => '10',
+        'not null' => TRUE,
       ],
       'count' => [
         'description' => 'The number of times this object has been flagged for this flag.',
