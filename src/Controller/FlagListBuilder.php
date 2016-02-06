@@ -33,7 +33,9 @@ class FlagListBuilder extends DraggableListBuilder {
    */
   public function buildHeader() {
     $header['label'] = t('Flag');
+    $header['flag_type'] = t('Flag Type');
     $header['roles'] = t('Roles');
+    $header['bundles'] = t('Entity Bundles');
     $header['global'] = t('Global?');
     $header['status'] = t('Status');
 
@@ -41,13 +43,13 @@ class FlagListBuilder extends DraggableListBuilder {
   }
 
   /**
-   * Creates a displayable string of roles that may use the flag.
+   * Creates a render array of roles that may use the flag.
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag entity.
    *
-   * @return string
-   *   An HTML string of roles.
+   * @return array
+   *   A render array of flag roles for the entity.
    */
   protected function getFlagRoles(FlagInterface $flag) {
     $all_roles = [];
@@ -75,13 +77,56 @@ class FlagListBuilder extends DraggableListBuilder {
   }
 
   /**
+   * Gets the flag type for the given flag.
+   *
+   * @param \Drupal\flag\FlagInterface $flag
+   *   The flag entity.
+   *
+   * @return array
+   *   A render array of the flag type.
+   */
+  protected function getFlagType(FlagInterface $flag) {
+    return [
+      '#markup' => $flag->getFlaggableEntityTypeId(),
+    ];
+  }
+
+  /**
+   * Generates a render array of the applicable bundles for the flag..
+   *
+   * @param \Drupal\flag\FlagInterface $flag
+   *   The flag entity.
+   *
+   * @return array
+   *   A render array of the applicable bundles for the flag..
+   */
+  protected function getBundles(FlagInterface $flag) {
+    $bundles = $flag->getBundles();
+
+    if (empty($bundles)) {
+      return [
+        '#markup' => '<em>' . $this->t('All') . '</em>',
+        '#allowed_tags' => ['em'],
+      ];
+    }
+
+    return [
+      '#markup' => implode(', ', $bundles),
+    ];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
 
     $row['label'] = $entity->label();
 
+    $row['flag_type'] = $this->getFlagType($entity);
+
     $row['roles'] = $this->getFlagRoles($entity);
+
+    $row['bundles'] = $this->getBundles($entity);
 
     $row['global'] = [
       '#markup' => $entity->isGlobal() ? t('Yes') : t('No'),
