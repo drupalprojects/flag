@@ -4,5 +4,6 @@ core: 8.x
 type: module
 dependencies:
   - flag
+  - views
   - node
 package: Flags
