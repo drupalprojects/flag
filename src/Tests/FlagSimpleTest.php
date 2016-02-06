@@ -117,6 +117,15 @@ class FlagSimpleTest extends FlagTestBase {
     $this->drupalGet('node/' . $node_id);
     $this->clickLink('Flag this item');
     $this->assertResponse(200);
+    $flaggings = \Drupal::entityTypeManager()->getStorage('flagging')->loadMultiple();
+    $this->assertEqual(count($flaggings), 1);
+    // Test the calculated entity reference field. Calculated fields are rare
+    // so a few extra asserts can't hurt.
+    $flagging = reset($flaggings);
+    $this->assertEqual($flagging->flagged_entity->getSetting('target_type'), 'node');
+    $this->assertEqual($flagging->flagged_entity->target_id, $node_id);
+    $this->assertEqual($flagging->flagged_entity->entity->id(), $node_id);
+    $this->assertEqual($flagging->flagged_entity->entity->getEntityTypeId(), 'node');
     $this->assertLink('Unflag this item');
 
     // Switch user to check flagging link.
