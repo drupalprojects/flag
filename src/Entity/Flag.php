@@ -221,27 +221,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $values, $entity_type) {
-    parent::__construct($values, $entity_type);
-
-    if ($this->flag_type) {
-      $this->flagTypeCollection = new DefaultSingleLazyPluginCollection(
-        \Drupal::service('plugin.manager.flag.flagtype'),
-        $this->flag_type, $this->flagTypeConfig
-      );
-    }
-
-    if ($this->link_type) {
-      $this->linkTypeCollection = new DefaultSingleLazyPluginCollection(
-        \Drupal::service('plugin.manager.flag.linktype'),
-        $this->link_type, $this->linkTypeConfig
-      );
-    }
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function enable() {
     $this->enabled = TRUE;
   }
@@ -327,16 +306,32 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    */
   public function getPluginCollections() {
     return [
-      'flagTypeConfig' => $this->flagTypeCollection,
-      'linkTypeConfig' => $this->linkTypeCollection,
+      'flagTypeConfig' => $this->getFlagTypeCollection(),
+      'linkTypeConfig' => $this->getLinkTypeCollection(),
     ];
+  }
+
+  /**
+   * Encapsulates the creation of the flag type's plugin collection.
+   *
+   * @return \Drupal\Component\Plugin\DefaultSingleLazyPluginCollection
+   *   The flag type's plugin collection.
+   */
+  protected function getFlagTypeCollection() {
+    if (!$this->flagTypeCollection) {
+      $this->flagTypeCollection = new DefaultSingleLazyPluginCollection(
+        \Drupal::service('plugin.manager.flag.flagtype'),
+        $this->flag_type, $this->flagTypeConfig
+      );
+    }
+    return $this->flagTypeCollection;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFlagTypePlugin() {
-    return $this->flagTypeCollection->get($this->flag_type);
+    return $this->getFlagTypeCollection()->get($this->flag_type);
   }
 
   /**
@@ -361,8 +356,25 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    * {@inheritdoc}
    */
   public function getLinkTypePlugin() {
-    return $this->linkTypeCollection->get($this->link_type);
+    return $this->getLinkTypeCollection()->get($this->link_type);
   }
+
+  /**
+   * Encapsulates the creation of the link type's plugin collection.
+   *
+   * @return \Drupal\Component\Plugin\DefaultSingleLazyPluginCollection
+   *   The link type's plugin collection.
+   */
+  protected function getLinkTypeCollection() {
+    if (!$this->linkTypeCollection) {
+      $this->linkTypeCollection = new DefaultSingleLazyPluginCollection(
+        \Drupal::service('plugin.manager.flag.linktype'),
+        $this->link_type, $this->linkTypeConfig
+      );
+    }
+    return $this->linkTypeCollection;
+  }
+
 
   /**
    * {@inheritdoc}
