@@ -91,11 +91,6 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
       $this->flag->enable();
     }
 
-    // Invalidate the flaggable render cache.
-    \Drupal::entityManager()
-      ->getViewBuilder($this->flag->getFlaggableEntityTypeId())
-      ->resetCache();
-
     // Save The flag entity.
     $this->flag->save();
 

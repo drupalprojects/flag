@@ -233,12 +233,6 @@ class FlagService implements FlagServiceInterface {
 
     $flagging->save();
 
-    $this->entityManager
-      ->getViewBuilder($entity->getEntityTypeId())
-      ->resetCache([
-        $entity,
-      ]);
-
     $this->eventDispatcher->dispatch(FlagEvents::ENTITY_FLAGGED, new FlaggingEvent($flag, $entity));
 
     return $flagging;

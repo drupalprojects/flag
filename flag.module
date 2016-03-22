@@ -8,6 +8,7 @@
 define('FLAG_API_VERSION', 3);
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Cache\Cache;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
@@ -168,6 +169,8 @@ function flag_entity_view(array &$build, EntityInterface $entity, EntityViewDisp
   $flags = $flag_service->getFlags($entity->getEntityTypeID(), $entity->bundle());
 
   foreach ($flags as $flag) {
+    $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $flag->getCacheTags());
+
     // Do not display the flag if disabled.
     if (!$flag->isEnabled()){
       continue;

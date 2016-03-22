@@ -68,7 +68,7 @@ class AdminUITest extends FlagTestBase {
   /**
    * The ID of the entity to created for the test.
    *
-   * @var type
+   * @var int
    */
   protected $nodeId;
 
@@ -243,9 +243,8 @@ class AdminUITest extends FlagTestBase {
     // Saving the new weights via the interface.
     $this->drupalPostForm('admin/structure/flags', $edit, $this->t('Save order'));
 
-    // Load the vocabularies from the database.
+    // Load the all the flags.
     $flag_storage = $this->container->get('entity.manager')->getStorage('flag');
-    $flag_storage->resetCache();
     $updated_flags = $flag_storage->loadMultiple();
 
     // Check that the weights are saved in the database correctly.
@@ -258,6 +257,9 @@ class AdminUITest extends FlagTestBase {
    * Delete the flag.
    */
   public function doFlagDelete() {
+    // Flag node.
+    $this->drupalGet('node/' . $this->nodeId);
+    $this->assertLink($this->flagShortText);
     // Go to the delete form for the flag.
     $this->drupalGet('admin/structure/flags/manage/' . $this->flag->id() . '/delete');
 
@@ -269,6 +271,9 @@ class AdminUITest extends FlagTestBase {
     $result = $this->flagService->getFlagById($this->flagId);
 
     $this->assertNull($result, 'The flag was deleted.');
+    $this->drupalGet('node/' . $this->nodeId);
+    $this->assertText($this->node->label());
+    $this->assertNoLink($this->flagShortText);
   }
 
 }
