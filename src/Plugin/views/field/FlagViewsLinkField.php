@@ -73,8 +73,32 @@ class FlagViewsLinkField extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    // $entity = $this->getEntity($values);
-    return $this->renderLink($values->_entity, $values);
+    $entity = $this->getParentRelationshipEntity($values);
+    return $this->renderLink($entity, $values);
+  }
+
+  /**
+   * Returns the entity for this field's relationship's parent relationship.
+   *
+   * For example, if this field's flag relationship is itself on a node, then
+   * this will return the node entity for the current row.
+   *
+   * @param ResultRow $values
+   *   The current result row.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface
+   */
+  protected function getParentRelationshipEntity(ResultRow $values) {
+    $relationship_id = $this->options['relationship'];
+    $relationship_handler = $this->view->display_handler->handlers['relationship'][$relationship_id];
+    $parent_relationship_id = $relationship_handler->options['relationship'];
+
+    if ($parent_relationship_id == 'none') {
+      return $values->_entity;
+    }
+    elseif (isset($values->_relationship_entities[$parent_relationship_id])) {
+      return $values->_relationship_entities[$parent_relationship_id];
+    }
   }
 
   /**
