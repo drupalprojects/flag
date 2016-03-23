@@ -105,6 +105,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
     $fields['id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Flagging ID'))
       ->setDescription(t('The flagging ID.'))
+      ->setSetting('unsigned', TRUE)
       ->setReadOnly(TRUE);
 
     $fields['uuid'] = BaseFieldDefinition::create('uuid')
