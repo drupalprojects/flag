@@ -9,6 +9,7 @@ namespace Drupal\flag\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\ActionLinkPluginManager;
+use Drupal\flag\Entity\Flag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -74,7 +75,7 @@ abstract class FlagFormBase extends EntityForm {
       '#description' => $this->t('The machine-name for this flag. It may be up to 32 characters long and may only contain lowercase letters, underscores, and numbers. It will be used in URLs and in all API calls.'),
       '#weight' => -2,
       '#machine_name' => [
-        'exists' => [$this, 'exists'],
+        'exists' => '\Drupal\flag\Entity\Flag::load',
       ],
       '#disabled' => !$flag->isNew(),
       '#required' => TRUE,
@@ -342,20 +343,6 @@ abstract class FlagFormBase extends EntityForm {
    */
   public function delete(array $form, FormStateInterface $form_state) {
     $form_state->setRedirect('flag_list');
-  }
-
-  /**
-   * Determines if the flag already exists.
-   *
-   * @param string $id
-   *   The flag ID
-   *
-   * @return bool
-   *   TRUE if the flag exists, FALSE otherwise.
-   */
-  public function exists($id) {
-    // @todo: Make this injected like ActionFormBase::exists().
-    return \Drupal::entityManager()->getStorage('flag')->load($id);
   }
 
 }
