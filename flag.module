@@ -15,6 +15,7 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\user\UserInterface;
 use Drupal\flag\FlagInterface;
+use Drupal\Core\Url;
 
 /**
  * Implements hook_help().
@@ -23,6 +24,24 @@ function flag_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'entity.flag.collection':
       $output = '<p>' . t('This page lists all the <em>flags</em> that are currently defined on this system.') . '</p>';
+      if (\Drupal::moduleHandler()->moduleExists('views')) {
+        $output .= '<p>';
+        $output .= t('Lists of flagged content can be displayed using views. You can configure these in the Views administration section.');
+        if (\Drupal::service('flag')->getFlagById('bookmark')) {
+          $output .= ' ' . t('Flag module automatically provides a few default views for the <em>bookmarks</em> flag. You can use these as templates by cloning these views and then customizing as desired.');
+        }
+        $output .= ' ' . t('The <a href="@flag-handbook-url">Flag module handbook</a> contains extensive <a href="@customize-url">documentation on creating customized views</a> using flags.', ['@flag-handbook-url' => 'http://drupal.org/handbook/modules/flag', '@customize-url' => 'http://drupal.org/node/296954']);
+        $output .= '</p>';
+      }
+
+      if (\Drupal::moduleHandler()->moduleExists('rules')) {
+        $output .= '<p>' . t('Flagging an item may trigger <a href="@rules-url">rules</a>.', ['@rules-url' => Url::fromRoute('entity.rules_reaction_rule.collection')->toString()]) . '</p>';
+      }
+      else {
+        $output .= '<p>' . t('Flagging an item may trigger <em>rules</em>. However, you don\'t have the <a href="@rules-url">Rules</a> module enabled, so you won\'t be able to enjoy this feature. The Rules module is a more extensive solution than Flag actions.', ['@rules-url' => Url::fromUri('http://drupal.org/node/407070')->toString()]) . '</p>';
+      }
+
+      $output .= '<p>' . t('To learn about the various ways to use flags, please check out the <a href="@handbook-url">Flag module handbook</a>.', ['@handbook-url' => 'http://drupal.org/handbook/modules/flag']) . '</p>';
       return $output;
     case 'flag.add_page':
       $output = '<p>' . t('Select the type of flag to create. An individual flag can only affect one type of object. This cannot be changed once the flag is created.') . '</p>';
