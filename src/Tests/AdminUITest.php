@@ -161,13 +161,13 @@ class AdminUITest extends FlagTestBase {
    */
   public function doFlagDisable() {
     $this->drupalGet('admin/structure/flags');
-    $this->assertText(t('enabled'));
+    $this->assertText(t('Enabled'));
 
     $this->drupalPostForm('admin/structure/flags/manage/' . $this->flagId . '/disable', [], $this->t('Disable'));
     $this->assertResponse(200);
 
     $this->drupalGet('admin/structure/flags');
-    $this->assertText(t('disabled'));
+    $this->assertText(t('Disabled'));
 
     $this->drupalGet('node/' . $this->nodeId);
     $this->assertNoText($this->flagShortText);
@@ -178,13 +178,13 @@ class AdminUITest extends FlagTestBase {
    */
   public function doFlagEnable() {
     $this->drupalGet('admin/structure/flags');
-    $this->assertText(t('disabled'));
+    $this->assertText(t('Disabled'));
 
     $this->drupalPostForm('admin/structure/flags/manage/' . $this->flagId . '/enable', [], $this->t('Enable'));
     $this->assertResponse(200);
 
     $this->drupalGet('admin/structure/flags');
-    $this->assertText(t('enabled'));
+    $this->assertText(t('Enabled'));
 
     $this->drupalGet('node/' . $this->nodeId);
     $this->assertText($this->flagShortText);

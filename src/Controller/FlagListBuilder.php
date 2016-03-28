@@ -133,7 +133,7 @@ class FlagListBuilder extends DraggableListBuilder {
     ];
 
     $row['status'] = [
-      '#markup' => $entity->isEnabled() ? t('enabled') : t('disabled'),
+      '#markup' => $entity->isEnabled() ? t('Enabled') : t('Disabled'),
     ];
 
     return $row + parent::buildRow($entity);
