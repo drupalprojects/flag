@@ -85,17 +85,20 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
 
     $url->setRouteParameter('destination', $this->getDestination());
 
-    $render = $url->toRenderArray();
-    $render['#type'] = 'link';
+    // Get the Flag URL.
+    $render = [];
+    $render['#attributes']['href'] = $url->toString();
+
+    $render['#theme'] = 'flag';
     $render['#attributes']['id'] = 'flag-' . $flag->id() . '-id-' . $entity->id();
 
     if ($action === 'unflag') {
       $render['#title'] = $flag->getUnflagShortText();
-      $render['#alt'] = $flag->getUnflagLongText();
+      $render['#attributes']['#alt'] = $flag->getUnflagLongText();
     }
     else {
       $render['#title'] = $flag->getFlagShortText();
-      $render['#alt'] = $flag->getFlagLongText();
+      $render['#attributes']['alt'] = $flag->getFlagLongText();
     }
 
     return $render;

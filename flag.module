@@ -164,6 +164,20 @@ function flag_entity_extra_field_info() {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function flag_theme($existing, $type, $theme, $path) {
+  return [
+    'flag' => [
+      'variables' => [
+        'attributes' => [],
+        'title' => NULL,
+      ],
+    ],
+  ];
+}
+
+/**
  * Implements hook_node_links_alter().
  */
 function flag_node_links_alter(array &$links, NodeInterface $entity, array &$context) {
