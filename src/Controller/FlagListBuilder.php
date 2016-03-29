@@ -77,17 +77,21 @@ class FlagListBuilder extends DraggableListBuilder {
   }
 
   /**
-   * Gets the flag type for the given flag.
+   * Gets the flag type label for the given flag.
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag entity.
    *
    * @return array
-   *   A render array of the flag type.
+   *   A render array of the flag type label.
    */
   protected function getFlagType(FlagInterface $flag) {
+    // Get the flaggable entity type definition.
+    $flaggable_entity_type = \Drupal::entityTypeManager()
+      ->getDefinition($flag->getFlaggableEntityTypeId());
+
     return [
-      '#markup' => $flag->getFlaggableEntityTypeId(),
+      '#markup' => $flaggable_entity_type->getLabel(),
     ];
   }
 
