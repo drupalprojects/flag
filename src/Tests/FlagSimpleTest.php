@@ -181,11 +181,11 @@ class FlagSimpleTest extends FlagTestBase {
 
     $this->drupalLogin($this->adminUser);
     $edit = [
-      'global' => TRUE,
+      'global' => '1',
     ];
     $this->drupalPostForm('admin/structure/flags/manage/' . $this->id, $edit, t('Save Flag'));
     $this->drupalGet('admin/structure/flags/manage/' . $this->id);
-    $this->assertFieldChecked('edit-global');
+    $this->assertFieldChecked('edit-global-1');
 
     $this->drupalLogin($user_2);
     $this->drupalGet('node/' . $node_id);
@@ -193,11 +193,11 @@ class FlagSimpleTest extends FlagTestBase {
 
     $this->drupalLogin($this->adminUser);
     $edit = [
-      'global' => FALSE,
+      'global' => '0',
     ];
     $this->drupalPostForm('admin/structure/flags/manage/' . $this->id, $edit, t('Save Flag'));
     $this->drupalGet('admin/structure/flags/manage/' . $this->id);
-    $this->assertNoFieldChecked('edit-global');
+    $this->assertFieldChecked('edit-global-0');
 
     $this->drupalLogin($user_2);
     $this->drupalGet('node/' . $node_id);

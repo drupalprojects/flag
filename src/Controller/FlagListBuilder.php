@@ -36,7 +36,7 @@ class FlagListBuilder extends DraggableListBuilder {
     $header['flag_type'] = t('Flag Type');
     $header['roles'] = t('Roles');
     $header['bundles'] = t('Entity Bundles');
-    $header['global'] = t('Global?');
+    $header['global'] = t('Scope');
     $header['status'] = t('Status');
 
     return $header + parent::buildHeader();
@@ -133,7 +133,7 @@ class FlagListBuilder extends DraggableListBuilder {
     $row['bundles'] = $this->getBundles($entity);
 
     $row['global'] = [
-      '#markup' => $entity->isGlobal() ? t('Yes') : t('No'),
+      '#markup' => $entity->isGlobal() ? t('Global') : t('Personal'),
     ];
 
     $row['status'] = [

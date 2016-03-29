@@ -82,12 +82,19 @@ abstract class FlagFormBase extends EntityForm {
     ];
 
     $form['global'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Global flag'),
-      '#default_value' => $flag->isGlobal(),
-      '#description' => $this->t('If checked, flag is considered "global" and each entity is either flagged or not. If unchecked, each user has individual flags on entities.'),
+      '#type' => 'radios',
+      '#title' => $this->t('Scope'),
+      '#default_value' => $flag->isGlobal() ? 1 : 0,
+      '#options' => array(
+        0 => t('Personal'),
+        1 => t('Global'),
+      ),
       '#weight' => -1,
     ];
+
+    // Add descriptions for each radio button.
+    $form['global'][0]['#description'] = $this->t('Each user has individual flags on entities.');
+    $form['global'][1]['#description'] = $this->t('The entity is either flagged or not for all users.');
 
     $form['messages'] = [
       '#type' => 'details',
