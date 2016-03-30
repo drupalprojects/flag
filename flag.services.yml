@@ -1,4 +1,12 @@
 services:
+  access_check.flag.action:
+    class: Drupal\flag\Access\FlagAccessCheck
+    tags:
+      - { name: access_check, applies_to: _flag_access }
+  access_check.unflag.action:
+    class: Drupal\flag\Access\UnFlagAccessCheck
+    tags:
+      - { name: access_check, applies_to: _unflag_access }
   plugin.manager.flag.flagtype:
     class: Drupal\flag\FlagTypePluginManager
     arguments: ['@container.namespaces', '@cache.default', '@module_handler']
