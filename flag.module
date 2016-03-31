@@ -179,9 +179,21 @@ function flag_form_submit($form, FormStateInterface $form_state) {
   }
 }
 
+/**
+ * Performs flagging/unflagging for the entity edit form.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *  The entity being saved.
+ * @param $values
+ *  The flag entity form values.
+ *
+ * @see flag_form_submit()
+ */
 function flag_form_save(EntityInterface $entity, $values) {
   $flag_service = \Drupal::service('flag');
   $account = \Drupal::currentUser();
+
+  // For existing entities, get any existing flaggings per flag.
   $flagging_ids = array();
   if (!$entity->isNew()) {
     $flaggings = $flag_service->getFlaggings(NULL, $entity, $account);
@@ -189,13 +201,24 @@ function flag_form_save(EntityInterface $entity, $values) {
       return $flagging->getFlagId();
     }, $flaggings);
   }
+
+  // Iterate through each flag on the entity form.
   foreach ($values as $flag_id => $value) {
+    // Get the flag from the Flag Service.
     $flag = $flag_service->getFlagById($flag_id);
+
+    // Determine if the flagging exists.
     $flag_exists = in_array($flag_id, $flagging_ids);
+
+    // If the flag is checked in the form, and the flagging doesn't exist...
     if ($value && !$flag_exists) {
+      // ...flag the entity.
       $flag_service->flag($flag, $entity);
     }
+
+    // If the flag is not checked in the form, and the flagging exists..
     if (!$value && $flag_exists) {
+      // ...unflag the entity.
       $flag_service->unflag($flag, $entity);
     }
   }
