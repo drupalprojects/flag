@@ -20,9 +20,9 @@ class FlagResetForm extends ConfirmFormBase {
   /**
    * The Flag Service.
    *
-   * @var \Drupal\flag\FlaggingServiceInterface $flagDelete
+   * @var \Drupal\flag\FlaggingServiceInterface
    */
-  protected $flagging;
+  protected $flagService;
 
   /**
    * The flag to reset.
@@ -34,10 +34,10 @@ class FlagResetForm extends ConfirmFormBase {
   /**
    * Class constructor.
    *
-   * @param \Drupal\flag\FlaggingServiceInterface $flagging
+   * @param \Drupal\flag\FlaggingServiceInterface $flag_service
    */
-  public function __construct(FlaggingServiceInterface $flagging) {
-    $this->flagging = $flagging;
+  public function __construct(FlaggingServiceInterface $flag_service) {
+    $this->flagService = $flag_service;
   }
 
   /**
@@ -102,7 +102,7 @@ class FlagResetForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->flagging->reset($this->flag);
+    $this->flagService->reset($this->flag);
     drupal_set_message($this->t('Flag %label was reset.', [
       '%label' => $this->flag->label(),
     ]));
