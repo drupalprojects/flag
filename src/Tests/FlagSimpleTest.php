@@ -234,12 +234,12 @@ class FlagSimpleTest extends FlagTestBase {
     $this->drupalPostForm('node/' . $node2->id() . '/delete', [], t('Delete'));
     $this->assertResponse(200);
 
-    // Assert that both nodes remain as flagged after the changes.
-    // @todo This will fail when fixing this issue https://www.drupal.org/node/2551311
+    // Assert that the first node remain as flagged after the changes.
     $count_flags_before = $this->countFlaggings($user_1, $node1);
     $this->assertEqual(1, $count_flags_before);
+    // Assert that the flaggings of the second node where deleted.
     $count_flags_before = $this->countFlaggings($user_1, $node2);
-    $this->assertEqual(1, $count_flags_before);
+    $this->assertEqual(0, $count_flags_before);
 
     // Delete the user.
     $user_1->delete();

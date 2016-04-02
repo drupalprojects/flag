@@ -175,4 +175,69 @@ class FlagCountsTest extends FlagTestBase {
     $this->assertEqual(empty($article2_counts_after), 'Article2 counts has been removed.');
   }
 
+  /**
+   * Tests flaggings and counts are deleted when its entity is deleted.
+   */
+  public function testEntityDeletion() {
+    // Create a flag.
+    $flag = $this->createFlag('node', ['article'], 'reload');
+
+    // Create a article to flag.
+    $article1 = Node::create([
+      'body' => [
+        [
+          'value' => $this->randomMachineName(32),
+          'format' => filter_default_format(),
+        ],
+      ],
+      'type' => 'article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $article1->save();
+
+    // Create a second article.
+    $article2 = Node::create([
+      'body' => [
+        [
+          'value' => $this->randomMachineName(32),
+          'format' => filter_default_format(),
+        ],
+      ],
+      'type' => 'article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $article2->save();
+
+    // Flag both.
+    $this->flagService->flag($flag, $article1);
+    $this->flagService->flag($flag, $article2);
+
+    // Confirm the counts have been incremented.
+    $article1_count_before = $this->flagCountService->getEntityFlagCounts($article1);
+    $this->assertEqual($article1_count_before[$flag->id()], 1, 'The article1 has been flagged.');
+    $article2_count_before = $this->flagCountService->getEntityFlagCounts($article2);
+    $this->assertEqual(count($article2_count_before[$flag->id()]), 1, 'The article2 has been flagged.');
+
+    // Confirm the flagging have been created.
+    $flaggings_before = $this->flagService->getFlaggings($flag);
+    $this->assertEqual(count($flaggings_before), 2, 'There are two flaggings associated with the flag');
+
+    // Delete the entities.
+    $article1->delete();
+    $article2->delete();
+    // Reset counts stored in FlagCountManager and force inspection of the
+    // peristent store.
+    drupal_static_reset();
+
+    // The list of all flaggings MUST now be empty.
+    $flaggings_after = $this->flagService->getFlaggings($flag);
+    $this->assert(empty($flaggings_after), 'The flaggings were removed, when the flag was deleted');
+
+    // Confirm the counts have been removed.
+    $article1_count_after = $this->flagCountService->getEntityFlagCounts($article1);
+    $this->assertTrue(empty($article1_count_after), 'Article1 counts has been removed.');
+    $article2_count_after = $this->flagCountService->getEntityFlagCounts($article2);
+    $this->assertTrue(empty($article2_count_after), 'Article2 counts has been removed.');
+  }
+
 }

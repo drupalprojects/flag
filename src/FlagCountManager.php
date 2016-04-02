@@ -162,7 +162,7 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
 
     /* @var \Drupal\flag\FlaggingInterface flag */
     $flag = $event->getFlag();
-    /* @var Drupal\Core\Entity\EntityInterface $entity */
+    /* @var \Drupal\Core\Entity\EntityInterface $entity */
     $entity = $event->getEntity();
 
     $count_result = $this->connection->select('flag_counts')
