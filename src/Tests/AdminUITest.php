@@ -116,6 +116,7 @@ class AdminUITest extends FlagTestBase {
    */
   public function testFlagAdmin() {
     $this->doFlagAdd();
+    $this->doFlagEdit();
 
     $this->doFlagDisable();
     $this->doFlagEnable();
@@ -154,6 +155,16 @@ class AdminUITest extends FlagTestBase {
     $this->assertNotNull($this->flag, 'The flag was created.');
 
     $this->grantFlagPermissions($this->flag);
+  }
+
+  /**
+   * Check the flag edit form.
+   */
+  public function doFlagEdit() {
+    $this->drupalGet('admin/structure/flags/manage/' . $this->flagId);
+
+    $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-global-0'));
+    $this->assertTrue(isset($elements[0]) && !empty($elements[0]['disabled']), 'The global form element is disabled when editing the flag.');
   }
 
   /**

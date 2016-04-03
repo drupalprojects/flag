@@ -91,7 +91,6 @@ class FlagSimpleTest extends FlagTestBase {
     $this->createFlagWithForm('node', $edit);
 
     $this->doFlagLinksTest();
-    $this->doGlobalFlagLinksTest();
     $this->doTestFlagCounts();
     $this->doUserDeletionTest();
   }
@@ -103,105 +102,18 @@ class FlagSimpleTest extends FlagTestBase {
     $node = $this->drupalCreateNode(['type' => $this->nodeType]);
     $node_id = $node->id();
 
-    // Grant the flag permissions to the authenticated role, so that both
-    // users have the same roles and share the render cache.
+    // Grant the flag permissions to the authenticated role.
     $role = Role::load(RoleInterface::AUTHENTICATED_ID);
     $role->grantPermission('flag ' . $this->id);
     $role->grantPermission('unflag ' . $this->id);
     $role->save();
-
-    // Create and login a new user.
-    $user_1 = $this->drupalCreateUser();
-    $this->drupalLogin($user_1);
-
-    $this->drupalGet('node/' . $node_id);
-    $this->clickLink('Flag this item');
-    $this->assertResponse(200);
-    $flaggings = \Drupal::entityTypeManager()->getStorage('flagging')->loadMultiple();
-    $this->assertEqual(count($flaggings), 1);
-    // Test the calculated entity reference field. Calculated fields are rare
-    // so a few extra asserts can't hurt.
-    $flagging = reset($flaggings);
-    $this->assertEqual($flagging->flagged_entity->getSetting('target_type'), 'node');
-    $this->assertEqual($flagging->flagged_entity->target_id, $node_id);
-    $this->assertEqual($flagging->flagged_entity->entity->id(), $node_id);
-    $this->assertEqual($flagging->flagged_entity->entity->getEntityTypeId(), 'node');
-    $this->assertLink('Unflag this item');
-
-    // Switch user to check flagging link.
-    $user_2 = $this->drupalCreateUser();
-    $this->drupalLogin($user_2);
-    $this->drupalGet('node/' . $node_id);
-    $this->assertResponse(200);
-    $this->assertLink('Flag this item');
-
-    // Switch back to first user and unflag.
-    $this->drupalLogin($user_1);
-    $this->drupalGet('node/' . $node_id);
-
-    $this->clickLink('Unflag this item');
-    $this->assertResponse(200);
-    $this->assertLink('Flag this item');
 
     // Check that the anonymous user, who does not have the necessary
     // permissions, does not see the flag link.
+    // TODO: move this to a new test LinkPermissionAccessTest test class.
     $this->drupalLogout();
     $this->drupalGet('node/' . $node_id);
     $this->assertNoLink('Flag this item');
-  }
-
-  /**
-   * Test a global flag link appears correctly in different states.
-   */
-  public function doGlobalFlagLinksTest() {
-    $node = $this->drupalCreateNode(['type' => $this->nodeType]);
-    $node_id = $node->id();
-
-    // Grant the flag permissions to the authenticated role, so that both
-    // users have the same roles and share the render cache.
-    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
-    $role->grantPermission('flag ' . $this->id);
-    $role->grantPermission('unflag ' . $this->id);
-    $role->save();
-
-    // Create and login a new user.
-    $user_1 = $this->drupalCreateUser();
-    $user_2 = $this->drupalCreateUser();
-    $this->drupalLogin($user_1);
-
-    // Flag the node with user 1.
-    $this->drupalGet('node/' . $node_id);
-    $this->clickLink('Flag this item');
-    $this->assertResponse(200);
-    $this->assertLink('Unflag this item');
-
-    $this->drupalLogin($user_2);
-    $this->drupalGet('node/' . $node_id);
-    $this->assertLink('Flag this item');
-
-    $this->drupalLogin($this->adminUser);
-    $edit = [
-      'global' => '1',
-    ];
-    $this->drupalPostForm('admin/structure/flags/manage/' . $this->id, $edit, t('Save Flag'));
-    $this->drupalGet('admin/structure/flags/manage/' . $this->id);
-    $this->assertFieldChecked('edit-global-1');
-
-    $this->drupalLogin($user_2);
-    $this->drupalGet('node/' . $node_id);
-    $this->assertLink('Unflag this item');
-
-    $this->drupalLogin($this->adminUser);
-    $edit = [
-      'global' => '0',
-    ];
-    $this->drupalPostForm('admin/structure/flags/manage/' . $this->id, $edit, t('Save Flag'));
-    $this->drupalGet('admin/structure/flags/manage/' . $this->id);
-    $this->assertFieldChecked('edit-global-0');
-
-    $this->drupalLogin($user_2);
-    $this->drupalGet('node/' . $node_id);
-    $this->assertLink('Flag this item');
   }
 
   /**
