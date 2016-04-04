@@ -7,7 +7,6 @@
 namespace Drupal\flag\Form;
 
 use Drupal\Core\Form\ConfirmFormBase;
-use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\FlagInterface;
 
@@ -48,12 +47,7 @@ abstract class FlagConfirmBaseForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    $destination = \Drupal::request()->get('destination');
-    if (!empty($destination)) {
-      return Url::createFromPath($destination);
-    }
-
-    return $this->entity->urlInfo();
+    return $this->entity->toUrl();
   }
 
 }
