@@ -30,7 +30,7 @@ interface FlagCountManagerInterface {
    * );
    * @endcode
    *
-   * @param $entity
+   * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
    * @return array
@@ -63,7 +63,7 @@ interface FlagCountManagerInterface {
    * words, an entity that has been reported multiple times will only be counted
    * once.
    *
-   * @param \Drupal\flag\FlagInterface
+   * @param \Drupal\flag\FlagInterface $flag
    *   The flag for which to retrieve a flag count.
    *
    * @return int

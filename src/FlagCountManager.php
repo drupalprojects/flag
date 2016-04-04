@@ -193,7 +193,7 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
    * Deletes all of a flag's count entries.
    *
    * @param \Drupal\flag\event\FlagResetEvent $event
-   *  The flag reset event.
+   *   The flag reset event.
    */
   public function resetFlagCounts(FlagResetEvent $event) {
     /* @var \Drupal\flag\FlaggingInterface flag */
