@@ -20,6 +20,7 @@ use Drupal\flag\FlaggingInterface;
  *  label = @Translation("Flagging"),
  *  bundle_label = @Translation("Flagging"),
  *  handlers = {
+ *    "storage" = "Drupal\flag\Entity\Storage\FlaggingStorage",
  *    "form" = {
  *      "add" = "Drupal\flag\Form\FlaggingForm",
  *      "edit" = "Drupal\flag\Form\FlaggingForm",

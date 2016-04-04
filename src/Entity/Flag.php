@@ -55,6 +55,9 @@ use Drupal\flag\FlagInterface;
  *     "flag_type",
  *     "link_type",
  *   },
+ *   lookup_keys = {
+ *     "global",
+ *   },
  *   links = {
  *     "edit-form" = "/admin/structure/flags/manage/{flag}",
  *     "delete-form" = "/admin/structure/flags/manage/{flag}/delete",
@@ -248,27 +251,12 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
       $account = \Drupal::currentUser();
     }
 
-    // Query the flagging entities for the given flag and flaggable.
-    $query = \Drupal::entityQuery('flagging')
-      ->condition('flag_id', $this->id())
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('entity_id', $entity->id());
+    // Load the is flagged list from the flagging storage, check if this flag
+    // is in the list.
+    $flag_ids = \Drupal::entityTypeManager()->getStorage('flagging')
+      ->loadIsFlagged($entity, $account);
+    return isset($flag_ids[$this->id()]);
 
-    // Select by user if the flag is not global.
-    if (!$this->isGlobal()) {
-      $query->condition('uid', $account->id());
-    }
-
-    // Execute the query.
-    $result = $query->execute();
-
-    // If we found a result, return TRUE.
-    if (!empty($result)) {
-      return TRUE;
-    }
-
-    // If there's no result, the flag hasn't been used.
-    return FALSE;
   }
 
   /**
