@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
+use Drupal\flag\FlagType\FlagTypePluginManager;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;

@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains \Drupal\flag\FlagPermissions.
+ * Contains \Drupal\flag\Permissions\FlagPermissions.
  */
 
-namespace Drupal\flag;
+namespace Drupal\flag\Permissions;
 
 /**
  * Provides dynamic permissions for defined flags.

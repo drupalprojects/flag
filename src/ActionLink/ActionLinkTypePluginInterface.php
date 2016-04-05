@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains the \Drupal\flag\ActionLinkTypePluginInterface.
+ * Contains the \Drupal\flag\ActionLink\ActionLinkTypePluginInterface.
  */
 
-namespace Drupal\flag;
+namespace Drupal\flag\ActionLink;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\flag\FlagInterface;
@@ -39,7 +39,7 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
    *
    * This method is not recommended for general use.
    *
-   * @see \Drupal\flag\ActionLinkTypePluginInterface::getLink()
+   * @see \Drupal\flag\ActionLink\ActionLinkTypePluginInterface::getLink()
    *
    * @param string $action
    *   The action, flag or unflag.
@@ -58,7 +58,7 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
    *
    * This method is not recommended for general use.
    *
-   * @see \Drupal\flag\ActionLinkTypePluginInterface::getLink()
+   * @see \Drupal\flag\ActionLink\ActionLinkTypePluginInterface::getLink()
    *
    * @param string $action
    *   The action to perform, 'flag' and 'unflag'.

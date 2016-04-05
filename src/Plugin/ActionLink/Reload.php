@@ -6,7 +6,7 @@
 
 namespace Drupal\flag\Plugin\ActionLink;
 
-use Drupal\flag\ActionLinkTypeBase;
+use Drupal\flag\ActionLink\ActionLinkTypeBase;
 
 /**
  * Provides the Normal Link (Reload) link type.

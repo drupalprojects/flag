@@ -4,4 +4,4 @@ administer flags:
   restrict access: TRUE
 
 permission_callbacks:
-  - Drupal\flag\FlagPermissions::permissions
+  - Drupal\flag\Permissions\FlagPermissions::permissions

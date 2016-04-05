@@ -8,7 +8,7 @@ namespace Drupal\flag\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\flag\FlagTypePluginManager;
+use Drupal\flag\FlagType\FlagTypePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,21 +18,21 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * that allows the administrator to select key values that are necessary to
  * initialize the flag entity. Most importantly, this includes the FlagType.
  *
- * @see \Drupal\flag\FlagTypeBase
+ * @see \Drupal\flag\FlagType\FlagTypeBase
  */
 class FlagAddPageForm extends FormBase {
 
   /**
    * The flag type plugin manager.
    *
-   * @var Drupal\flag\FlagTypePluginManager
+   * @var Drupal\flag\FlagType\FlagTypePluginManager
    */
   protected $flagTypeManager;
 
   /**
    * Constructs a new form.
    *
-   * @param \Drupal\flag\FlagTypePluginManager $flag_type_manager
+   * @param \Drupal\flag\FlagType\FlagTypePluginManager $flag_type_manager
    *   The link type plugin manager.
    */
   public function __construct(FlagTypePluginManager $flag_type_manager) {

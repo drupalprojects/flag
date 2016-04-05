@@ -8,10 +8,10 @@ services:
     tags:
       - { name: access_check, applies_to: _unflag_access }
   plugin.manager.flag.flagtype:
-    class: Drupal\flag\FlagTypePluginManager
+    class: Drupal\flag\FlagType\FlagTypePluginManager
     arguments: ['@container.namespaces', '@cache.default', '@module_handler']
   plugin.manager.flag.linktype:
-    class: Drupal\flag\ActionLinkPluginManager
+    class: Drupal\flag\ActionLink\ActionLinkPluginManager
     arguments: ['@container.namespaces', '@cache.default', '@module_handler']
   flag:
     class: Drupal\flag\FlagService

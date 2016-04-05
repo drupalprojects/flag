@@ -1,12 +1,12 @@
 <?php
 /**
  * @file
- * Contains the \Drupal\flag\FlagTypeBase class.
+ * Contains the \Drupal\flag\FlagType\FlagTypeBase class.
  */
 
-namespace Drupal\flag;
+namespace Drupal\flag\FlagType;
 
-use Drupal\flag\FlagTypePluginInterface;
+use Drupal\flag\FlagType\FlagTypePluginInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Form\FormStateInterface;

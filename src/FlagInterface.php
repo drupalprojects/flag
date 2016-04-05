@@ -99,7 +99,7 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   /**
    * Get the flag type plugin.
    *
-   * @return \Drupal\flag\FlagTypePluginInterface
+   * @return \Drupal\flag\FlagType\FlagTypePluginInterface
    *   The flag type plugin for the flag.
    */
   public function getFlagTypePlugin();
@@ -115,7 +115,7 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   /**
    * Get the link type plugin for this flag.
    *
-   * @return \Drupal\flag\ActionLinkTypePluginInterface
+   * @return \Drupal\flag\ActionLink\ActionLinkTypePluginInterface
    *   The link type plugin for the flag.
    */
   public function getLinkTypePlugin();

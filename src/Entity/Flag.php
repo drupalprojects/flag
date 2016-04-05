@@ -196,7 +196,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    * The ID of the ActionLink plugin.
    *
    * @var string
-   * @see \Drupal\flag\ActionLinkTypeBase
+   * @see \Drupal\flag\ActionLink\ActionLinkTypeBase
    */
   protected $link_type = 'reload';
 

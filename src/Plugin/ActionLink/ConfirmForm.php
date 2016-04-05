@@ -6,7 +6,7 @@
 
 namespace Drupal\flag\Plugin\ActionLink;
 
-use Drupal\flag\ActionLinkTypeBase;
+use Drupal\flag\ActionLink\ActionLinkTypeBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**

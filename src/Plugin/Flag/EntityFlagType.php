@@ -6,7 +6,7 @@
 
 namespace Drupal\flag\Plugin\Flag;
 
-use Drupal\flag\FlagTypeBase;
+use Drupal\flag\FlagType\FlagTypeBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**

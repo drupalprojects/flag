@@ -1,16 +1,16 @@
 <?php
 /**
  * @file
- * Contains the \Drupal\flag\ActionLinkTypeBase class.
+ * Contains the \Drupal\flag\ActionLink\ActionLinkTypeBase class.
  */
 
-namespace Drupal\flag;
+namespace Drupal\flag\ActionLink;
 
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\flag\FlagInterface;
-use Drupal\flag\ActionLinkTypePluginInterface;
+use Drupal\flag\ActionLink\ActionLinkTypePluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**

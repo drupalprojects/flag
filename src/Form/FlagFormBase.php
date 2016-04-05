@@ -8,7 +8,7 @@ namespace Drupal\flag\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\flag\ActionLinkPluginManager;
+use Drupal\flag\ActionLink\ActionLinkPluginManager;
 use Drupal\flag\Entity\Flag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -24,14 +24,14 @@ abstract class FlagFormBase extends EntityForm {
   /**
    * The action link plugin manager.
    *
-   * @var Drupal\flag\ActionLinkPluginManager
+   * @var Drupal\flag\ActionLink\ActionLinkPluginManager
    */
   protected $actionLinkManager;
 
   /**
    * Constructs a new form.
    *
-   * @param \Drupal\flag\ActionLinkPluginManager $action_link_manager
+   * @param \Drupal\flag\ActionLink\ActionLinkPluginManager $action_link_manager
    *   The link type plugin manager.
    */
   public function __construct(ActionLinkPluginManager $action_link_manager) {

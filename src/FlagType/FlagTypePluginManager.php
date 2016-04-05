@@ -1,10 +1,10 @@
 <?php
 /**
  * @file
- * Contains the \Drupal\flag\FlagTypePluginManager class.
+ * Contains the \Drupal\flag\FlagType\FlagTypePluginManager class.
  */
 
-namespace Drupal\flag;
+namespace Drupal\flag\FlagType;
 
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -27,7 +27,7 @@ class FlagTypePluginManager extends DefaultPluginManager {
    *   The module handler to invoke the alter hook with.
    */
   public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/Flag', $namespaces, $module_handler, 'Drupal\flag\FlagTypePluginInterface', 'Drupal\flag\Annotation\FlagType');
+    parent::__construct('Plugin/Flag', $namespaces, $module_handler, 'Drupal\flag\FlagType\FlagTypePluginInterface', 'Drupal\flag\Annotation\FlagType');
 
     $this->alterInfo('flag_type_info');
     $this->setCacheBackend($cache_backend, 'flag');

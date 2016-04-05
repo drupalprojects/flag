@@ -119,7 +119,7 @@ function hook_flag_javascript_info_alter(FlagInterface $flag, $entity_id) {
  * @param $link_types
  *  An array of the link types defined by all modules.
  *
- * @see \Drupal\flag\ActionLinkPluginManager:getAllLinkTypes()
+ * @see \Drupal\flag\ActionLink\ActionLinkPluginManager:getAllLinkTypes()
  */
 function hook_flag_link_type_info_alter(array &$link_types) {
 
