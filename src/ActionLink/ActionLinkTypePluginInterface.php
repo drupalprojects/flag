@@ -61,7 +61,7 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
    * @see \Drupal\flag\ActionLink\ActionLinkTypePluginInterface::getLink()
    *
    * @param string $action
-   *   The action to perform, 'flag' and 'unflag'.
+   *   The action to perform, 'flag' or 'unflag'.
    * @param FlagInterface $flag
    *   The flag entity.
    * @param EntityInterface $entity
