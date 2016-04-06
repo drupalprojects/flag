@@ -72,35 +72,77 @@ abstract class FlagTestBase extends WebTestBase {
    * @return \Drupal\flag\FlagInterface
    *   A new flag entity with the given criteria.
    */
-  protected function createFlag($entity_type = 'node', $bundles = [], $link_type = 'reload') {
+  protected function createFlag($entity_type = 'node', array $bundles = [], $link_type = 'reload') {
+    return $this->createFlagFromArray([
+      'entity_type' => $entity_type,
+      'bundles' => $bundles,
+      'link_type' => $link_type,
+    ]);
+  }
 
-    // If we didn't get an entity type, assume 'node'.
-    if (empty($entity_type)) {
-      $entity_type = 'node';
-    }
+  /**
+   * Create a global flag programmatically.
+   *
+   * Creates a flag with the given entity type, bundles, and link type without
+   * using the admin UI. The flag's ID, label, flag and unflag text will be
+   * random strings.
+   *
+   * @param string|null $entity_type
+   *   (optional) The entity type of the flag to create. If omitted,
+   *   assumes 'node'.
+   * @param array $bundles
+   *   (optional) An array of entity bundles to which the flag applies.
+   *   If NULL, all bundles are assumed.
+   * @param string|null $link_type
+   *   (optional) The ID of the link type to use. If omitted, assumes 'reload'.
+   *
+   * @return \Drupal\flag\FlagInterface
+   *   A new flag entity with the given criteria.
+   */
+  protected function createGlobalFlag($entity_type = 'node', array $bundles = [], $link_type = 'reload') {
+    return $this->createFlagFromArray([
+      'entity_type' => $entity_type,
+      'bundles' => $bundles,
+      'link_type' => $link_type,
+      'global' => TRUE,
+    ]);
+  }
 
-    // If we didn't get a bundles, assume all bundles for the entity.
-    if (empty($bundles)) {
-      $bundles = array_keys(\Drupal::entityManager()->getBundleInfo($entity_type));
-    }
+  /**
+   * Creates a flag from an array.
+   *
+   * Sensible key values pairs will be inserted into the input array if not
+   * provided.
+   *
+   * @param array $edit
+   *   The edit array to pass to Flag::create().
+   *
+   * @return \Drupal\flag\FlagInterface
+   *   A new flag entity with the given criteria.
+   */
+  protected function createFlagFromArray(array $edit) {
 
-    // If we didn't get a link type, assume 'reload'.
-    if (empty($link_type)) {
-      $link_type = 'reload';
+    $default = [
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'node',
+      'bundles' => array_keys(\Drupal::entityManager()->getBundleInfo('node')),
+      'flag_short' => $this->randomString(),
+      'flag_type' => $this->getFlagType('node'),
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+      'global' => FALSE,
+    ];
+
+    foreach ($default as $key => $value) {
+      if (empty($edit[$key])) {
+        $edit[$key] = $value;
+      }
     }
 
     // Create the flag programmatically.
-    $flag = Flag::create([
-      'id' => strtolower($this->randomMachineName()),
-      'label' => $this->randomString(),
-      'entity_type' => $entity_type,
-      'bundles' => $bundles,
-      'flag_short' => $this->t('Flag this item'),
-      'flag_type' => $this->getFlagType($entity_type),
-      'link_type' => $link_type,
-      'flagTypeConfig' => [],
-      'linkTypeConfig' => [],
-    ]);
+    $flag = Flag::create($edit);
 
     // Save the flag.
     $flag->save();
