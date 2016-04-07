@@ -13,7 +13,7 @@ use Drupal\flag\FlagInterface;
 /**
  * Provides the AJAX link type.
  *
- * This class is virtually a copy of the Reload link type, but modified to
+ * This class is an extension of the Reload link type, but modified to
  * provide AJAX links.
  *
  * @ActionLinkType(
@@ -22,18 +22,7 @@ use Drupal\flag\FlagInterface;
  *   description = "An AJAX JavaScript request will be made without reloading the page."
  * )
  */
-class AJAXactionLink extends ActionLinkTypeBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public function routeName($action = NULL) {
-    if ($action === 'unflag') {
-      return 'flag.link_unflag.json';
-    }
-
-    return 'flag.link_flag.json';
-  }
+class AJAXactionLink extends Reload {
 
   /**
    * {@inheritdoc}
@@ -42,7 +31,6 @@ class AJAXactionLink extends ActionLinkTypeBase {
     $render = parent::buildLink($action, $flag, $entity);
     $render['#attached']['library'][] = 'core/drupal.ajax';
     $render['#attributes']['class'][] = 'use-ajax';
-    $render['#url']->setRouteParameter('_format', 'json');
     return $render;
   }
 

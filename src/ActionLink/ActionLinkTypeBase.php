@@ -81,13 +81,19 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
    * {@inheritdoc}
    */
   public function buildLink($action, FlagInterface $flag, EntityInterface $entity) {
+    // Get the Flag URL.
     $url = $this->getLinkURL($action, $flag, $entity);
 
     $url->setRouteParameter('destination', $this->getDestination());
 
-    // Get the Flag URL.
+    // Build the URL. It is important that bubbleable metadata is explicitly
+    // collected and applied to the render array, as it might be rendered on its
+    // own, for example in an ajax response. Specifically, this is necessary for
+    // CSRF token placeholder replacements.
     $render = [];
-    $render['#attributes']['href'] = $url->toString();
+    $rendered_url = $url->toString(TRUE);
+    $rendered_url->applyTo($render);
+    $render['#attributes']['href'] = $rendered_url->getGeneratedUrl();
 
     $render['#theme'] = 'flag';
     $render['#attributes']['id'] = 'flag-' . $flag->id() . '-id-' . $entity->id();
