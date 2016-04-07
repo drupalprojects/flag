@@ -45,9 +45,9 @@ class FlagViewsLinkField extends FieldPluginBase {
     $options = parent::defineOptions();
 
     // Set the default relationship handler. The first instance of the
-    // FlagViewsRelationship should always have the id "flag_content_rel", so
+    // FlagViewsRelationship should always have the id "flag_relationship", so
     // we set that as the default.
-    $options['relationship'] = array('default' => 'flag_content_rel');
+    $options['relationship'] = array('default' => 'flag_relationship');
 
     return $options;
   }

@@ -41,7 +41,7 @@ class FlagViewsFlaggedField extends Boolean {
    */
   protected function defineOptions() {
     $options = parent::defineOptions();
-    $options['relationship'] = ['default' => 'flag_content_rel'];
+    $options['relationship'] = ['default' => 'flag_relationship'];
 
     return $options;
   }

@@ -306,7 +306,7 @@ display:
           id: link_flag
           table: flagging
           field: link_flag
-          relationship: flag_content_rel
+          relationship: flag_relationship
           group_type: group
           admin_label: ''
           label: Ops
@@ -374,10 +374,10 @@ display:
           content: 'No bookmarks available.'
           plugin_id: text_custom
       relationships:
-        flag_content_rel:
-          id: flag_content_rel
+        flag_relationship:
+          id: flag_relationship
           table: node_field_data
-          field: flag_content_rel
+          field: flag_relationship
           relationship: none
           group_type: group
           admin_label: Flags

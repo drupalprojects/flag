@@ -22,7 +22,7 @@ class FlagViewsFilter extends BooleanOperator {
   public function defineOptions() {
     $options = parent::defineOptions();
     $options['value'] = array('default' => 1);
-    $options['relationship'] = array('default' => 'flag_content_rel');
+    $options['relationship'] = array('default' => 'flag_relationship');
 
     return $options;
   }
