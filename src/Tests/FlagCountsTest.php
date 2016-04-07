@@ -11,9 +11,6 @@ use Drupal\node\Entity\Node;
 /**
  * Tests the Flag counts API.
  *
- * @todo These are currently very basic, and simply test that the various count
- * functions return a sane value and don't crash.
- *
  * @group flag
  */
 class FlagCountsTest extends FlagTestBase {
@@ -105,7 +102,6 @@ class FlagCountsTest extends FlagTestBase {
     $this->assertEqual($flag_get_flag_counts, 1, "getFlagEntityCount() returns the expected count.");
 
     $this->flaggingDelete->reset($this->flag);
-    drupal_static_reset();
     $flag_get_flag_counts = $this->flagCountService->getFlagEntityCount($this->flag);
     $this->assertEqual($flag_get_flag_counts, 0, "getFlagEntityCount() on reset flag returns the expected count.");
   }
@@ -159,9 +155,6 @@ class FlagCountsTest extends FlagTestBase {
 
     // Delete the flag.
     $flag->delete();
-    // Reset counts stored in FlagCountManager and force inspection of the
-    // peristent store.
-    drupal_static_reset();
 
     // The list of all flaggings MUST now be empty.
     $flaggings_after = $this->flagService->getFlaggings($flag);
@@ -225,9 +218,6 @@ class FlagCountsTest extends FlagTestBase {
     // Delete the entities.
     $article1->delete();
     $article2->delete();
-    // Reset counts stored in FlagCountManager and force inspection of the
-    // peristent store.
-    drupal_static_reset();
 
     // The list of all flaggings MUST now be empty.
     $flaggings_after = $this->flagService->getFlaggings($flag);

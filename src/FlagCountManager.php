@@ -13,14 +13,40 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\Event\FlagResetEvent;
-use Drupal\flag\FlagCountManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Drupal\flag\FlagInterface;
 
 /**
  * Class FlagCountManager.
  */
 class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInterface {
+
+  /**
+   * Stores flag counts per entity.
+   *
+   * @var array
+   */
+  protected $entityCounts = [];
+
+  /**
+   * Stores flag counts per flag.
+   *
+   * @var array
+   */
+  protected $flagCounts = [];
+
+  /**
+   * Stores flagged entity counts per flag.
+   *
+   * @var array
+   */
+  protected $flagEntityCounts = [];
+
+  /**
+   * Stores flag counts per flag and user.
+   *
+   * @var array
+   */
+  protected $userFlagCounts = [];
 
   /**
    * Database connection.
@@ -40,12 +66,10 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
    * {@inheritdoc}
    */
   public function getEntityFlagCounts(EntityInterface $entity) {
-    $counts = &drupal_static(__METHOD__);
-
     $entity_type = $entity->getEntityTypeId();
     $entity_id = $entity->id();
-    if (!isset($counts[$entity_type][$entity_id])) {
-      $counts[$entity_type][$entity_id] = [];
+    if (!isset($this->entityCounts[$entity_type][$entity_id])) {
+      $this->entityCounts[$entity_type][$entity_id] = [];
       $query = $this->connection->select('flag_counts', 'fc');
       $result = $query
         ->fields('fc', ['flag_id', 'count'])
@@ -53,26 +77,23 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
         ->condition('fc.entity_id', $entity_id)
         ->execute();
       foreach ($result as $row) {
-        $counts[$entity_type][$entity_id][$row->flag_id] = $row->count;
+        $this->entityCounts[$entity_type][$entity_id][$row->flag_id] = $row->count;
       }
     }
 
-    return $counts[$entity_type][$entity_id];
+    return $this->entityCounts[$entity_type][$entity_id];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFlagFlaggingCount(FlagInterface $flag) {
-    $counts = &drupal_static(__METHOD__);
-
     $flag_id = $flag->id();
     $entity_type = $flag->getFlaggableEntityTypeId();
 
     // We check to see if the flag count is already in the cache,
     // if it's not, run the query.
-    if (!isset($counts[$flag_id][$entity_type])) {
-      $counts[$flag_id][$entity_type] = [];
+    if (!isset($this->flagCounts[$flag_id][$entity_type])) {
       $result = $this->connection->select('flagging', 'f')
         ->fields('f', ['flag_id'])
         ->condition('flag_id', $flag_id)
@@ -80,44 +101,40 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
         ->countQuery()
         ->execute()
         ->fetchField();
-      $counts[$flag_id][$entity_type] = $result;
+      $this->flagCounts[$flag_id][$entity_type] = $result;
     }
 
-    return $counts[$flag_id][$entity_type];
+    return $this->flagCounts[$flag_id][$entity_type];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFlagEntityCount(FlagInterface $flag) {
-    $counts = &drupal_static(__METHOD__);
-    $flag_name = $flag->id();
+    $flag_id = $flag->id();
 
-    if (!isset($counts[$flag_name])) {
-      $counts[$flag_name] = $this->connection->select('flag_counts', 'fc')
+    if (!isset($this->flagEntityCounts[$flag_id])) {
+      $this->flagEntityCounts[$flag_id] = $this->connection->select('flag_counts', 'fc')
         ->fields('fc', array('flag_id'))
-        ->condition('flag_id', $flag_name)
+        ->condition('flag_id', $flag_id)
         ->countQuery()
         ->execute()
         ->fetchField();
     }
 
-    return $counts[$flag_name];
+    return $this->flagEntityCounts[$flag_id];
   }
 
   /**
    * {@inheritdoc}
    */
   public function getUserFlagFlaggingCount(FlagInterface $flag, AccountInterface $user) {
-    $counts = &drupal_static(__METHOD__);
-
     $flag_id = $flag->id();
     $uid = $user->id();
 
     // We check to see if the flag count is already in the cache,
     // if it's not, run the query.
-    if (!isset($counts[$flag_id][$uid])) {
-      $counts[$flag_id][$uid] = [];
+    if (!isset($this->userFlagCounts[$flag_id][$uid])) {
       $result = $this->connection->select('flagging', 'f')
         ->fields('f', ['flag_id'])
         ->condition('flag_id', $flag_id)
@@ -125,10 +142,10 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
         ->countQuery()
         ->execute()
         ->fetchField();
-      $counts[$flag_id][$uid] = $result;
+      $this->userFlagCounts[$flag_id][$uid] = $result;
     }
 
-    return $counts[$flag_id][$uid];
+    return $this->userFlagCounts[$flag_id][$uid];
   }
 
   /**
@@ -150,6 +167,8 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
       ])
       ->expression('count', 'count + :inc', [':inc' => 1])
       ->execute();
+
+    $this->resetLoadedCounts($event->getEntity(), $event->getFlag());
   }
 
   /**
@@ -187,6 +206,7 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
         ->condition('entity_type', $entity->getEntityTypeId())
         ->execute();
     }
+    $this->resetLoadedCounts($entity, $flag);
   }
 
   /**
@@ -202,6 +222,13 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     $this->connection->delete('flag_counts')
       ->condition('flag_id', $flag->id())
       ->execute();
+
+    // Reset statically cached counts.
+    $this->entityCounts = [];
+    $this->flagCounts = [];
+    $this->flagEntityCounts = [];
+    $this->userFlagCounts = [];
+
   }
 
   /**
@@ -213,6 +240,22 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     $events[FlagEvents::ENTITY_UNFLAGGED][] = array('decrementFlagCounts', -100);
     $events[FlagEvents::FLAG_RESET][] = array('resetFlagCounts', -100);
     return $events;
+  }
+
+  /**
+   * Resets loaded flag counts.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The flagged entity.
+   * @param \Drupal\flag\FlagInterface $flag
+   *   The flag.
+   */
+  protected function resetLoadedCounts(EntityInterface $entity, FlagInterface $flag) {
+    // @todo Consider updating them instead of just clearing it.
+    unset($this->entityCounts[$entity->getEntityTypeId()][$entity->id()]);
+    unset($this->flagCounts[$flag->id()]);
+    unset($this->flagEntityCounts[$flag->id()]);
+    unset($this->userFlagCounts[$flag->id()]);
   }
 
 }
