@@ -7,6 +7,7 @@
 namespace Drupal\flag\Tests;
 
 use Drupal\field_ui\Tests\FieldUiTestTrait;
+use Drupal\flag\FlagInterface;
 use Drupal\simpletest\WebTestBase;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
@@ -16,37 +17,9 @@ use Drupal\user\Entity\Role;
  *
  * @group flag
  */
-class LinkTypeFieldEntryTest extends WebTestBase {
+class LinkTypeFieldEntryTest extends FlagTestBase {
 
   use FieldUiTestTrait;
-
-  /**
-   * The label of the flag to create for the test.
-   *
-   * @var string
-   */
-  protected $label = 'Test label 123';
-
-  /**
-   * The ID of the flag to create for the test.
-   *
-   * @var string
-   */
-  protected $id = 'test_label_123';
-
-  /**
-   * The flag link type.
-   *
-   * @var string
-   */
-  protected $flagLinkType;
-
-  /**
-   * The node type to use in the test.
-   *
-   * @var string
-   */
-  protected $nodeType = 'article';
 
   protected $nodeId;
 
@@ -59,24 +32,18 @@ class LinkTypeFieldEntryTest extends WebTestBase {
   protected $flagFieldValue;
 
   /**
-   * User object.
+   * The flag object.
    *
-   * @var \Drupal\user\Entity\User|false
+   * @var \Drupal\flag\FlagInterface
    */
-  protected $adminUser;
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('views', 'flag', 'node', 'field_ui', 'text', 'block');
+  protected $flag;
 
   /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
+
     // The breadcrumb block is needed for FieldUiTestTrait's tests.
     $this->drupalPlaceBlock('system_breadcrumb_block');
     $this->drupalPlaceBlock('local_tasks_block');
@@ -87,13 +54,6 @@ class LinkTypeFieldEntryTest extends WebTestBase {
    * Create a new flag with the Field Entry type, and add fields.
    */
   public function testCreateFieldEntryFlag() {
-    $this->adminUser = $this->drupalCreateUser([
-      'administer flags',
-      'administer flagging display',
-      'administer flagging fields',
-      'administer node display',
-    ]);
-
     $this->drupalLogin($this->adminUser);
     $this->doCreateFlag();
     $this->doAddFields();
@@ -103,17 +63,10 @@ class LinkTypeFieldEntryTest extends WebTestBase {
   }
 
   /**
-   * Create a node type and flag.
+   * Test the flag field entry plugin UI.
    */
-  public function doCreateFlag() {
-    // Create content type.
-    $this->drupalCreateContentType(['type' => $this->nodeType]);
-
-    // Test with minimal value requirement.
-    $edit = [
-      'flag_entity_type' => 'entity:node',
-    ];
-    $this->drupalPostForm('admin/structure/flags/add', $edit, t('Continue'));
+  public function doFlagUIfieldPlugin() {
+    $this->drupalPostForm('admin/structure/flags/add', [], t('Continue'));
 
     // Update the flag.
     $edit = [
@@ -125,30 +78,35 @@ class LinkTypeFieldEntryTest extends WebTestBase {
     $this->assertText(t('Flag confirmation message'));
     $this->assertText(t('Enter flagging details message'));
     $this->assertText(t('Unflag confirmation message'));
+  }
 
+  /**
+   * Create a node type and flag.
+   */
+  public function doCreateFlag() {
     $edit = [
-      'label' => $this->label,
-      'id' => $this->id,
       'bundles[' . $this->nodeType . ']' => $this->nodeType,
       'flag_confirmation' => $this->flagConfirmMessage,
       'flagging_edit_title' => $this->flagDetailsMessage,
       'unflag_confirmation' => $this->unflagConfirmMessage,
     ];
-    $this->drupalPostForm(NULL, $edit, t('Create Flag'));
+    $this->flag = $this->createFlagWithForm('node', $edit, 'field_entry');
 
     // Check to see if the flag was created.
-    $this->assertText(t('Flag @this_label has been added.', ['@this_label' => $this->label]));
+    $this->assertText(t('Flag @this_label has been added.', ['@this_label' => $this->flag->label()]));
   }
 
   /**
    * Add fields to flag.
    */
   public function doAddFields() {
+    $flag_id = $this->flag->id();
+
     // Check the Field UI tabs appear on the flag edit page.
-    $this->drupalGet('admin/structure/flags/manage/' . $this->id);
+    $this->drupalGet('admin/structure/flags/manage/' . $flag_id);
     $this->assertText(t("Manage fields"), "The Field UI tabs appear on the flag edit form page.");
 
-    $this->fieldUIAddNewField('admin/structure/flags/manage/' . $this->id, $this->flagFieldId, $this->flagFieldLabel, 'text');
+    $this->fieldUIAddNewField('admin/structure/flags/manage/' . $flag_id, $this->flagFieldId, $this->flagFieldLabel, 'text');
   }
 
   /**
@@ -160,10 +118,7 @@ class LinkTypeFieldEntryTest extends WebTestBase {
 
     // Grant the flag permissions to the authenticated role, so that both
     // users have the same roles and share the render cache.
-    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
-    $role->grantPermission('flag ' . $this->id);
-    $role->grantPermission('unflag ' . $this->id);
-    $role->save();
+    $this->grantFlagPermissions($this->flag);
 
     // Create and login a new user.
     $user_1 = $this->drupalCreateUser();
@@ -171,7 +126,7 @@ class LinkTypeFieldEntryTest extends WebTestBase {
 
     // Click the flag link.
     $this->drupalGet('node/' . $this->nodeId);
-    $this->clickLink(t('Flag this item'));
+    $this->clickLink($this->flag->getFlagShortText());
 
     // Check if we have the confirm form message displayed.
     $this->assertText($this->flagConfirmMessage);
@@ -184,18 +139,20 @@ class LinkTypeFieldEntryTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Create Flagging'));
 
     // Check that the node is flagged.
-    $this->assertLink(t('Unflag this item'));
+    $this->assertLink($this->flag->getUnflagShortText());
   }
 
   /**
    * Edit the field value of the existing flagging.
    */
   public function doEditFlagField() {
+    $flag_id = $this->flag->id();
+
     $this->drupalGet('node/' . $this->nodeId);
 
     // Get the details form.
-    $this->clickLink(t('Unflag this item'));
-    $this->assertUrl('flag/details/edit/' . $this->id . '/' . $this->nodeId, [
+    $this->clickLink($this->flag->getUnflagShortText());
+    $this->assertUrl('flag/details/edit/' . $flag_id . '/' . $this->nodeId, [
       'query' => [
         'destination' => 'node/' . $this->nodeId,
       ],
@@ -215,7 +172,7 @@ class LinkTypeFieldEntryTest extends WebTestBase {
     $this->drupalPostForm(NULL, $edit, t('Update Flagging'));
 
     // Get the details form.
-    $this->drupalGet('flag/details/edit/' . $this->id . '/' . $this->nodeId);
+    $this->drupalGet('flag/details/edit/' . $flag_id . '/' . $this->nodeId);
 
     // See if the field value was preserved.
     $this->assertFieldByName('field_' . $this->flagFieldId . '[0][value]', $this->flagFieldValue);
@@ -225,8 +182,10 @@ class LinkTypeFieldEntryTest extends WebTestBase {
    * Assert editing an invalid flagging throws an exception.
    */
   public function doBadEditFlagField() {
+    $flag_id = $this->flag->id();
+
     // Test a good flag ID param, but a bad flaggable ID param.
-    $this->drupalGet('flag/details/edit/' . $this->id . '/-9999');
+    $this->drupalGet('flag/details/edit/' . $flag_id . '/-9999');
     $this->assertResponse('404', 'Editing an invalid flagging path: good flag, bad entity.');
 
     // Test a bad flag ID param, but a good flaggable ID param.
@@ -235,7 +194,7 @@ class LinkTypeFieldEntryTest extends WebTestBase {
 
     // Test editing a unflagged entity.
     $unlinked_node = $this->drupalCreateNode(['type' => $this->nodeType]);
-    $this->drupalGet('flag/details/edit/' . $this->id . '/' . $unlinked_node->id());
+    $this->drupalGet('flag/details/edit/' . $flag_id . '/' . $unlinked_node->id());
     $this->assertResponse('404', 'Editing an invalid flagging path: good flag, good entity, but not flagged');
   }
 

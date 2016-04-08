@@ -61,6 +61,7 @@ abstract class FlagTestBase extends WebTestBase {
     $this->adminUser = $this->createUser([
       'administer flags',
       'administer flagging display',
+      'administer flagging fields',
       'administer node display',
       'administer modules',
       'administer nodes',

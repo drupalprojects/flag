@@ -17,12 +17,6 @@ use Drupal\flag\Tests\FlagTestBase;
  */
 class FlagServiceTest extends FlagTestBase {
 
-  public static $modules = array(
-    'flag',
-    'node',
-    'user',
-  );
-
   /**
    * Test the FlagService.
    */
@@ -36,19 +30,7 @@ class FlagServiceTest extends FlagTestBase {
    * Tests that flags once created can be retrieved.
    */
   public function doTestFlagServiceGetFlag() {
-    $flag = Flag::create([
-      'id' => 'test',
-      'entity_type' => 'node',
-      'bundles' => [
-        'article',
-      ],
-      'flag_type' => 'entity:node',
-      'link_type' => 'reload',
-      'flagTypeConfig' => [],
-      'linkTypeConfig' => [],
-    ]);
-
-    $flag->save();
+    $flag = $this->createFlag('node', ['article']);
 
     $result = $this->flagService->getFlags('node', 'article');
     $this->assertIdentical(count($result), 1, 'Found flag type');
@@ -60,17 +42,7 @@ class FlagServiceTest extends FlagTestBase {
   public function doTestFlagServiceFlagExceptions() {
     $this->drupalCreateContentType(['type' => 'not_article']);
 
-    $flag = Flag::create([
-      'id' => 'test',
-      'entity_type' => 'node',
-      'bundles' => [
-        'article',
-      ],
-      'flag_type' => 'entity:node',
-      'link_type' => 'reload',
-      'flagTypeConfig' => [],
-      'linkTypeConfig' => [],
-    ]);
+    $flag = $this->createFlag('node', ['article']);
 
     // The service methods don't check access, so our user can be anybody.
     $account = $this->drupalCreateUser();
@@ -144,20 +116,7 @@ class FlagServiceTest extends FlagTestBase {
    */
   public function doTestFlagServiceGetFlaggingUsers() {
 
-    $flag = Flag::create([
-      'id' => 'testFlaggingUsers',
-      'entity_type' => 'node',
-      'bundles' => [
-        //Content type article exists already from test before.
-        'article',
-      ],
-      'flag_type' => 'entity:node',
-      'link_type' => 'reload',
-      'flagTypeConfig' => [],
-      'linkTypeConfig' => [],
-    ]);
-
-    $flag->save();
+    $flag = $this->createFlag('node', ['article']);
 
     // The service methods don't check access, so our user can be anybody.
     $accounts = array($this->drupalCreateUser(), $this->drupalCreateUser());

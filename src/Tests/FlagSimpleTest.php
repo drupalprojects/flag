@@ -7,6 +7,7 @@
 
 namespace Drupal\flag\Tests;
 
+use Drupal\flag\FlagInterface;
 use Drupal\node\NodeInterface;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
@@ -42,11 +43,11 @@ class FlagSimpleTest extends FlagTestBase {
   protected $flagLinkType;
 
   /**
-   * Modules to enable.
+   * The flag to test.
    *
-   * @var array
+   * @var FlagInterface
    */
-  public static $modules = array('views', 'flag', 'node', 'field_ui');
+  protected $flag;
 
   /**
    * Configures test base and executes test cases.
@@ -56,16 +57,7 @@ class FlagSimpleTest extends FlagTestBase {
     $this->drupalLogin($this->adminUser);
 
     // Create flag.
-    // TODO: replace this with createFlag(), and change rest of test class to
-    // use generated flag ID and labels.
-    $edit = [
-      'label' => $this->label,
-      'id' => $this->id,
-      'bundles[' . $this->nodeType . ']' => $this->nodeType,
-      'flag_short' => 'Flag this item',
-      'flag_long' => 'Unflag this item',
-    ];
-    $this->createFlagWithForm('node', $edit);
+    $this->flag = $this->createFlagWithForm();
 
     $this->doFlagLinksTest();
     $this->doTestFlagCounts();
@@ -80,10 +72,7 @@ class FlagSimpleTest extends FlagTestBase {
     $node_id = $node->id();
 
     // Grant the flag permissions to the authenticated role.
-    $role = Role::load(RoleInterface::AUTHENTICATED_ID);
-    $role->grantPermission('flag ' . $this->id);
-    $role->grantPermission('unflag ' . $this->id);
-    $role->save();
+    $this->grantFlagPermissions($this->flag);
 
     // Check that the anonymous user, who does not have the necessary
     // permissions, does not see the flag link.
@@ -106,11 +95,11 @@ class FlagSimpleTest extends FlagTestBase {
 
     // Flag the nodes.
     $this->drupalGet('node/' . $node1->id());
-    $this->clickLink('Flag this item');
+    $this->clickLink($this->flag->getFlagShortText());
     $this->assertResponse(200);
-    $this->assertLink('Unflag this item');
+    $this->assertLink($this->flag->getUnflagShortText());
     $this->drupalGet('node/' . $node2->id());
-    $this->clickLink('Flag this item');
+    $this->clickLink($this->flag->getFlagShortText());
     $this->assertResponse(200);
 
     // Assert that the nodes are set to flagged.
@@ -152,10 +141,7 @@ class FlagSimpleTest extends FlagTestBase {
 
     // Grant the flag permissions to the authenticated role, so that both
     // users have the same roles and share the render cache.
-    $role = Role::load(DRUPAL_AUTHENTICATED_RID);
-    $role->grantPermission('flag ' . $this->id);
-    $role->grantPermission('unflag ' . $this->id);
-    $role->save();
+    $this->grantFlagPermissions($this->flag);
 
     // Create and login user 1.
     $user_1 = $this->drupalCreateUser();
@@ -163,13 +149,13 @@ class FlagSimpleTest extends FlagTestBase {
 
     // Flag node (first count).
     $this->drupalGet('node/' . $node_id);
-    $this->clickLink('Flag this item');
+    $this->clickLink($this->flag->getFlagShortText());
     $this->assertResponse(200);
-    $this->assertLink('Unflag this item');
+    $this->assertLink($this->flag->getUnflagShortText());
 
     // Check for 1 flag count.
     $count_flags_before = $connection->select('flag_counts')
-      ->condition('flag_id', $this->id)
+      ->condition('flag_id', $this->flag->id())
       ->condition('entity_type', $node->getEntityTypeId())
       ->condition('entity_id', $node_id)
       ->countQuery()
@@ -183,13 +169,13 @@ class FlagSimpleTest extends FlagTestBase {
 
     // Flag node (second count).
     $this->drupalGet('node/' . $node_id);
-    $this->clickLink('Flag this item');
+    $this->clickLink($this->flag->getFlagShortText());
     $this->assertResponse(200);
-    $this->assertLink('Unflag this item');
+    $this->assertLink($this->flag->getUnflagShortText());
 
     // Check for 2 flag counts.
     $count_flags_after = $connection->select('flag_counts')
-      ->condition('flag_id', $this->id)
+      ->condition('flag_id', $this->flag->id())
       ->condition('entity_type', $node->getEntityTypeId())
       ->condition('entity_id', $node_id)
       ->countQuery()
@@ -199,13 +185,13 @@ class FlagSimpleTest extends FlagTestBase {
 
     // Unflag the node again.
     $this->drupalGet('node/' . $node_id);
-    $this->clickLink('Unflag this item');
+    $this->clickLink($this->flag->getUnflagShortText());
     $this->assertResponse(200);
-    $this->assertLink('Flag this item');
+    $this->assertLink($this->flag->getFlagShortText());
 
     // Check for 1 flag count.
     $count_flags_before = $connection->select('flag_counts')
-      ->condition('flag_id', $this->id)
+      ->condition('flag_id', $this->flag->id())
       ->condition('entity_type', $node->getEntityTypeId())
       ->condition('entity_id', $node_id)
       ->countQuery()
@@ -219,7 +205,7 @@ class FlagSimpleTest extends FlagTestBase {
     // Check for 0 flag counts, user deletion should lead to count decrement
     // or row deletion.
     $count_flags_before = $connection->select('flag_counts')
-      ->condition('flag_id', $this->id)
+      ->condition('flag_id', $this->flag->id())
       ->condition('entity_type', $node->getEntityTypeId())
       ->condition('entity_id', $node_id)
       ->countQuery()
@@ -243,7 +229,7 @@ class FlagSimpleTest extends FlagTestBase {
   protected function countFlaggings(UserInterface $user, NodeInterface $node) {
     return \Drupal::entityQuery('flagging')
       ->condition('uid', $user->id())
-      ->condition('flag_id', $this->id)
+      ->condition('flag_id', $this->flag->id())
       ->condition('entity_type', $node->getEntityTypeId())
       ->condition('entity_id', $node->id())
       ->count()
