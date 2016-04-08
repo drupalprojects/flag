@@ -24,13 +24,6 @@ class AdminUITest extends FlagTestBase {
   protected $entityQueryManager;
 
   /**
-   * Admin user who performs the tests.
-   *
-   * @var \Drupal\user\Entity\User|false
-   */
-  protected $adminUser;
-
-  /**
    * The label of the flag to create for the test.
    *
    * @var string
@@ -50,13 +43,6 @@ class AdminUITest extends FlagTestBase {
    * @var \Drupal\flag\FlagInterface
    */
   protected $flag;
-
-  /**
-   * The node type to use in the test.
-   *
-   * @var string
-   */
-  protected $nodeType = 'article';
 
   /**
    * The node for test flagging.
@@ -94,17 +80,7 @@ class AdminUITest extends FlagTestBase {
 
     $this->entityQueryManager = $this->container->get('entity.query');
 
-    // Create and log in our user.
-    $this->adminUser = $this->drupalCreateUser([
-      'administer flags',
-      'administer flagging display',
-      'administer node display',
-    ]);
-
     $this->drupalLogin($this->adminUser);
-
-    // Create content type.
-    $this->drupalCreateContentType(['type' => $this->nodeType]);
 
     // Create a node to flag.
     $this->node = $this->drupalCreateNode(['type' => $this->nodeType]);

@@ -6,6 +6,7 @@
 
 namespace Drupal\flag\Tests;
 
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flag\FlagInterface;
 use Drupal\simpletest\WebTestBase;
@@ -28,13 +29,43 @@ abstract class FlagTestBase extends WebTestBase {
   protected $flagService;
 
   /**
+   * A user with Flag admin rights.
+   *
+   * @var AccountInterface
+   */
+  protected $adminUser;
+
+  /**
+   * The node type to use in the test.
+   *
+   * @var string
+   */
+  protected $nodeType = 'article';
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
+    // Get the Flag Service.
     $this->flagService = \Drupal::service('flag');
+
+    // Place the title block, otherwise some tests fail.
     $this->drupalPlaceBlock('page_title_block', ['region' => 'content']);
+
+    // Create content type.
+    $this->drupalCreateContentType(['type' => $this->nodeType]);
+
+    // Create the admin user.
+    $this->adminUser = $this->createUser([
+      'administer flags',
+      'administer flagging display',
+      'administer node display',
+      'administer modules',
+      'administer nodes',
+      'edit any ' . $this->nodeType . ' content',
+    ]);
   }
 
   /**

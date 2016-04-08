@@ -15,44 +15,11 @@ namespace Drupal\flag\Tests;
 class ShowOnEntityFormTest extends FlagTestBase {
 
   /**
-   * The admin user.
-   *
-   * @var AccountInterface
-   */
-  protected $adminUser;
-
-  /**
    * The flag to be flagged and unflagged.
    *
    * @var FlagInterface
    */
   protected $flag;
-
-  /**
-   * The node type to use in the test.
-   *
-   * @var string
-   */
-  protected $nodeType = 'article';
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-
-    // Create content type.
-    $this->drupalCreateContentType(['type' => $this->nodeType]);
-
-    // Setup an admin user.
-    $this->adminUser = $this->createUser([
-      'administer flags',
-      'administer flagging display',
-      'administer node display',
-      'administer nodes',
-      'edit any ' . $this->nodeType . ' content',
-    ]);
-  }
 
   /**
    * Tests if flags appear on the entity form.

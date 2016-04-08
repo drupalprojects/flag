@@ -58,7 +58,6 @@ class FlagServiceTest extends FlagTestBase {
    * Test exceptions are thrown when flagging and unflagging.
    */
   public function doTestFlagServiceFlagExceptions() {
-    $this->drupalCreateContentType(['type' => 'article']);
     $this->drupalCreateContentType(['type' => 'not_article']);
 
     $flag = Flag::create([

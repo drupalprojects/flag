@@ -60,9 +60,6 @@ class LinkOutputLocationTest extends FlagTestBase {
 
     $this->drupalLogin($this->adminUser);
 
-    // Create a node type.
-    $this->drupalCreateContentType(['type' => 'article']);
-
     // Create a node to flag.
     $this->node = Node::create([
       'body' => [

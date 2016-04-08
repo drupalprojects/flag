@@ -44,13 +44,6 @@ class FlagCountsTest extends FlagTestBase {
   protected $flaggingDelete;
 
   /**
-   * User object.
-   *
-   * @var \Drupal\user\Entity\User|false
-   */
-  protected $adminUser;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -61,11 +54,6 @@ class FlagCountsTest extends FlagTestBase {
 
     // Create a flag.
     $this->flag = $this->createFlag('node', ['article'], 'reload');
-
-    // Create a user who may flag.
-    $this->adminUser = $this->drupalCreateUser([
-      'administer flags',
-    ]);
 
     // Create a node to flag.
     $this->node = Node::create([

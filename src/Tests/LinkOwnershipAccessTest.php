@@ -18,22 +18,12 @@ use Drupal\flag\Tests\FlagTestBase;
 class LinkOwnershipAccessTest extends FlagTestBase {
 
   /**
-   * The node type to use in the test.
-   *
-   * @var string
-   */
-  protected $nodeType = 'article';
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
     $this->entityQueryManager = $this->container->get('entity.query');
-
-    // Create content type.
-    $this->drupalCreateContentType(['type' => $this->nodeType]);
 
     // Create a node to flag.
     $this->node = $this->drupalCreateNode(['type' => $this->nodeType]);

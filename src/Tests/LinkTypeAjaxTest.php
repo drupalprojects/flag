@@ -21,13 +21,6 @@ class LinkTypeAjaxTest extends FlagTestBase {
   protected $flag;
 
   /**
-   * The node type to use in the test
-   *
-   * @var string
-   */
-  protected $nodeType = 'article';
-
-  /**
    * The node to be flagged and unflagged.
    *
    * @var \Drupal\node\NodeInterface
@@ -35,30 +28,13 @@ class LinkTypeAjaxTest extends FlagTestBase {
   protected $node;
 
   /**
-   * The admin user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $adminUser;
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
     parent::setUp();
 
-    // Create content type.
-    $this->drupalCreateContentType(['type' => $this->nodeType]);
-
     // Create a node to flag.
     $this->node = $this->drupalCreateNode(['type' => $this->nodeType]);
-
-    // Create the admin user.
-    $this->adminUser = $this->drupalCreateUser([
-      'administer flags',
-      'administer flagging display',
-      'administer node display',
-    ]);
   }
 
   /**

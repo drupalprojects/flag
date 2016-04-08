@@ -42,20 +42,6 @@ class FlagSimpleTest extends FlagTestBase {
   protected $flagLinkType;
 
   /**
-   * The node type to use in the test.
-   *
-   * @var string
-   */
-  protected $nodeType = 'article';
-
-  /**
-   * User object.
-   *
-   * @var \Drupal\user\Entity\User|false
-   */
-  protected $adminUser;
-
-  /**
    * Modules to enable.
    *
    * @var array
@@ -66,17 +52,8 @@ class FlagSimpleTest extends FlagTestBase {
    * Configures test base and executes test cases.
    */
   public function testFlagForm() {
-    // Create and log in our user.
-    $this->adminUser = $this->drupalCreateUser([
-      'administer flags',
-      'administer flagging display',
-      'administer node display',
-    ]);
-
+    // Log in our user.
     $this->drupalLogin($this->adminUser);
-
-    // Create content type.
-    $this->drupalCreateContentType(['type' => $this->nodeType]);
 
     // Create flag.
     // TODO: replace this with createFlag(), and change rest of test class to
