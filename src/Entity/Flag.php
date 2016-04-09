@@ -282,7 +282,9 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     if (empty($bundles)) {
       // If the setting is empty, return all bundle names for the flag's entity
       // type.
-      $bundle_info = \Drupal::entityManager()->getBundleInfo($this->entity_type);
+      /** @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface $bundle_info_service */
+      $bundle_info_service = \Drupal::service('entity_type.bundle.info');
+      $bundle_info = $bundle_info_service->getBundleInfo($this->entity_type);
       $bundles = array_keys($bundle_info);
     }
 
@@ -537,6 +539,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   public function setWeight($weight) {
     $this->weight = $weight;
   }
+
   /**
    * {@inheritdoc}
    */
@@ -557,14 +560,15 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     $linkTypePlugin = $this->getLinkTypePlugin();
     $this->set('linkTypeConfig', $linkTypePlugin->getConfiguration());
     */
+
     // Reset the render cache for the entity.
-    // @todo Inject the entity manager into the object?
-    \Drupal::entityManager()
+    \Drupal::entityTypeManager()
       ->getViewBuilder($this->getFlaggableEntityTypeId())
       ->resetCache();
-    // Clear entity extra field caches.
-    \Drupal::entityManager()->clearCachedFieldDefinitions();
 
+    // Clear entity extra field caches.
+    // @todo Inject the entity field manager into the object?
+    \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
   }
 
   /**

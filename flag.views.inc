@@ -54,14 +54,14 @@ function flag_views_data() {
  */
 function flag_views_data_alter(array &$data) {
   $flags = \Drupal::service('flag')->getFlags();
-  $entity_manager = \Drupal::entityManager();
+  $entity_type_manager = \Drupal::entityTypeManager();
 
   foreach ($flags as $flag_id => $flag) {
     $entity_type_id = $flag->getFlaggableEntityTypeId();
 
-    $entity_type = $entity_manager->getDefinition($entity_type_id);
+    $entity_type = $entity_type_manager->getDefinition($entity_type_id);
     if ($entity_type->hasHandlerClass('views_data')) {
-      $base_table = $entity_manager->getHandler($entity_type_id, 'views_data')->getViewsTableForEntityType($entity_type);
+      $base_table = $entity_type_manager->getHandler($entity_type_id, 'views_data')->getViewsTableForEntityType($entity_type);
       $data[$base_table]['flag_relationship'] = [
         'title' => t('@entity_label flag', ['@entity_label' => $entity_type->getLabel()]),
         'help' => t('Limit results to only those entity flagged by a certain flag; Or display information about the flag set on a entity.'),

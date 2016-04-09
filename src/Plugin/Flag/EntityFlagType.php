@@ -68,7 +68,11 @@ class EntityFlagType extends FlagTypeBase {
     // Add checkboxes to show flag link on each entity view mode.
     $options = [];
     $defaults = [];
-    $view_modes = \Drupal::entityManager()->getViewModes($this->entityType);
+
+    /* @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_service */
+    $entity_display_service = \Drupal::service('entity_display.repository');
+    $view_modes = $entity_display_service->getViewModes($this->entityType);
+
     foreach ($view_modes as $name => $view_mode) {
       $options[$name] = t('Display on @name view mode', ['@name' => $view_mode['label']]);
       if ($this->showInLinks($name)) {

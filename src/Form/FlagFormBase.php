@@ -7,6 +7,7 @@
 namespace Drupal\flag\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\ActionLink\ActionLinkPluginManager;
 use Drupal\flag\Entity\Flag;
@@ -29,13 +30,21 @@ abstract class FlagFormBase extends EntityForm {
   protected $actionLinkManager;
 
   /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+   */
+  protected $bundleInfoService;
+
+  /**
    * Constructs a new form.
    *
    * @param \Drupal\flag\ActionLink\ActionLinkPluginManager $action_link_manager
    *   The link type plugin manager.
    */
-  public function __construct(ActionLinkPluginManager $action_link_manager) {
+  public function __construct(ActionLinkPluginManager $action_link_manager, EntityTypeBundleInfoInterface $bundle_info_service) {
     $this->actionLinkManager = $action_link_manager;
+    $this->bundleInfoService = $bundle_info_service;
   }
 
   /**
@@ -43,7 +52,8 @@ abstract class FlagFormBase extends EntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('plugin.manager.flag.linktype')
+      $container->get('plugin.manager.flag.linktype'),
+      $container->get('entity_type.bundle.info')
     );
   }
 
@@ -161,7 +171,7 @@ abstract class FlagFormBase extends EntityForm {
     $flag_type_plugin = $flag->getFlagTypePlugin();
     $flag_type_def = $flag_type_plugin->getPluginDefinition();
 
-    $bundles = \Drupal::entityManager()->getBundleInfo($flag_type_def['entity_type']);
+    $bundles = $this->bundleInfoService->getBundleInfo($flag_type_def['entity_type']);
     $entity_bundles = [];
     foreach ($bundles as $bundle_id => $bundle_row) {
       $entity_bundles[$bundle_id] = $bundle_row['label'];

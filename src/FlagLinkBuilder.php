@@ -7,7 +7,7 @@
 
 namespace Drupal\flag;
 
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\flag\FlagServiceInterface;
 
 /**
@@ -18,9 +18,9 @@ class FlagLinkBuilder implements FlagLinkBuilderInterface {
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The flag service.
@@ -32,13 +32,13 @@ class FlagLinkBuilder implements FlagLinkBuilderInterface {
   /**
    * Constructor.
    *
-   * @param Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_manager
    *   The entity manager.
-   * @param Drupal\flag\FlagServiceInterface $flag_service
+   * @param \Drupal\flag\FlagServiceInterface $flag_service
    *   The flag service.
    */
-  public function __construct(EntityManagerInterface $entity_manager, FlagServiceInterface $flag_service) {
-    $this->entityManager = $entity_manager;
+  public function __construct(EntityTypeManagerInterface $entity_manager, FlagServiceInterface $flag_service) {
+    $this->entityTypeManager = $entity_manager;
     $this->flagService = $flag_service;
   }
 
@@ -46,7 +46,7 @@ class FlagLinkBuilder implements FlagLinkBuilderInterface {
    * {@inheritdoc}
    */
   public function build($entity_type_id, $entity_id, $flag_id) {
-    $entity = $this->entityManager->getStorage($entity_type_id)->load($entity_id);
+    $entity = $this->entityTypeManager->getStorage($entity_type_id)->load($entity_id);
     $flag = $this->flagService->getFlagById($flag_id);
 
     $link_type_plugin = $flag->getLinkTypePlugin();

@@ -9,7 +9,7 @@ namespace Drupal\flag;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
@@ -54,9 +54,9 @@ class FlagService implements FlagServiceInterface {
   private $currentUser;
 
   /*
-   * @var EntityManagerInterface
+   * @var EntityTypeManagerInterface
    * */
-  private $entityManager;
+  private $entityTypeManager;
 
   /**
    * Constructor.
@@ -69,19 +69,19 @@ class FlagService implements FlagServiceInterface {
    *   The entity query factory.
    * @param AccountInterface $current_user
    *   The current user.
-   * @param EntityManagerInterface $entity_manager
+   * @param EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    */
   public function __construct(FlagTypePluginManager $flag_type,
                               EventDispatcherInterface $event_dispatcher,
                               QueryFactory $entity_query,
                               AccountInterface $current_user,
-                              EntityManagerInterface $entity_manager) {
+                              EntityTypeManagerInterface $entity_type_manager) {
     $this->flagTypeManager = $flag_type;
     $this->eventDispatcher = $event_dispatcher;
     $this->entityQueryManager = $entity_query;
     $this->currentUser = $current_user;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -164,14 +164,14 @@ class FlagService implements FlagServiceInterface {
    * {@inheritdoc}
    */
   public function getFlagById($flag_id) {
-    return $this->entityManager->getStorage('flag')->load($flag_id);
+    return $this->entityTypeManager->getStorage('flag')->load($flag_id);
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFlaggableById(FlagInterface $flag, $entity_id) {
-    return $this->entityManager->getStorage($flag->getFlaggableEntityTypeId())->load($entity_id);
+    return $this->entityTypeManager->getStorage($flag->getFlaggableEntityTypeId())->load($entity_id);
   }
 
   /**
@@ -195,7 +195,7 @@ class FlagService implements FlagServiceInterface {
       $user_ids[] = $flagging->get('uid')->first()->getValue()['target_id'];
     }
 
-    return $this->entityManager->getStorage('user')->loadMultiple($user_ids);
+    return $this->entityTypeManager->getStorage('user')->loadMultiple($user_ids);
   }
 
   /**
@@ -224,7 +224,7 @@ class FlagService implements FlagServiceInterface {
       throw new \LogicException('The user has already flagged the entity with the flag.');
     }
 
-    $flagging = $this->entityManager->getStorage('flagging')->create([
+    $flagging = $this->entityTypeManager->getStorage('flagging')->create([
       'uid' => $account->id(),
       'flag_id' => $flag->id(),
       'entity_id' => $entity->id(),
@@ -308,7 +308,7 @@ class FlagService implements FlagServiceInterface {
    *   An array of flags.
    */
   protected function getFlagsByIds(array $ids) {
-    return $this->entityManager->getStorage('flag')->loadMultiple($ids);
+    return $this->entityTypeManager->getStorage('flag')->loadMultiple($ids);
   }
 
   /**
@@ -321,7 +321,7 @@ class FlagService implements FlagServiceInterface {
    *   An array of flaggings.
    */
   protected function getFlaggingsByIds(array $ids) {
-    return $this->entityManager->getStorage('flagging')->loadMultiple($ids);
+    return $this->entityTypeManager->getStorage('flagging')->loadMultiple($ids);
   }
 
 }

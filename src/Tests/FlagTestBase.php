@@ -158,7 +158,7 @@ abstract class FlagTestBase extends WebTestBase {
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
       'entity_type' => 'node',
-      'bundles' => array_keys(\Drupal::entityManager()->getBundleInfo('node')),
+      'bundles' => array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('node')),
       'flag_short' => $this->randomString(),
       'flag_type' => $this->getFlagType('node'),
       'link_type' => 'reload',
@@ -225,7 +225,7 @@ abstract class FlagTestBase extends WebTestBase {
     $final_edit = array_merge($default_edit, $edit);
 
     // Check if any of the bundles have been set.
-    $bundles = array_keys(\Drupal::entityManager()->getBundleInfo($entity_type));
+    $bundles = array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type));
     $has_specified_bundle = FALSE;
     foreach ($bundles as $bundle_id) {
       if (!empty($final_edit['bundles[' . $bundle_id . ']'])) {
