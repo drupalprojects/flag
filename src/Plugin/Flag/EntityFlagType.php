@@ -48,7 +48,7 @@ class EntityFlagType extends FlagTypeBase {
       // entities.
       // @see hook_entity_view().
       'show_in_links' => [],
-      // Output the flag as individual pseudofields.
+      // Output the flag as individual fields.
       'show_as_field' => TRUE,
       // Add a checkbox for the flag in the entity form.
       // @see hook_field_attach_form().
@@ -91,7 +91,7 @@ class EntityFlagType extends FlagTypeBase {
     $form['display']['show_as_field'] = [
       '#type' => 'checkbox',
       '#title' => t('Display link as field'),
-      '#description' => t('Show the flag link as a pseudofield, which can be ordered among other entity elements in the "Manage display" settings for the entity type.'),
+      '#description' => t('Show the flag link as a field, which can be ordered among other entity elements in the "Manage display" settings for the entity type.'),
       '#default_value' => $this->showAsField(),
     ];
     /*

@@ -53,7 +53,7 @@ class LinkOutputLocationTest extends FlagTestBase {
     $this->adminUser = $this->drupalCreateUser([
       'administer flags',
       // This permission is needed to change the view mode settings to show and
-      // hide the flag link pseudofield.
+      // hide the flag link field.
       'administer node display',
     ]);
     $this->grantFlagPermissions($this->flag);
@@ -108,17 +108,17 @@ class LinkOutputLocationTest extends FlagTestBase {
     $this->flag->getFlagTypePlugin()->setConfiguration($flag_config);
     $this->flag->save();
 
-    // Check the full node shows the flag link as a pseudofield.
+    // Check the full node shows the flag link as a field.
     $this->drupalGet('node/' . $this->node->id());
     $this->assertPseudofield($this->flag, $this->node);
     // TODO: check no entity link.
 
-    // Check the teaser view mode shows the flag link as a pseudofield.
+    // Check the teaser view mode shows the flag link as a field.
     $this->drupalGet('node');
     $this->assertPseudofield($this->flag, $this->node);
     // TODO: check no entity link.
 
-    // Hide the flag pseudofield on teaser view mode.
+    // Hide the flag field on teaser view mode.
     $edit = [
       'fields[flag_' . $this->flag->id() . '][type]' => 'hidden',
     ];
@@ -127,25 +127,25 @@ class LinkOutputLocationTest extends FlagTestBase {
     // Check the form was saved successfully.
     $this->assertText('Your settings have been saved.');
 
-    // Check the full node still shows the flag link as a pseudofield.
+    // Check the full node still shows the flag link as a field.
     $this->drupalGet('node/' . $this->node->id());
     $this->assertPseudofield($this->flag, $this->node);
     // TODO: check no entity link.
 
-    // Check the teaser view mode does not show the flag link as a pseudofield.
+    // Check the teaser view mode does not show the flag link as a field.
     $this->drupalGet('node');
     $this->assertNoPseudofield($this->flag, $this->node);
     // TODO: check no entity link.
 
     // TODO:
-    // Turn on the entity link, and turn off the pseudofield.
+    // Turn on the entity link, and turn off the field.
     // Check the full and teaser view modes.
     // Turn off the entity link for one view mode.
     // Check both view modes are as expected.
   }
 
   /**
-   * Pass if the flag link is shown as a pseudofield on the page.
+   * Pass if the flag link is shown as a field on the page.
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag to look for.
@@ -155,11 +155,11 @@ class LinkOutputLocationTest extends FlagTestBase {
    *   (Optional) Message to display.
    */
   protected function assertPseudofield(FlagInterface $flag, EntityInterface $entity, $message = '') {
-    $this->assertPseudofieldHelper($flag, $entity, $message ?: "The flag link is shown as a pseudofield.", TRUE);
+    $this->assertPseudofieldHelper($flag, $entity, $message ?: "The flag link is shown as a field.", TRUE);
   }
 
   /**
-   * Pass if the flag link is not shown as a pseudofield on the page.
+   * Pass if the flag link is not shown as a field on the page.
    *
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag to look for.
@@ -169,7 +169,7 @@ class LinkOutputLocationTest extends FlagTestBase {
    *   (Optional) Message to display.
    */
   protected function assertNoPseudofield(FlagInterface $flag, EntityInterface $entity, $message = '') {
-    $this->assertPseudofieldHelper($flag, $entity, $message ?: "The flag link is not shown as a pseudofield.", FALSE);
+    $this->assertPseudofieldHelper($flag, $entity, $message ?: "The flag link is not shown as a field.", FALSE);
   }
 
   /**
