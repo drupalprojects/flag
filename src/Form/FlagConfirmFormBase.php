@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Contains \Drupal\flag\Form\FlagConfirmBaseForm.
+ * Contains \Drupal\flag\Form\FlagConfirmFormBase.
  */
 
 namespace Drupal\flag\Form;
@@ -15,7 +15,7 @@ use Drupal\flag\FlagInterface;
  *
  * @see \Drupal\flag\Plugin\ActionLink\ConfirmForm
  */
-abstract class FlagConfirmBaseForm extends ConfirmFormBase {
+abstract class FlagConfirmFormBase extends ConfirmFormBase {
 
   /**
    * The flaggable entity.

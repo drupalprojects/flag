@@ -7,7 +7,7 @@
 
 namespace Drupal\flag\Form;
 
-use Drupal\flag\Form\FlagConfirmBaseForm;
+use Drupal\flag\Form\FlagConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -15,7 +15,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @see \Drupal\flag\Plugin\ActionLink\ConfirmForm
  */
-class UnflagConfirmForm extends FlagConfirmBaseForm {
+class UnflagConfirmForm extends FlagConfirmFormBase {
 
   /**
    * {@inheritdoc}
