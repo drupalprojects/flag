@@ -1,36 +1,33 @@
 <?php
-
-/**
- * @file
- * Contains \Drupal\flag\Tests\FlagServiceTest.
- */
-
-namespace Drupal\flag\Tests;
+namespace Drupal\Tests\flag\Kernel;
 
 use Drupal\flag\Entity\Flag;
-use Drupal\flag\Tests\FlagTestBase;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
 
 /**
  * Tests the FlagService.
  *
  * @group flag
  */
-class FlagServiceTest extends FlagTestBase {
-
-  /**
-   * Test the FlagService.
-   */
-  public function testFlagService() {
-    $this->doTestFlagServiceGetFlag();
-    $this->doTestFlagServiceFlagExceptions();
-    $this->doTestFlagServiceGetFlaggingUsers();
-  }
+class FlagServiceTest extends FlagKernelTestBase {
 
   /**
    * Tests that flags once created can be retrieved.
    */
-  public function doTestFlagServiceGetFlag() {
-    $flag = $this->createFlag('node', ['article']);
+  public function testFlagServiceGetFlag() {
+    // Create a flag.
+    $flag = Flag::create([
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'node',
+      'bundles' => ['article'],
+      'flag_type' => 'entity:node',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+    ]);
+    $flag->save();
 
     $result = $this->flagService->getFlags('node', 'article');
     $this->assertIdentical(count($result), 1, 'Found flag type');
@@ -39,13 +36,25 @@ class FlagServiceTest extends FlagTestBase {
   /**
    * Test exceptions are thrown when flagging and unflagging.
    */
-  public function doTestFlagServiceFlagExceptions() {
-    $this->drupalCreateContentType(['type' => 'not_article']);
-
-    $flag = $this->createFlag('node', ['article']);
+  public function testFlagServiceFlagExceptions() {
+    $not_article = NodeType::create(['type' => 'not_article']);
+    $not_article->save();
 
     // The service methods don't check access, so our user can be anybody.
-    $account = $this->drupalCreateUser();
+    $account = $this->createUser();
+
+    // Create a flag.
+    $flag = Flag::create([
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'node',
+      'bundles' => ['article'],
+      'flag_type' => 'entity:node',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+    ]);
+    $flag->save();
 
     // Test flagging.
 
@@ -59,7 +68,12 @@ class FlagServiceTest extends FlagTestBase {
     }
 
     // Try flagging a node of the wrong bundle.
-    $wrong_node = $this->drupalCreateNode(['type' => 'not_article']);
+    $wrong_node = Node::create([
+      'type' => 'not_article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $wrong_node->save();
+
     try {
       $this->flagService->flag($flag, $wrong_node, $account);
       $this->fail("The exception was not thrown.");
@@ -69,7 +83,12 @@ class FlagServiceTest extends FlagTestBase {
     }
 
     // Flag the node, then try to flag it again.
-    $flaggable_node = $this->drupalCreateNode(['type' => 'article']);
+    $flaggable_node = Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $flaggable_node->save();
+
     $this->flagService->flag($flag, $flaggable_node, $account);
 
     try {
@@ -79,7 +98,6 @@ class FlagServiceTest extends FlagTestBase {
     catch (\LogicException $e) {
       $this->pass("The flag() method throws an exception when the flaggable entity is already flagged by the user with the flag.");
     }
-
     // Test unflagging.
 
     // Try unflagging an entity that's not a node: a user account.
@@ -101,7 +119,11 @@ class FlagServiceTest extends FlagTestBase {
     }
 
     // Create a new node that's not flagged, and try to unflag it.
-    $unflagged_node = $this->drupalCreateNode(['type' => 'article']);
+    $unflagged_node = Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $unflagged_node->save();
     try {
       $this->flagService->unflag($flag, $unflagged_node, $account);
       $this->fail("The exception was not thrown.");
@@ -114,15 +136,29 @@ class FlagServiceTest extends FlagTestBase {
   /**
    * Tests that getFlaggingUsers method returns the expected result.
    */
-  public function doTestFlagServiceGetFlaggingUsers() {
-
-    $flag = $this->createFlag('node', ['article']);
-
+  public function testFlagServiceGetFlaggingUsers() {
     // The service methods don't check access, so our user can be anybody.
-    $accounts = array($this->drupalCreateUser(), $this->drupalCreateUser());
+    $accounts = array($this->createUser(), $this->createUser());
+
+    // Create a flag.
+    $flag = Flag::create([
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'node',
+      'bundles' => ['article'],
+      'flag_type' => 'entity:node',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+    ]);
+    $flag->save();
 
     // Flag the node.
-    $flaggable_node = $this->drupalCreateNode(['type' => 'article']);
+    $flaggable_node = Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $flaggable_node->save();
     foreach ($accounts as $account) {
       $this->flagService->flag($flag, $flaggable_node, $account);
     }
@@ -139,4 +175,5 @@ class FlagServiceTest extends FlagTestBase {
       $this->assertTrue($flagging_user->id() == $account->id(), "The returned array has the flagged account included.");
     }
   }
+
 }
