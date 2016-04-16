@@ -54,6 +54,8 @@ use Drupal\flag\FlagInterface;
  *     "unflag_denied_text",
  *     "flag_type",
  *     "link_type",
+ *     "flagTypeConfig",
+ *     "linkTypeConfig",
  *   },
  *   lookup_keys = {
  *     "global",
@@ -593,26 +595,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     }
 
     return parent::sort($a, $b);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function toArray() {
-    // @todo Do we need Flag::toArray() any longer?
-    $properties = parent::toArray();
-    $names = [
-      'flag_type',
-      'link_type',
-      'flagTypeConfig',
-      'linkTypeConfig',
-    ];
-
-    foreach ($names as $name) {
-      $properties[$name] = $this->get($name);
-    }
-
-    return $properties;
   }
 
 }
