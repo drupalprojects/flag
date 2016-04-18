@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlaggingServiceInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Provides the flag reset form.
  */
@@ -22,7 +23,7 @@ class FlagResetForm extends ConfirmFormBase {
    *
    * @var \Drupal\flag\FlaggingServiceInterface
    */
-  protected $flagService;
+  protected $flaggingService;
 
   /**
    * The flag to reset.
@@ -34,10 +35,10 @@ class FlagResetForm extends ConfirmFormBase {
   /**
    * Class constructor.
    *
-   * @param \Drupal\flag\FlaggingServiceInterface $flag_service
+   * @param \Drupal\flag\FlaggingServiceInterface $flagging_service
    */
-  public function __construct(FlaggingServiceInterface $flag_service) {
-    $this->flagService = $flag_service;
+  public function __construct(FlaggingServiceInterface $flagging_service) {
+    $this->flaggingService = $flagging_service;
   }
 
   /**
@@ -102,7 +103,7 @@ class FlagResetForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->flagService->reset($this->flag);
+    $this->flaggingService->reset($this->flag);
     drupal_set_message($this->t('Flag %label was reset.', [
       '%label' => $this->flag->label(),
     ]));
