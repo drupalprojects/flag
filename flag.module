@@ -270,7 +270,7 @@ function flag_entity_extra_field_info() {
 /**
  * Implements hook_theme().
  */
-function flag_theme($existing, $type, $theme, $path) {
+function flag_theme() {
   return [
     'flag' => [
       'variables' => [
