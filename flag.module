@@ -276,6 +276,7 @@ function flag_theme($existing, $type, $theme, $path) {
       'variables' => [
         'attributes' => [],
         'title' => NULL,
+        'action' => 'flag',
       ],
     ],
   ];
