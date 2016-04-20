@@ -54,10 +54,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
   }
 
   /**
-   * Gets the flag ID for the parent flag.
-   *
-   * @return string
-   *   The flag ID.
+   * {@inheritdoc}
    */
   public function getFlagId() {
     return $this->get('flag_id')->value;
@@ -71,20 +68,14 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
   }
 
   /**
-   * Gets the entity type of the flaggable.
-   *
-   * @return string
-   *   A string containing the flaggable type ID.
+   * {@inheritdoc}
    */
   public function getFlaggableType() {
     return $this->get('entity_type')->value;
   }
 
   /**
-   * Gets the entity ID of the flaggable.
-   *
-   * @return string
-   *   A string containing the flaggable ID.
+   * {@inheritdoc}
    */
   public function getFlaggableId() {
     return $this->get('entity_id')->value;
