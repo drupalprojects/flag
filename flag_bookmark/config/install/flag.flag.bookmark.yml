@@ -2,8 +2,8 @@ id: bookmark
 entity_type: node
 label: Bookmark
 bundles:
-  article: article
-  page: page
+  - article
+  - page
 flag_short: 'Bookmark this'
 flag_long: 'Add this post to your bookmarks'
 flag_message: 'This post has been added to your bookmarks'
@@ -20,11 +20,8 @@ flag_type: entity:node
 link_type: reload
 flagTypeConfig:
   show_in_links:
-    full: full
-    teaser: teaser
-    rss: ''
-    search_index: ''
-    search_result: ''
+    - full
+    - teaser
   show_as_field: 1
   show_on_form: 0
   show_contextual_link: 0

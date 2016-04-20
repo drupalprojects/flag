@@ -21,9 +21,7 @@ unflag_denied_text: ''
 flag_type: 'entity:user'
 link_type: reload
 flagTypeConfig:
-  show_in_links:
-    compact: '0'
-    full: '0'
+  show_in_links: {  }
   show_as_field: 1
   show_on_form: 0
   show_contextual_link: 0
