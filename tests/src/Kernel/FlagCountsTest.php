@@ -54,6 +54,8 @@ class FlagCountsTest extends FlagKernelTestBase {
   protected function setUp() {
     parent::setUp();
 
+    $this->installSchema('user', 'users_data');
+
     $this->flagCountService = \Drupal::service('flag.count');
     $this->flaggingDelete = \Drupal::service('flagging');
 
@@ -203,6 +205,48 @@ class FlagCountsTest extends FlagKernelTestBase {
     $this->assertTrue(empty($article1_count_after), 'Article1 counts has been removed.');
     $article2_count_after = $this->flagCountService->getEntityFlagCounts($article2);
     $this->assertTrue(empty($article2_count_after), 'Article2 counts has been removed.');
+  }
+
+  /**
+   * Tests flaggings and counts are deleted when its user is deleted.
+   */
+  public function testUserDeletion() {
+    $auth_user = $this->createUser();
+
+    // Create a flag.
+    $user_flag = Flag::create([
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'user',
+      'flag_type' => 'entity:user',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+    ]);
+    $user_flag->save();
+
+    $article = Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $article->save();
+
+    $this->flagService->flag($user_flag, $auth_user, $this->adminUser);
+    $this->flagService->flag($this->flag, $article, $auth_user);
+
+    $user_before_count = $this->flagCountService->getEntityFlagCounts($auth_user);
+    $this->assertEqual($user_before_count[$user_flag->id()], 1, 'The user has been flagged.');
+
+    $article_count_before = $this->flagCountService->getEntityFlagCounts($article);
+    $this->assertEqual($article_count_before[$this->flag->id()], 1, 'The article has been flagged by the user.');
+
+    $auth_user->delete();
+
+    $flaggings_after = $this->flagService->getFlaggings($user_flag);
+    $this->assertEmpty($flaggings_after, 'The user flaggings were removed when the user was deleted.');
+
+    $flaggings_after = $this->flagService->getFlaggings($this->flag);
+    $this->assert(empty($flaggings_after), 'The node flaggings were removed when the user was deleted');
   }
 
 }

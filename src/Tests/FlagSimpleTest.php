@@ -8,10 +8,6 @@
 namespace Drupal\flag\Tests;
 
 use Drupal\flag\FlagInterface;
-use Drupal\node\NodeInterface;
-use Drupal\user\RoleInterface;
-use Drupal\user\Entity\Role;
-use Drupal\user\UserInterface;
 
 
 /**
@@ -61,7 +57,6 @@ class FlagSimpleTest extends FlagTestBase {
 
     $this->doFlagLinksTest();
     $this->doTestFlagCounts();
-    $this->doUserDeletionTest();
   }
 
   /**
@@ -82,52 +77,7 @@ class FlagSimpleTest extends FlagTestBase {
     $this->assertNoLink('Flag this item');
   }
 
-  /**
-   * Creates user, sets flags and deletes user.
-   */
-  public function doUserDeletionTest() {
-    $node1 = $this->drupalCreateNode(['type' => $this->nodeType]);
-    $node2 = $this->drupalCreateNode(['type' => $this->nodeType]);
 
-    // Create and login a new user.
-    $user_1 = $this->drupalCreateUser(['delete any article content']);
-    $this->drupalLogin($user_1);
-
-    // Flag the nodes.
-    $this->drupalGet('node/' . $node1->id());
-    $this->clickLink($this->flag->getFlagShortText());
-    $this->assertResponse(200);
-    $this->assertLink($this->flag->getUnflagShortText());
-    $this->drupalGet('node/' . $node2->id());
-    $this->clickLink($this->flag->getFlagShortText());
-    $this->assertResponse(200);
-
-    // Assert that the nodes are set to flagged.
-    $count_flags_before = $this->countFlaggings($user_1, $node1);
-    $this->assertEqual(1, $count_flags_before);
-    $count_flags_before = $this->countFlaggings($user_1, $node2);
-    $this->assertEqual(1, $count_flags_before);
-
-    // Delete one node.
-    $this->drupalPostForm('node/' . $node2->id() . '/delete', [], t('Delete'));
-    $this->assertResponse(200);
-
-    // Assert that the first node remain as flagged after the changes.
-    $count_flags_before = $this->countFlaggings($user_1, $node1);
-    $this->assertEqual(1, $count_flags_before);
-    // Assert that the flaggings of the second node where deleted.
-    $count_flags_before = $this->countFlaggings($user_1, $node2);
-    $this->assertEqual(0, $count_flags_before);
-
-    // Delete the user.
-    $user_1->delete();
-
-    // Ensure that all the flags are deleted.
-    $count_flags_after = $this->countFlaggings($user_1, $node1);
-    $this->assertEqual(0, $count_flags_after);
-    $count_flags_after = $this->countFlaggings($user_1, $node2);
-    $this->assertEqual(0, $count_flags_after);
-  }
 
   /**
    * Flags a node using different user accounts and checks flag counts.
@@ -213,27 +163,6 @@ class FlagSimpleTest extends FlagTestBase {
       ->fetchField();
 
     $this->assertEqual(0, $count_flags_before);
-  }
-
-  /**
-   * Count the number of flaggings of the user over an entity.
-   *
-   * @param UserInterface $user
-   *    The user owner of the flaggings.
-   * @param NodeInterface $node
-   *    The node flagged.
-   *
-   * @return int
-   *    Number of flags.
-   */
-  protected function countFlaggings(UserInterface $user, NodeInterface $node) {
-    return \Drupal::entityQuery('flagging')
-      ->condition('uid', $user->id())
-      ->condition('flag_id', $this->flag->id())
-      ->condition('entity_type', $node->getEntityTypeId())
-      ->condition('entity_id', $node->id())
-      ->count()
-      ->execute();
   }
 
 }
