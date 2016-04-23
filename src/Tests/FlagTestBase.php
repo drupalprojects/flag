@@ -224,23 +224,6 @@ abstract class FlagTestBase extends WebTestBase {
     // Merge the default values with the edit array.
     $final_edit = array_merge($default_edit, $edit);
 
-    // Check if any of the bundles have been set.
-    $bundles = array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo($entity_type));
-    $has_specified_bundle = FALSE;
-    foreach ($bundles as $bundle_id) {
-      if (!empty($final_edit['bundles[' . $bundle_id . ']'])) {
-        $has_specified_bundle = TRUE;
-        break;
-      }
-    }
-
-    // If not, assume all by default.
-    if (!$has_specified_bundle) {
-      foreach ($bundles as $bundle_id) {
-        $final_edit['bundles[' . $bundle_id . ']'] = $bundle_id;
-      }
-    }
-
     // Submit the flag details form.
     $this->drupalPostForm(NULL, $final_edit, $this->t('Create Flag'));
 
