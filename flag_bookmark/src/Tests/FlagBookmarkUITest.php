@@ -61,6 +61,12 @@ class FlagBookmarkUITest extends WebTestBase {
       'title[0][value]' => 'Article 1',
     ], t('Save'));
 
+    $auth_user = $this->drupalCreateUser([
+      'flag bookmark',
+      'unflag bookmark',
+    ]);
+    $this->drupalLogin($auth_user);
+
     // Check the link to bookmark exist.
     $this->drupalGet('node/1');
     $this->assertLink(t('Bookmark this'));

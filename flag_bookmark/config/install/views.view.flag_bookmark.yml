@@ -25,7 +25,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content'
+          perm: 'flag bookmark'
       cache:
         type: none
         options: {  }
@@ -298,7 +298,7 @@ display:
           decimal: .
           separator: ','
           format_plural: false
-          format_plural_string: '1\x03@count'
+          format_plural_string: 1\x03@count
           prefix: ''
           suffix: ''
           plugin_id: numeric
