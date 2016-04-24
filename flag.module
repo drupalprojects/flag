@@ -8,6 +8,7 @@
 define('FLAG_API_VERSION', 3);
 
 use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\Plugin\Flag\EntityFlagType;
@@ -315,6 +316,13 @@ function flag_entity_view(array &$build, EntityInterface $entity, EntityViewDisp
     }
 
     $flag_type_plugin = $flag->getFlagTypePlugin();
+
+
+    if ($entity instanceof AccountInterface &&
+        $entity->id() == \Drupal::currentUser()->id() &&
+        !$flag_type_plugin->getAccessUidSetting()) {
+      continue;
+    }
 
     // Only add cache key if flag link is displayed.
     if (!$flag_type_plugin->showAsField() || !$display->getComponent('flag_' . $flag->id())) {

@@ -29,7 +29,7 @@ class UserFlagType extends EntityFlagType {
     $options = parent::defaultConfiguration();
     $options += [
       'show_on_profile' => TRUE,
-      'access_uid' => '',
+      'access_uid' => TRUE,
     ];
     return $options;
   }
@@ -52,7 +52,7 @@ class UserFlagType extends EntityFlagType {
       '#type' => 'checkbox',
       '#title' => t('Users may flag themselves'),
       '#description' => t('Disabling this option may be useful when setting up a "friend" flag, when a user flagging themselves does not make sense.'),
-      '#default_value' => $this->getAccessUidSetting() ? 0 : 1,
+      '#default_value' => $this->getAccessUidSetting(),
     ];
     $form['display']['show_on_profile'] = [
       '#type' => 'checkbox',
@@ -71,8 +71,8 @@ class UserFlagType extends EntityFlagType {
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
-    $this->configuration['access_uid'] = $form_state->getValue(['access', 'access_uid']);
-    $this->configuration['show_on_profile'] = $form_state->getValue(['display', 'show_on_profile']);
+    $this->configuration['access_uid'] = $form_state->getValue(['access_uid']);
+    $this->configuration['show_on_profile'] = $form_state->getValue(['show_on_profile']);
   }
 
   /**
