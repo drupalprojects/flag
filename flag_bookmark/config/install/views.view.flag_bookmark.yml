@@ -245,14 +245,14 @@ display:
           empty_zero: false
           hide_alter_empty: true
           plugin_id: user_name
-        comment_count:
-          id: comment_count
-          table: comment_entity_statistics
-          field: comment_count
-          relationship: none
+        created:
+          id: created
+          table: flagging
+          field: created
+          relationship: flag_relationship
           group_type: group
           admin_label: ''
-          label: Replies
+          label: Bookmarked
           exclude: false
           alter:
             alter_text: false
@@ -271,7 +271,7 @@ display:
             suffix: ''
             target: ''
             nl2br: false
-            max_length: null
+            max_length: 0
             word_boundary: true
             ellipsis: true
             more_link: false
@@ -285,23 +285,31 @@ display:
           element_class: ''
           element_label_type: ''
           element_label_class: ''
-          element_label_colon: true
+          element_label_colon: false
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
-          empty: '0'
+          empty: ''
           hide_empty: false
-          empty_zero: true
-          hide_alter_empty: false
-          set_precision: false
-          precision: 0
-          decimal: .
-          separator: ','
-          format_plural: false
-          format_plural_string: 1\x03@count
-          prefix: ''
-          suffix: ''
-          plugin_id: numeric
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: timestamp_ago
+          settings:
+            granularity: 1
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: flagging
+          entity_field: created
+          plugin_id: field
         link_flag:
           id: link_flag
           table: flagging
