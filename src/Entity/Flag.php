@@ -574,6 +574,17 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    foreach ($entities as $flag) {
+      \Drupal::service('flagging')->reset($flag);
+    }
+  }
+
+  /**
    * Sorts the flag entities, putting disabled flags at the bottom.
    *
    * @see \Drupal\Core\Config\Entity\ConfigEntityBase::sort()

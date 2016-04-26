@@ -7,11 +7,10 @@
 
 namespace Drupal\flag;
 
-use Drupal\flag\Event\FlagEvents;
-use Drupal\flag\Event\FlagResetEvent;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Class FlaggingService.
@@ -43,6 +42,11 @@ class FlaggingService implements FlaggingServiceInterface {
    */
   private $eventDispatcher;
 
+  /*
+   * @var EntityTypeManagerInterface
+   * */
+  private $entityTypeManager;
+
   /**
    * The Flag Service.
    *
@@ -58,33 +62,24 @@ class FlaggingService implements FlaggingServiceInterface {
    * @param EventDispatcherInterface $event_dispatcher
    *   The event dispatcher service.
    */
-  public function __construct(QueryFactory $entity_query, EventDispatcherInterface $event_dispatcher, FlagService $flag_service) {
+  public function __construct(QueryFactory $entity_query,
+                              EventDispatcherInterface $event_dispatcher,
+                              FlagService $flag_service,
+                              EntityTypeManagerInterface $entity_type_manager) {
     $this->entityQueryManager = $entity_query;
     $this->eventDispatcher = $event_dispatcher;
     $this->flagService = $flag_service;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public function reset(FlagInterface $flag, EntityInterface $entity = NULL) {
-    $query = $this->entityQueryManager->get('flagging')
-      ->condition('flag_id', $flag->id());
-
-    if (!empty($entity)) {
-      $query->condition('entity_id', $entity->id());
-    }
-
-    // Count the number of flaggings to delete.
-    $count = $query->count()
-      ->execute();
-
-    $this->eventDispatcher->dispatch(FlagEvents::FLAG_RESET, new FlagResetEvent($flag, $count));
-
     $flaggings = $this->flagService->getFlaggings($flag, $entity);
-    foreach ($flaggings as $flagging) {
-      $flagging->delete();
-    }
+    $count = count($flaggings);
+
+    $this->entityTypeManager->getStorage('flagging')->delete($flaggings);
 
     return $count;
   }

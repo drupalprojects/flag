@@ -1,49 +1,39 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Event\FlaggingEvent.
- */
 
 namespace Drupal\flag\Event;
 
-
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\flag\FlagInterface;
+use Drupal\flag\FlaggingInterface;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event manages the flagging of events.
+ * Event for when a flagging is created.
  */
-class FlaggingEvent extends FlagEventBase {
+class FlaggingEvent extends Event {
 
   /**
-   * The Flag in question.
+   * The flagging in question.
    *
-   * @var \Drupal\Core\Entity\EntityInterface
+   * @var \Drupal\flag\FlaggingInterface
    */
-  protected $entity;
+  protected $flagging;
 
   /**
    * Builds a new FlaggingEvent.
    *
-   * @param \Drupal\flag\FlagInterface $flag
-   *   The flag.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The entity to be acted upon.
+   * @param \Drupal\flag\FlaggingInterface $flagging
+   *   The flaging.
    */
-  public function __construct(FlagInterface $flag, EntityInterface $entity) {
-    parent::__construct($flag);
-
-    $this->entity = $entity;
+  public function __construct(FlaggingInterface $flagging) {
+    $this->flagging = $flagging;
   }
 
   /**
-   * Returns the flaggable entity associated with the Event.
+   * Returns the flagging associated with the Event.
    *
-   * @return \Drupal\Core\Entity\EntityInterface
-   *   The entity.
+   * @return \Drupal\flag\FlaggingInterface
+   *   The flagging.
    */
-  public function getEntity() {
-    return $this->entity;
+  public function getFlagging() {
+    return $this->flagging;
   }
-
 }

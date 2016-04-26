@@ -341,9 +341,9 @@ function flag_entity_view(array &$build, EntityInterface $entity, EntityViewDisp
 }
 
 /**
- * Implements hook_entity_delete().
+ * Implements hook_entity_predelete().
  */
-function flag_entity_delete(EntityInterface $entity) {
+function flag_entity_predelete(EntityInterface $entity) {
   // User flags handle things through the entity type delete hook.
   // @todo: make this configurable in the flag type definition?
   if ($entity->getEntityTypeId() == 'user') {
@@ -351,15 +351,6 @@ function flag_entity_delete(EntityInterface $entity) {
   }
 
   \Drupal::service('flag')->unflagAll($entity);
-}
-
-/**
- * Implements hook_ENTITY_TYPE_delete().
- */
-function flag_flag_delete(FlagInterface $entity) {
-  /** @var \Drupal\flag\FlaggingServiceInterface $flagging_service */
-  $flagging_service = \Drupal::service('flagging');
-  $flagging_service->reset($entity);
 }
 
 /**

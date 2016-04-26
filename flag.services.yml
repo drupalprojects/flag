@@ -26,4 +26,4 @@ services:
     arguments: ['@entity.manager', '@flag']
   flagging:
     class: Drupal\flag\FlaggingService
-    arguments: ['@entity.query', '@event_dispatcher', '@flag']
+    arguments: ['@entity.query', '@event_dispatcher', '@flag', '@entity_type.manager']

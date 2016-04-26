@@ -10,7 +10,10 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\flag\Event\UnflaggingEvent;
 use Drupal\flag\FlaggingInterface;
+use Drupal\flag\Event\FlagEvents;
+use Drupal\flag\Event\FlaggingEvent;
 
 /**
  * Provides the flagging content entity.
@@ -173,4 +176,24 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
     return parent::bundleFieldDefinitions($entity_type, $bundle, $base_field_definitions);
   }
 
+  /**
+   * {@inheritdoc
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+
+    if (!$update) {
+      \Drupal::service('event_dispatcher')->dispatch(FlagEvents::ENTITY_FLAGGED, new FlaggingEvent($this));
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function preDelete(EntityStorageInterface $storage, array $entities) {
+    parent::preDelete($storage, $entities);
+
+    $event = new UnflaggingEvent($entities);
+    \Drupal::service('event_dispatcher')->dispatch(FlagEvents::ENTITY_UNFLAGGED, $event);
+  }
 }

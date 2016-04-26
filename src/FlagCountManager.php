@@ -12,7 +12,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
-use Drupal\flag\Event\FlagResetEvent;
+use Drupal\flag\Event\UnflaggingEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -155,11 +155,15 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
    *   The flagging event.
    */
   public function incrementFlagCounts(FlaggingEvent $event) {
+    $flagging = $event->getFlagging();
+    $flag = $flagging->getFlag();
+    $entity = $flagging->getFlaggable();
+
     $this->connection->merge('flag_counts')
       ->key([
-        'flag_id' => $event->getFlag()->id(),
-        'entity_id' => $event->getEntity()->id(),
-        'entity_type' => $event->getEntity()->getEntityTypeId(),
+        'flag_id' => $flag->id(),
+        'entity_id' => $entity->id(),
+        'entity_type' => $entity->getEntityTypeId(),
       ])
       ->fields([
         'last_updated' => REQUEST_TIME,
@@ -168,66 +172,83 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
       ->expression('count', 'count + :inc', [':inc' => 1])
       ->execute();
 
-    $this->resetLoadedCounts($event->getEntity(), $event->getFlag());
+    $this->resetLoadedCounts($entity, $flag);
   }
 
   /**
    * Decrements count of flagged entities.
    *
-   * @param \Drupal\flag\Event\FlaggingEvent $event
-   *   The flagging Event.
+   * @param \Drupal\flag\Event\UnflaggingEvent $event
+   *   The unflagging event.
    */
-  public function decrementFlagCounts(FlaggingEvent $event) {
+  public function decrementFlagCounts(UnflaggingEvent $event) {
 
-    /* @var \Drupal\flag\FlaggingInterface flag */
-    $flag = $event->getFlag();
-    /* @var \Drupal\Core\Entity\EntityInterface $entity */
-    $entity = $event->getEntity();
+    $flaggings_count = [];
+    $flag_ids = [];
+    $entity_ids = [];
 
-    $count_result = $this->connection->select('flag_counts')
-      ->fields(NULL, ['flag_id', 'entity_id', 'entity_type', 'count'])
-      ->condition('flag_id', $flag->id())
-      ->condition('entity_id', $entity->id())
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->execute()
-      ->fetchAll();
-    if ($count_result[0]->count == '1') {
-      $this->connection->delete('flag_counts')
-        ->condition('flag_id', $flag->id())
-        ->condition('entity_id', $entity->id())
-        ->condition('entity_type', $entity->getEntityTypeId())
-        ->execute();
+    $flaggings = $event->getFlaggings();
+
+    // Attempt to optimize the amount of queries that need to be executed if
+    // a lot of flaggings are deleted. Build a list of flags and entity_ids
+    // that will need to be updated. Entity type is ignored since one flag is
+    // specific to a given entity type.
+    foreach ($flaggings as $flagging) {
+      $flag_id = $flagging->getFlagId();
+      $entity_id = $flagging->getFlaggableId();
+
+      $flag_ids[$flag_id] = $flag_id;
+      $entity_ids[$entity_id] = $entity_id;
+      if (!isset($flaggings_count[$flag_id][$entity_id])) {
+        $flaggings_count[$flag_id][$entity_id] = 1;
+      }
+      else {
+        $flaggings_count[$flag_id][$entity_id]++;
+      }
+
+      $this->resetLoadedCounts($flagging->getFlaggable(), $flagging->getFlag());
     }
-    else {
-      $this->connection->update('flag_counts')
-        ->expression('count', 'count - 1')
-        ->condition('flag_id', $flag->id())
-        ->condition('entity_id', $entity->id())
-        ->condition('entity_type', $entity->getEntityTypeId())
-        ->execute();
-    }
-    $this->resetLoadedCounts($entity, $flag);
-  }
 
-  /**
-   * Deletes all of a flag's count entries.
-   *
-   * @param \Drupal\flag\event\FlagResetEvent $event
-   *   The flag reset event.
-   */
-  public function resetFlagCounts(FlagResetEvent $event) {
-    /* @var \Drupal\flag\FlaggingInterface flag */
-    $flag = $event->getFlag();
-
-    $this->connection->delete('flag_counts')
-      ->condition('flag_id', $flag->id())
+    // Build a query that fetches the count for all flag and entity ID
+    // combinations.
+    $result = $this->connection->select('flag_counts')
+      ->fields('flag_counts', ['flag_id', 'entity_type', 'entity_id', 'count'])
+      ->condition('flag_id', $flag_ids, 'IN')
+      ->condition('entity_id', $entity_ids, 'IN')
       ->execute();
 
-    // Reset statically cached counts.
-    $this->entityCounts = [];
-    $this->flagCounts = [];
-    $this->flagEntityCounts = [];
-    $this->userFlagCounts = [];
+    $to_delete = [];
+    foreach ($result as $row) {
+      // The query above could fetch combinations that are not being deleted
+      // skip them now.
+      // Most cases will either delete flaggings of a single flag or a single
+      // entity where that does not happen.
+      if (!isset($flaggings_count[$row->flag_id][$row->entity_id])) {
+        continue;
+      }
+
+      if ($row->count <= $flaggings_count[$row->flag_id][$row->entity_id]) {
+        // If all flaggings for the given flag and entity are deleted, delete
+        // the row.
+        $to_delete[$row->flag_id][] = $row->entity_id;
+      }
+      else {
+        // Otherwise, update the count.
+        $this->connection->update('flag_counts')
+          ->expression('count', 'count - :decrement', [':decrement' => $flaggings_count[$row->flag_id][$row->entity_id]])
+          ->condition('flag_id', $row->flag_id)
+          ->condition('entity_id', $row->entity_id)
+          ->execute();
+      }
+    }
+
+    // Execute a delete query per flag.
+    foreach ($to_delete as $flag_id => $entity_ids) {
+      $this->connection->delete('flag_counts')
+        ->condition('flag_id', $flag_id)
+        ->condition('entity_id', $entity_ids, 'IN')
+        ->execute();
+    }
 
   }
 
@@ -237,8 +258,10 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
   public static function getSubscribedEvents() {
     $events = array();
     $events[FlagEvents::ENTITY_FLAGGED][] = array('incrementFlagCounts', -100);
-    $events[FlagEvents::ENTITY_UNFLAGGED][] = array('decrementFlagCounts', -100);
-    $events[FlagEvents::FLAG_RESET][] = array('resetFlagCounts', -100);
+    $events[FlagEvents::ENTITY_UNFLAGGED][] = array(
+      'decrementFlagCounts',
+      -100
+    );
     return $events;
   }
 

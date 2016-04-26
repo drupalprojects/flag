@@ -28,13 +28,4 @@ final class FlagEvents {
    * @var string
    */
   const ENTITY_UNFLAGGED = 'flag.entity_unflagged';
-
-  /**
-   * Event ID for when a flag is reset and all its flaggings are deleted.
-   *
-   * @Event
-   *
-   * @var string
-   */
-  const FLAG_RESET = 'flag.flag_reset';
 }

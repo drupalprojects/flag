@@ -234,8 +234,6 @@ class FlagService implements FlagServiceInterface {
 
     $flagging->save();
 
-    $this->eventDispatcher->dispatch(FlagEvents::ENTITY_FLAGGED, new FlaggingEvent($flag, $entity));
-
     return $flagging;
   }
 
@@ -263,8 +261,6 @@ class FlagService implements FlagServiceInterface {
       throw new \LogicException('The entity is not flagged by the user.');
     }
 
-    $this->eventDispatcher->dispatch(FlagEvents::ENTITY_UNFLAGGED, new FlaggingEvent($flag, $entity));
-
     $flagging->delete();
   }
 
@@ -274,17 +270,7 @@ class FlagService implements FlagServiceInterface {
   public function unflagAll(EntityInterface $entity = NULL, AccountInterface $account = NULL) {
     $flaggings = $this->getFlaggings(NULL, $entity, $account);
 
-    /** @var \Drupal\flag\FlaggingInterface $flagging */
-    foreach ($flaggings as $flagging_id => $flagging) {
-      // We're working around the potential situation where the flagging
-      // is already gone and the unflag event won't get fired.
-      if ($entity ? $flaggable = $entity : $flaggable = $flagging->getFlaggable()) {
-        $this->unflag($flagging->getFlag(), $flaggable, $account ? $account : $flagging->get('uid')->entity);
-      }
-      else {
-        $flagging->delete();
-      }
-    }
+    $this->entityTypeManager->getStorage('flagging')->delete($flaggings);
   }
 
   /**
