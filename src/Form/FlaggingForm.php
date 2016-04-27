@@ -53,7 +53,7 @@ class FlaggingForm extends ContentEntityForm {
         'entity_id' => $this->entity->getFlaggableId(),
         'destination' => \Drupal::request()->get('destination'),
       ];
-      $url = Url::fromRoute('flag.confirm_unflag', $route_params);
+      $url = Url::fromRoute('flag.field_entry.delete', $route_params);
 
       $actions['delete']['#url'] = $url;
     }

@@ -39,6 +39,9 @@ use Drupal\flag\Event\FlaggingEvent;
  *  },
  *  bundle_entity_type = "flag",
  *  field_ui_base_route = "entity.flag.edit_form",
+ *  links = {
+ *   "delete-form" = "/flag/details/delete/{flag}/{entity_id}",
+ *  }
  * )
  */
 class Flagging extends ContentEntityBase implements FlaggingInterface {

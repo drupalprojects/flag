@@ -88,6 +88,14 @@ flag.field_entry.edit:
   requirements:
     _flag_access: 'entity:flag{flag}'
 
+flag.field_entry.delete:
+  path: '/flag/details/delete/{flag}/{entity_id}'
+  defaults:
+    _form: '\Drupal\flag\Form\UnflaggingForm'
+    _title: 'Unflag Content'
+  requirements:
+    _unflag_access: 'entity:flag{flag}'
+
 entity.flag.enable:
   path: '/admin/structure/flags/manage/{flag}/enable'
   defaults:

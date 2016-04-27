@@ -7,10 +7,6 @@
 namespace Drupal\flag\Tests;
 
 use Drupal\field_ui\Tests\FieldUiTestTrait;
-use Drupal\flag\FlagInterface;
-use Drupal\simpletest\WebTestBase;
-use Drupal\user\RoleInterface;
-use Drupal\user\Entity\Role;
 
 /**
  * Test the Field Entry link type.
@@ -60,6 +56,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->doFlagNode();
     $this->doEditFlagField();
     $this->doBadEditFlagField();
+    $this->doUnflagNode();
   }
 
   /**
@@ -87,8 +84,8 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $edit = [
       'bundles[' . $this->nodeType . ']' => $this->nodeType,
       'flag_confirmation' => $this->flagConfirmMessage,
-      'flagging_edit_title' => $this->flagDetailsMessage,
       'unflag_confirmation' => $this->unflagConfirmMessage,
+      'flagging_edit_title' => $this->flagDetailsMessage,
     ];
     $this->flag = $this->createFlagWithForm('node', $edit, 'field_entry');
 
@@ -196,6 +193,32 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $unlinked_node = $this->drupalCreateNode(['type' => $this->nodeType]);
     $this->drupalGet('flag/details/edit/' . $flag_id . '/' . $unlinked_node->id());
     $this->assertResponse('404', 'Editing an invalid flagging path: good flag, good entity, but not flagged');
+  }
+
+  /**
+   * Test unflagging content.
+   */
+  public function doUnflagNode() {
+
+    // Navigate to the node page.
+    $this->drupalGet('node/' . $this->nodeId);
+
+    // Click the Unflag link.
+    $this->clickLink($this->flag->getUnflagShortText());
+
+    // Click the delete link.
+    $this->clickLink($this->t('Delete Flagging'));
+
+    // Check if we have the confirm form message displayed.
+    $this->assertText($this->unflagConfirmMessage);
+
+    // Submit the confirm form.
+    $this->drupalPostForm(NULL, [], $this->t('Unflag'));
+    $this->assertResponse(200);
+
+    // Check that the node is no longer flagged.
+    $this->drupalGet('node/' . $this->nodeId);
+    $this->assertLink($this->flag->getFlagShortText());
   }
 
 }
