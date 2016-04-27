@@ -363,7 +363,7 @@ function flag_user_cancel($edit, $account, $method) {
 /**
  * Implements hook_user_delete().
  */
-function flag_user_delete(UserInterface $account) {
+function flag_user_predelete(UserInterface $account) {
   \Drupal::service('flag')->userFlagRemoval($account);
 }
 
