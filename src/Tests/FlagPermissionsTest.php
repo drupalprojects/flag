@@ -1,9 +1,6 @@
 <?php
 
 namespace Drupal\flag\Tests;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Session\AccountInterface;
-use Drupal\flag\FlagInterface;
 
 /**
  * Tests Flag module permissions.
@@ -13,26 +10,36 @@ use Drupal\flag\FlagInterface;
 class FlagPermissionsTest extends FlagTestBase {
 
   /**
+   * The flag under test.
+   *
    * @var FlagInterface
    */
   protected $flag;
 
   /**
+   * The node to flag.
+   *
    * @var EntityInterface
    */
   protected $node;
 
   /**
+   * A user who can flag and unflag.
+   *
    * @var AccountInterface
    */
   protected $fullFlagUser;
 
   /**
+   * A user who can only flag.
+   *
    * @var AccountInterface
    */
   protected $flagOnlyUser;
 
   /**
+   * A user with no flag permissions.
+   *
    * @var AccountInterface
    */
   protected $authUser;
@@ -103,4 +110,5 @@ class FlagPermissionsTest extends FlagTestBase {
     $this->drupalGet('node/' . $this->node->id());
     $this->assertNoLink($this->flag->getFlagShortText());
   }
+
 }
