@@ -160,6 +160,12 @@ abstract class FlagTestBase extends WebTestBase {
       'entity_type' => 'node',
       'bundles' => array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('node')),
       'flag_short' => $this->randomString(),
+      'unflag_short' => $this->randomString(),
+      'unflag_denied_text' => $this->randomString(),
+      'flag_long' => $this->randomString(16),
+      'unflag_long' => $this->randomString(16),
+      'flag_message' => $this->randomString(32),
+      'unflag_message' => $this->randomString(32),
       'flag_type' => $this->getFlagType('node'),
       'link_type' => 'reload',
       'flagTypeConfig' => [],
@@ -217,8 +223,13 @@ abstract class FlagTestBase extends WebTestBase {
     $default_edit = [
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
-      'flag_short' => $this->randomString(16),
+      'flag_short' => $this->randomString(),
+      'unflag_short' => $this->randomString(),
       'flag_long' => $this->randomString(16),
+      'unflag_long' => $this->randomString(16),
+      'flag_message' => $this->randomString(32),
+      'unflag_message' => $this->randomString(32),
+      'unflag_denied_text' => $this->randomString(),
     ];
 
     // Merge the default values with the edit array.
