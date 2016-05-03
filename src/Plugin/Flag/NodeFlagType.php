@@ -29,7 +29,6 @@ class NodeFlagType extends EntityFlagType {
     $options = parent::defaultConfiguration();
     // Use own display settings in the meanwhile.
     $options += [
-      'i18n' => 0,
       'access_author' => '',
     ];
     return $options;
@@ -55,20 +54,6 @@ class NodeFlagType extends EntityFlagType {
       '#description' => t("Restrict access to this flag based on the user's ownership of the content. Users must also have access to the flag through the role settings."),
     ];
 
-    // Support for i18n flagging requires Translation helpers module.
-    $form['i18n'] = [
-      '#type' => 'radios',
-      '#title' => t('Internationalization'),
-      '#options' => [
-        '1' => t('Flag translations of content as a group'),
-        '0' => t('Flag each translation of content separately'),
-      ],
-      '#default_value' => $this->getInternationalizationSetting(),
-      '#description' => t('Flagging translations as a group effectively allows users to flag the original piece of content regardless of the translation they are viewing. Changing this setting will <strong>not</strong> update content that has been flagged already.'),
-      '#access' => \Drupal::moduleHandler()->moduleExists('translation_helpers'),
-      '#weight' => 5,
-    ];
-
     return $form;
   }
 
@@ -78,7 +63,6 @@ class NodeFlagType extends EntityFlagType {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
     parent::submitConfigurationForm($form, $form_state);
     $this->configuration['access_author'] = $form_state->getValue('access_author');
-    $this->configuration['i18n'] = $form_state->getValue('i18n');
   }
 
   /**
@@ -117,17 +101,5 @@ class NodeFlagType extends EntityFlagType {
    */
   public function getAccessAuthorSetting() {
     return $this->configuration['access_author'];
-  }
-
-  /**
-   * Returns the internationalization setting for the flag type.
-   *
-   * @return int
-   *   The internationalization setting can be one of two values:
-   *   - 1 = Flag translations of content as a group.
-   *   - 0 = Flag each translation of content separately.
-   */
-  public function getInternationalizationSetting() {
-    return $this->configuration['i18n'];
   }
 }
