@@ -7,11 +7,12 @@
 namespace Drupal\flag;
 
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\user\EntityOwnerInterface;
 
 /**
  * The interface for flagging entities.
  */
-interface FlaggingInterface extends ContentEntityInterface {
+interface FlaggingInterface extends ContentEntityInterface, EntityOwnerInterface {
 
   /**
    * Gets the flag ID for the parent flag.

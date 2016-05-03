@@ -14,6 +14,7 @@ use Drupal\flag\Event\UnflaggingEvent;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\Event\FlaggingEvent;
+use Drupal\user\UserInterface;
 
 /**
  * Provides the flagging content entity.
@@ -199,4 +200,34 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
     $event = new UnflaggingEvent($entities);
     \Drupal::service('event_dispatcher')->dispatch(FlagEvents::ENTITY_UNFLAGGED, $event);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOwner() {
+    return $this->get('uid')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOwner(UserInterface $account) {
+    $this->set('uid', $account->id());
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getOwnerId() {
+    return $this->getEntityKey('uid');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOwnerId($uid) {
+    $this->set('uid', $uid);
+  }
+
 }
