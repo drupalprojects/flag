@@ -278,8 +278,23 @@ function flag_theme() {
         'attributes' => [],
         'title' => NULL,
         'action' => 'flag',
+        'flag' => NULL,
+        'flaggable' => NULL,
       ],
     ],
+  ];
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function flag_theme_suggestions_flag(array $variables) {
+  $flag = $variables['flag'];
+  $flaggable = $variables['flaggable'];
+
+  return [
+    'flag__' . $flag->id(),
+    'flag__' . $flag->id() . '_' . $flaggable->id(),
   ];
 }
 

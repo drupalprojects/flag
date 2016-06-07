@@ -7,3 +7,9 @@ flag.admin:
     - core/drupal
     - core/drupalSettings
     - core/drupal.form
+
+flag.link:
+  version: VERSION
+  css:
+    theme:
+      css/flag-link.css: {}
