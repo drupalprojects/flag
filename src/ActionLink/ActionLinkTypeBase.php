@@ -89,7 +89,6 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
     $render['#flag'] = $flag;
     $render['#flaggable'] = $entity;
     $render['#theme'] = 'flag';
-    $render['#attributes']['id'] = 'flag-' . $flag->id() . '-' . $entity->id();
 
     // Build the URL. It is important that bubbleable metadata is explicitly
     // collected and applied to the render array, as it might be rendered on its

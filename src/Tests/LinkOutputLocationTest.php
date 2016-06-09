@@ -187,7 +187,7 @@ class LinkOutputLocationTest extends FlagTestBase {
    *   TRUE if the flag link should exist, FALSE if it should not exist.
    */
   protected function assertPseudofieldHelper(FlagInterface $flag, EntityInterface $entity, $message, $exists) {
-    $xpath = $this->xpath("//*[contains(@class, 'node__content')]//a[@id = :id]", [
+    $xpath = $this->xpath("//*[contains(@class, 'node__content')]//a[contains(@class, :id)]", [
       ':id' => 'flag-' . $flag->id() . '-' . $entity->id(),
     ]);
     $this->assert(count($xpath) == ($exists ? 1 : 0), $message);

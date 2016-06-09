@@ -143,12 +143,14 @@ class ActionLinkController extends ControllerBase implements ContainerInjectionI
       // Get the link type plugin.
       $link_type = $flag->getLinkTypePlugin();
 
-      // Generate the link render array and get the link CSS ID.
+      // Generate the link render array.
       $link = $link_type->getLink($flag, $entity);
-      $link_id = '#' . $link['link']['#attributes']['id'];
+
+      // Generate a CSS selector to use in a JQuery Replace command.
+      $selector = '.flag-' . $flag->id() . '-' . $entity->id();
 
       // Create a new JQuery Replace command to update the link display.
-      $replace = new ReplaceCommand($link_id, $this->renderer->renderPlain($link));
+      $replace = new ReplaceCommand($selector, $this->renderer->renderPlain($link));
       $response->addCommand($replace);
 
       return $response;

@@ -93,7 +93,8 @@ class LinkTypeAjaxTest extends FlagTestBase {
     $ajax_response = $this->drupalGetAjax($url_target);
 
     // Assert that the replace selector is correct.
-    $this->assertEqual($ajax_response[0]['selector'], '#' .$urls[0]['id']);
+    $id_class_position = strpos($urls[0]['class'], ltrim($ajax_response[0]['selector'], '.'));
+    $this->assertTrue($id_class_position !== FALSE);
 
     // Request the returned URL to ensure that link is valid and has a valid
     // CSRF token.
@@ -101,8 +102,10 @@ class LinkTypeAjaxTest extends FlagTestBase {
     $this->assertEqual($this->flag->getUnflagShortText(), (string) $xml_data);
 
     $ajax_response = $this->drupalGetAjax($this->getAbsoluteUrl($xml_data['href']));
+
     // Assert that the replace selector is correct.
-    $this->assertEqual($ajax_response[0]['selector'], '#' . $xml_data['id']);
+    $id_class_position = strpos($xml_data['class'], ltrim($ajax_response[0]['selector'], '.'));
+    $this->assertTrue($id_class_position !== FALSE);
 
     $xml_data_unflag = new \SimpleXMLElement($ajax_response[0]['data']);
     $this->assertEqual($this->flag->getFlagShortText(), (string) $xml_data_unflag);
