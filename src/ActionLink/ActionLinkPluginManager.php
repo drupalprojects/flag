@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\ActionLink\ActionLinkPluginManager.
- */
-
 namespace Drupal\flag\ActionLink;
 
 use Drupal\Core\Cache\CacheBackendInterface;

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag_bookmark\Tests\FlagBookmarkUITest.
- */
 
 namespace Drupal\flag_bookmark\Tests;
 

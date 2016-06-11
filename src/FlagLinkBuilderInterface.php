@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\flag\FlagLinkBuilderInterface.
- */
-
 namespace Drupal\flag;
 
 /**

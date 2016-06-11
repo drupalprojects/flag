@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Event\FlagEventBase.
- */
 
 namespace Drupal\flag\Event;
 

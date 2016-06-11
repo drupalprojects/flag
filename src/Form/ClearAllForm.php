@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\From\ClearAllForm.
- */
 
 namespace Drupal\flag\Form;
 

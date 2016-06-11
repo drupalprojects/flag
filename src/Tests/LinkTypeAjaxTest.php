@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\LinkTypeAjaxTest.
- */
 
 namespace Drupal\flag\Tests;
 

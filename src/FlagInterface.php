@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\FlagInterface.
- */
 
 namespace Drupal\flag;
 

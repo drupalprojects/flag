@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains the \Drupal\flag\Controller\FieldEntryFormController class.
- */
 
 namespace Drupal\flag\Controller;
 

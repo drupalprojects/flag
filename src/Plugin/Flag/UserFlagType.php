@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Plugin\Flag\UserFlagType.
- */
 
 namespace Drupal\flag\Plugin\Flag;
 

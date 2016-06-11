@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Plugin\views\argument\FlagViewsFlaggableArgument.
- */
 
 namespace Drupal\flag\Plugin\views\argument;
 

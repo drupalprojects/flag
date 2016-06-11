@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\LinkTypeFieldEntryTest.
- */
 
 namespace Drupal\flag\Tests;
 

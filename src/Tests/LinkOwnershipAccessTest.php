@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\LinkOwnershipAccessTest.
- */
 
 namespace Drupal\flag\Tests;
 

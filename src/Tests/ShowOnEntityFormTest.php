@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\ShowOnEntityFormTest.
- */
 
 namespace Drupal\flag\Tests;
 

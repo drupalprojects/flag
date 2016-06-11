@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Form\FlaggingForm.
- */
 
 namespace Drupal\flag\Form;
 

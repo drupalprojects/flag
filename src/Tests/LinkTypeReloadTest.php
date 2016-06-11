@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\LinkTypeReloadTest.
- */
 
 namespace Drupal\flag\Tests;
 

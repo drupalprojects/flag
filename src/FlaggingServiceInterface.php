@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\flag\FlaggingServiceInterface.
- */
-
 namespace Drupal\flag;
 
 use Drupal\Core\Entity\EntityInterface;

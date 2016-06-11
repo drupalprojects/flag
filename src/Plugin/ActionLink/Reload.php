@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Plugin\ActionLink\Reload.
- */
 
 namespace Drupal\flag\Plugin\ActionLink;
 

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains the \Drupal\flag\Annotation\ActionLinkType annotation plugin.
- */
 
 namespace Drupal\flag\Annotation;
 

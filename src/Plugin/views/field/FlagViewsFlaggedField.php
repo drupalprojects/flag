@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Plugin\views\field\FlagViewsFlaggedField.
- */
 
 namespace Drupal\flag\Plugin\views\field;
 

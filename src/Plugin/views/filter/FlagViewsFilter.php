@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains the \Drupal\flag\Plugin\views\filter\FlagViewsFilter class.
- */
 
 namespace Drupal\flag\Plugin\views\filter;
 

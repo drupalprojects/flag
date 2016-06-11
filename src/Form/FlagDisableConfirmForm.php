@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains the \Drupal\flag\Form\FlagDisableConfirmForm class.
- */
 
 namespace Drupal\flag\Form;
 

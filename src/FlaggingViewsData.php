@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\FlaggingViewsData.
- */
-
 namespace Drupal\flag;
 
 use Drupal\views\EntityViewsData;

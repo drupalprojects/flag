@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Form\FlagEditForm.
- */
 
 namespace Drupal\flag\Form;
 

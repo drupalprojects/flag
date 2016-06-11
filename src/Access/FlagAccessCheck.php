@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\Access\FlagAccessCheck.
- */
-
 namespace Drupal\flag\Access;
 
 use Drupal\Core\Access\AccessResult;

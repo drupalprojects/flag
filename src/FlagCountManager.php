@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\flag\FlagCountManager.
- */
-
 namespace Drupal\flag;
 
 use Drupal\Core\Database\Connection;

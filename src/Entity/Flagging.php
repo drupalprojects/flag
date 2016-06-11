@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains the \Drupal\flag\Entity\Flagging content entity.
- */
 
 namespace Drupal\flag\Entity;
 

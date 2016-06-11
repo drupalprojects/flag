@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\Plugin\views\sort\FlagViewsSortFlagged;
- */
-
 namespace Drupal\flag\Plugin\views\sort;
 
 use Drupal\views\Plugin\views\sort\SortPluginBase;

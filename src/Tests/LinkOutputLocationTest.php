@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\LinkOutputLocationTest.
- */
 
 namespace Drupal\flag\Tests;
 

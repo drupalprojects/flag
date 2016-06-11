@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Drupal\flag_follower\Tests\FlagFollowerUITest.
- */
-
 namespace Drupal\flag_follower\Tests;
 
 use Drupal\simpletest\WebTestBase;

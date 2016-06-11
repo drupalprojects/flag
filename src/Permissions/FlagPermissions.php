@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Permissions\FlagPermissions.
- */
 
 namespace Drupal\flag\Permissions;
 

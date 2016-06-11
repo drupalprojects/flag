@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\FlagTestBase.
- */
 
 namespace Drupal\flag\Tests;
 

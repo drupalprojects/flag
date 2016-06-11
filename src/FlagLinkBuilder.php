@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\flag\FlagLinkBuilder.
- */
-
 namespace Drupal\flag;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;

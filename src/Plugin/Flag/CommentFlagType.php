@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Plugin\Flag\CommentFlagType.
- */
 
 namespace Drupal\flag\Plugin\Flag;
 

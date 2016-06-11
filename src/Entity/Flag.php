@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Entity\Flag.
- */
 
 namespace Drupal\flag\Entity;
 

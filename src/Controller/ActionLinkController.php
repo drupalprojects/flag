@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\Controller\ActionLinkController.
- */
-
 namespace Drupal\flag\Controller;
 
 use Drupal\Core\Ajax\AjaxResponse;

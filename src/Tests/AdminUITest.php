@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\AdminUITest.
- */
 
 namespace Drupal\flag\Tests;
 

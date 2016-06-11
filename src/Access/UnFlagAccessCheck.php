@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\Access\\UnFlagAccessCheck.
- */
-
 namespace Drupal\flag\Access;
 
 use Drupal\Core\Access\AccessResult;

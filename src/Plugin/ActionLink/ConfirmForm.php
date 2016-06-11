@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains the \Drupal\flag\Plugin\ActionLink\ConfirmForm link type.
- */
 
 namespace Drupal\flag\Plugin\ActionLink;
 

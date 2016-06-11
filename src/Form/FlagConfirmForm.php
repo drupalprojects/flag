@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\Form\FlagConfirmForm.
- */
-
 namespace Drupal\flag\Form;
 
 use Drupal\flag\Form\FlagConfirmFormBase;

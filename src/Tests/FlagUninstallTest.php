@@ -1,10 +1,7 @@
 <?php
-/**
- * @file
- * Contains the uninstall module test.
- */
 
 namespace Drupal\flag\Tests;
+
 use Drupal\Core\Database\Database;
 
 /**

@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\flag\Entity\Storage\FlaggingStorageInterface.
- */
-
 namespace Drupal\flag\Entity\Storage;
 
 use Drupal\Core\Entity\ContentEntityStorageInterface;

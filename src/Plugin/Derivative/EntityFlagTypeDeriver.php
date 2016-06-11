@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Plugin\Derivative\EntityFlagTypeDeriver.
- */
 
 namespace Drupal\flag\Plugin\Derivative;
 

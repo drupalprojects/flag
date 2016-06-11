@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains the \Drupal\flag\ActionLink\ActionLinkTypePluginInterface.
- */
 
 namespace Drupal\flag\ActionLink;
 

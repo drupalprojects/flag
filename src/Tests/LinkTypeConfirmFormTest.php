@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\LinkTypeConfirmFormTest.
- */
 
 namespace Drupal\flag\Tests;
 

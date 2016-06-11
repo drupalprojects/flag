@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Controller\FlagListBuilder.
- */
 
 namespace Drupal\flag\Controller;
 
