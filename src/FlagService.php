@@ -7,7 +7,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\flag\FlagType\FlagTypePluginManager;
 use Drupal\user\UserInterface;
 
 /**
@@ -16,13 +15,6 @@ use Drupal\user\UserInterface;
  *  - Performs flagging and unflaging operations.
  */
 class FlagService implements FlagServiceInterface {
-
-  /**
-   * The flag type plugin manager injected into the service.
-   *
-   * @var FlagTypePluginManager
-   */
-  private $flagTypeManager;
 
   /**
    * The entity query manager injected into the service.
@@ -46,8 +38,6 @@ class FlagService implements FlagServiceInterface {
   /**
    * Constructor.
    *
-   * @param FlagTypePluginManager $flag_type
-   *   The flag type plugin manager.
    * @param QueryFactory $entity_query
    *   The entity query factory.
    * @param AccountInterface $current_user
@@ -55,11 +45,9 @@ class FlagService implements FlagServiceInterface {
    * @param EntityTypeManagerInterface $entity_type_manager
    *   The entity manager.
    */
-  public function __construct(FlagTypePluginManager $flag_type,
-                              QueryFactory $entity_query,
+  public function __construct(QueryFactory $entity_query,
                               AccountInterface $current_user,
                               EntityTypeManagerInterface $entity_type_manager) {
-    $this->flagTypeManager = $flag_type;
     $this->entityQueryManager = $entity_query;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
