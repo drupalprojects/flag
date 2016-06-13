@@ -236,8 +236,8 @@ class FlagService implements FlagServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function unflagAll(EntityInterface $entity = NULL, AccountInterface $account = NULL) {
-    $flaggings = $this->getFlaggings(NULL, $entity, $account);
+  public function unflagAll(FlagInterface $flag = NULL, EntityInterface $entity = NULL, AccountInterface $account = NULL) {
+    $flaggings = $this->getFlaggings($flag, $entity, $account);
 
     $this->entityTypeManager->getStorage('flagging')->delete($flaggings);
   }
@@ -247,10 +247,10 @@ class FlagService implements FlagServiceInterface {
    */
   public function userFlagRemoval(UserInterface $account) {
     // Remove flags by this user.
-    $this->unflagAll(NULL, $account);
+    $this->unflagAll(NULL, NULL, $account);
 
     // Remove flags that have been done to this user.
-    $this->unflagAll($account);
+    $this->unflagAll(NULL, $account);
   }
 
   /**

@@ -576,7 +576,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     parent::preDelete($storage, $entities);
 
     foreach ($entities as $flag) {
-      \Drupal::service('flagging')->reset($flag);
+      \Drupal::service('flag')->unflagAll($flag);
     }
   }
 

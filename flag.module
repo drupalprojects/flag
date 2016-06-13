@@ -365,7 +365,7 @@ function flag_entity_predelete(EntityInterface $entity) {
     return;
   }
 
-  \Drupal::service('flag')->unflagAll($entity);
+  \Drupal::service('flag')->unflagAll(NULL, $entity);
 }
 
 /**

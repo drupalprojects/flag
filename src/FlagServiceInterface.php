@@ -5,6 +5,7 @@ namespace Drupal\flag;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\user\UserInterface;
+use Drupal\flag\FlagInterface;
 
 /**
  * Flag service interface.
@@ -215,6 +216,8 @@ interface FlagServiceInterface {
    *
    * If no parameters are provided, all flaggings will be removed.
    *
+   * @param \Drupal\Flag\FlagInterface|NULL $flag
+   *   (Optional) If provided, will remove all flaggings for this flag.
    * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
    *   (Optional) If provided, will remove all flaggings done to this entity.
    *   If NULL, flaggings for any entity will be removed.
@@ -222,7 +225,7 @@ interface FlagServiceInterface {
    *   (Optional) If provided, will remove all flaggings by this account.
    *   If NULL, flaggings for any account will be removed.
    */
-  public function unflagAll(EntityInterface $entity = NULL, AccountInterface $account = NULL);
+  public function unflagAll(FlagInterface $flag = NULL, EntityInterface $entity = NULL, AccountInterface $account = NULL);
 
   /**
    * Shared helper for user account cancellation or deletion.

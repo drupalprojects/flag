@@ -35,13 +35,6 @@ class FlagCountsTest extends FlagKernelTestBase {
   protected $flagCountService;
 
   /**
-   * The flagging deletion service.
-   *
-   * @var \Drupal\flag\FlaggingServiceInterface
-   */
-  protected $flaggingDelete;
-
-  /**
    * User object.
    *
    * @var \Drupal\user\Entity\User|false
@@ -57,7 +50,6 @@ class FlagCountsTest extends FlagKernelTestBase {
     $this->installSchema('user', 'users_data');
 
     $this->flagCountService = \Drupal::service('flag.count');
-    $this->flaggingDelete = \Drupal::service('flagging');
 
     // Create a flag.
     $this->flag = Flag::create([
@@ -108,7 +100,7 @@ class FlagCountsTest extends FlagKernelTestBase {
     $flag_get_flag_counts = $this->flagCountService->getFlagEntityCount($this->flag);
     $this->assertEqual($flag_get_flag_counts, 1, "getFlagEntityCount() returns the expected count.");
 
-    $this->flaggingDelete->reset($this->flag);
+    $this->flagService->unflagAll($this->flag);
     $flag_get_flag_counts = $this->flagCountService->getFlagEntityCount($this->flag);
     $this->assertEqual($flag_get_flag_counts, 0, "getFlagEntityCount() on reset flag returns the expected count.");
   }
