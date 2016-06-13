@@ -141,7 +141,6 @@ interface FlagServiceInterface {
    *   }
    * @endcode
    *
-   *
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity object.
    * @param \Drupal\flag\FlagInterface $flag

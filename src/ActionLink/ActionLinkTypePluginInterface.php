@@ -35,17 +35,17 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
    *
    * This method is not recommended for general use.
    *
-   * @see \Drupal\flag\ActionLink\ActionLinkTypePluginInterface::getLink()
-   *
    * @param string $action
    *   The action, flag or unflag.
    * @param \Drupal\flag\FlagInterface $flag
-   *   The flag entity
+   *   The flag entity.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity.
    *
    * @return \Drupal\Core\Url
    *   The URL object.
+   *
+   * @see \Drupal\flag\ActionLink\ActionLinkTypePluginInterface::getLink()
    */
   public function getLinkURL($action, FlagInterface $flag, EntityInterface $entity);
 
@@ -53,8 +53,6 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
    * Generates a flag link as a render array.
    *
    * This method is not recommended for general use.
-   *
-   * @see \Drupal\flag\ActionLink\ActionLinkTypePluginInterface::getLink()
    *
    * @param string $action
    *   The action to perform, 'flag' or 'unflag'.
@@ -65,6 +63,9 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
    *
    * @return array
    *   A render array of the flag link.
+   *
+   * @see \Drupal\flag\ActionLink\ActionLinkTypePluginInterface::getLink()
    */
   public function buildLink($action, FlagInterface $flag, EntityInterface $entity);
+
 }

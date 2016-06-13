@@ -46,7 +46,7 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    * Returns the status of the flag.
    *
    * @return bool
-   *  TRUE if the flag is enabled, FALSE otherwise.
+   *   TRUE if the flag is enabled, FALSE otherwise.
    */
   public function isEnabled();
 
@@ -75,8 +75,8 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    * Get the flag bundles property.
    *
    * @return array
-   *  An array containing the bundles this flag may be applied to. An empty
-   *  array indicates all bundles are valid.
+   *   An array containing the bundles this flag may be applied to. An empty
+   *   array indicates all bundles are valid.
    *
    * @see getApplicableBundles()
    */
@@ -88,7 +88,7 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    * For the verbatim value of the flag's types property, use getBundles().
    *
    * @return array
-   *  An array containing the bundles this flag may be applied to.
+   *   An array containing the bundles this flag may be applied to.
    */
   public function getApplicableBundles();
 
