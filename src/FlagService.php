@@ -7,12 +7,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\flag\Event\FlagEvents;
-use Drupal\flag\Event\FlaggingEvent;
 use Drupal\flag\FlagType\FlagTypePluginManager;
-use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Flag service.
@@ -27,13 +23,6 @@ class FlagService implements FlagServiceInterface {
    * @var FlagTypePluginManager
    */
   private $flagTypeManager;
-
-  /**
-   * The event dispatcher injected into the service.
-   *
-   * @var EventDispatcherInterface
-   */
-  private $eventDispatcher;
 
   /**
    * The entity query manager injected into the service.
@@ -59,8 +48,6 @@ class FlagService implements FlagServiceInterface {
    *
    * @param FlagTypePluginManager $flag_type
    *   The flag type plugin manager.
-   * @param EventDispatcherInterface $event_dispatcher
-   *   The event dispatcher service.
    * @param QueryFactory $entity_query
    *   The entity query factory.
    * @param AccountInterface $current_user
@@ -69,12 +56,10 @@ class FlagService implements FlagServiceInterface {
    *   The entity manager.
    */
   public function __construct(FlagTypePluginManager $flag_type,
-                              EventDispatcherInterface $event_dispatcher,
                               QueryFactory $entity_query,
                               AccountInterface $current_user,
                               EntityTypeManagerInterface $entity_type_manager) {
     $this->flagTypeManager = $flag_type;
-    $this->eventDispatcher = $event_dispatcher;
     $this->entityQueryManager = $entity_query;
     $this->currentUser = $current_user;
     $this->entityTypeManager = $entity_type_manager;
