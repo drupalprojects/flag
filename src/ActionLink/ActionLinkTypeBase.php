@@ -97,12 +97,12 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
 
     if ($action === 'unflag') {
       $render['#title'] = $flag->getUnflagShortText();
-      $render['#attributes']['alt'] = $flag->getUnflagLongText();
+      $render['#attributes']['title'] = $flag->getUnflagLongText();
       $render['#action'] = 'unflag';
     }
     else {
       $render['#title'] = $flag->getFlagShortText();
-      $render['#attributes']['alt'] = $flag->getFlagLongText();
+      $render['#attributes']['title'] = $flag->getFlagLongText();
       $render['#action'] = 'flag';
     }
 
