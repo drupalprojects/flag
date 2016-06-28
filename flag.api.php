@@ -72,18 +72,6 @@ function hook_flag_validate($action, FlagInterface $flag, $entity_id,
 }
 
 /**
- * Alter the javascript structure that describes the flag operation.
- *
- * @param \Drupal\flag\FlagInterface $flag
- *   The full flag object.
- * @param int $entity_id
- *   The ID of the node, comment, user or other object being flagged.
- */
-function hook_flag_javascript_info_alter(FlagInterface $flag, $entity_id) {
-
-}
-
-/**
  * Alter other modules' definitions of flag link types.
  *
  * This hook may be placed in a $module.flag.inc file.
