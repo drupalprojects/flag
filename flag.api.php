@@ -20,6 +20,8 @@ use Drupal\flag\FlaggingInterface;
  *
  * @param array $definitions
  *   An array of flag definitions returned by hook_flag_type_info().
+ *
+ * @See \Drupal\flag\FlagType\FlagTypePluginManager
  */
 function hook_flag_type_info_alter(array &$definitions) {
 
@@ -37,8 +39,6 @@ function hook_flag_type_info_alter(array &$definitions) {
  *   flag's link type merged in.
  * @param \Drupal\flag\FlagInterface $flag
  *   The flag object.
- *
- * @see flag_flag::options()
  */
 function hook_flag_options_alter(array &$options, FlagInterface $flag) {
 
@@ -78,8 +78,6 @@ function hook_flag_validate($action, FlagInterface $flag, $entity_id,
  *   The full flag object.
  * @param int $entity_id
  *   The ID of the node, comment, user or other object being flagged.
- *
- * @see flag_build_javascript_info()
  */
 function hook_flag_javascript_info_alter(FlagInterface $flag, $entity_id) {
 
@@ -93,7 +91,7 @@ function hook_flag_javascript_info_alter(FlagInterface $flag, $entity_id) {
  * @param $link_types
  *  An array of the link types defined by all modules.
  *
- * @see \Drupal\flag\ActionLink\ActionLinkPluginManager:getAllLinkTypes()
+ * @see \Drupal\flag\ActionLink\ActionLinkPluginManager
  */
 function hook_flag_link_type_info_alter(array &$link_types) {
 
