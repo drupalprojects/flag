@@ -224,7 +224,7 @@ class AdminUITest extends FlagTestBase {
       $edit['flags[' . $id . '][weight]'] = $weight;
     }
     // Saving the new weights via the interface.
-    $this->drupalPostForm('admin/structure/flags', $edit, $this->t('Save order'));
+    $this->drupalPostForm('admin/structure/flags', $edit, $this->t('Save'));
 
     // Load the all the flags.
     $flag_storage = $this->container->get('entity.manager')->getStorage('flag');
