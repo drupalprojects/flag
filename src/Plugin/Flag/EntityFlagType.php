@@ -59,30 +59,6 @@ class EntityFlagType extends FlagTypeBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
 
-    /* Options form extras for the generic entity flag. */
-
-    // Add checkboxes to show flag link on each entity view mode.
-    $options = [];
-    $defaults = [];
-
-    /* @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_service */
-    $entity_display_service = \Drupal::service('entity_display.repository');
-    $view_modes = $entity_display_service->getViewModes($this->entityType);
-
-    foreach ($view_modes as $name => $view_mode) {
-      $options[$name] = t('Display on @name view mode', ['@name' => $view_mode['label']]);
-      if ($this->showInLinks($name)) {
-        $defaults[$name] = $name;
-      }
-    }
-
-    $form['display']['show_in_links'] = [
-      '#type' => 'checkboxes',
-      '#title' => t('Display in entity links'),
-      '#description' => t('Show the flag link with the other links on the entity.'),
-      '#options' => $options,
-      '#default_value' => $defaults,
-    ];
 
     $form['display']['show_as_field'] = [
       '#type' => 'checkbox',
@@ -120,6 +96,30 @@ class EntityFlagType extends FlagTypeBase {
       '#description' => t('Note that not all entity types support contextual links.'),
       '#access' => \Drupal::moduleHandler()->moduleExists('contextual'),
       '#weight' => 10,
+    ];
+
+    // Add checkboxes to show flag link on each entity view mode.
+    $options = [];
+    $defaults = [];
+
+    /* @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $entity_display_service */
+    $entity_display_service = \Drupal::service('entity_display.repository');
+    $view_modes = $entity_display_service->getViewModes($this->entityType);
+
+    foreach ($view_modes as $name => $view_mode) {
+      $options[$name] = t('Display on @name view mode', ['@name' => $view_mode['label']]);
+      if ($this->showInLinks($name)) {
+        $defaults[$name] = $name;
+      }
+    }
+
+    $form['display']['show_in_links'] = [
+      '#type' => 'checkboxes',
+      '#title' => t('Display in entity links'),
+      '#description' => t('Show the flag link with the other links on the entity.'),
+      '#options' => $options,
+      '#default_value' => $defaults,
+      '#weight' => 15,
     ];
 
     return $form;
