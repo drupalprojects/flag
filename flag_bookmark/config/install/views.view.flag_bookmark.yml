@@ -2,6 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - flag.flag.bookmark
     - system.menu.main
   module:
     - flag

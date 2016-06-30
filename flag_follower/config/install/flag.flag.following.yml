@@ -2,6 +2,9 @@ uuid: b3a4f08c-726a-4729-99db-b6c8ec586c48
 langcode: en
 status: true
 dependencies:
+  enforced:
+    module:
+      - flag_follower
   module:
     - user
 id: following

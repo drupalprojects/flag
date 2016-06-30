@@ -14,7 +14,10 @@ unflag_denied_text: ''
 weight: 0
 status: true
 langcode: en
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - flag_bookmark
 roles: null
 flag_type: entity:node
 link_type: reload

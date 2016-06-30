@@ -111,6 +111,16 @@ class FlagViewsRelationship extends RelationshipPluginBase {
   }
 
   /**
+   * @inheritDoc
+   */
+  public function calculateDependencies() {
+    $dependencies = parent::calculateDependencies();
+    // Relationships need to depend on the flag that creates the relationship.
+    $dependencies['config'][] = $this->getFlag()->getConfigDependencyName();
+    return $dependencies;
+  }
+
+  /**
    * Get the flag of the relationship.
    *
    * @return \Drupal\flag\FlagInterface|null

@@ -2,6 +2,8 @@ uuid: 9ded31f9-ccf9-47df-8c81-6f5b50c9f190
 langcode: en
 status: true
 dependencies:
+  config:
+    - flag.flag.following
   module:
     - flag
     - user
