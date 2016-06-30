@@ -45,33 +45,6 @@ function hook_flag_options_alter(array &$options, FlagInterface $flag) {
 }
 
 /**
- * Perform custom validation on a flag before flagging/unflagging.
- *
- * @param string $action
- *   The action about to be carried out. Either 'flag' or 'unflag'.
- * @param \Drupal\flag\FlagInterface $flag
- *   The flag object.
- * @param int $entity_id
- *   The id of the entity the user is trying to flag or unflag.
- * @param \Drupal\Core\Session\AccountInterface $account
- *   The user account performing the action.
- * @param bool $skip_permission_check
- *   TRUE to skip the permission check, FALSE otherwise.
- * @param \Drupal\flag\FlaggingInterface $flagging
- *   The flagging entity.
- *
- * @return array|null
- *   (optional) array: textual error with the error-name as the key.
- *   If the error name is 'access-denied' and javascript is disabled,
- *   drupal_access_denied will be called and a 403 will be returned.
- *   If validation is successful, do not return a value.
- */
-function hook_flag_validate($action, FlagInterface $flag, $entity_id,
-                            AccountInterface $account, $skip_permission_check,
-                            FlaggingInterface $flagging) {
-}
-
-/**
  * Alter other modules' definitions of flag link types.
  *
  * This hook may be placed in a $module.flag.inc file.
