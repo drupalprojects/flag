@@ -95,7 +95,7 @@ class FlagService implements FlagServiceInterface {
       $account = $this->currentUser;
     }
 
-    $flaggings = $this->getFlaggings($flag, $entity, $account);
+    $flaggings = $this->getEntityFlaggings($flag, $entity, $account);
 
     return !empty($flaggings) ? reset($flaggings) : NULL;
   }
@@ -103,26 +103,65 @@ class FlagService implements FlagServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFlaggings(FlagInterface $flag = NULL, EntityInterface $entity = NULL, AccountInterface $account = NULL) {
+  public function getAllFlaggings() {
     $query = $this->entityQueryManager->get('flagging');
 
-    // The user is supplied with a flag that is not global.
-    if (!empty($account) && !empty($flag) && !$flag->isGlobal()) {
+    $ids = $query->execute();
+
+    return $this->getFlaggingsByIds($ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFlagFlaggings(FlagInterface $flag, AccountInterface $account = NULL) {
+    $query = $this->entityQueryManager->get('flagging');
+
+    $query->condition('flag_id', $flag->id());
+
+    if (!empty($account) && !$flag->isGlobal()) {
       $query->condition('uid', $account->id());
     }
 
-    // The user is supplied but the flag is not.
-    if (!empty($account) && empty($flag)) {
-       $query->condition('uid', $account->id());
-    }
-    if (!empty($flag)) {
-      $query->condition('flag_id', $flag->id());
+    $ids = $query->execute();
+
+    return $this->getFlaggingsByIds($ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getEntityFlaggings(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL) {
+    $query = $this->entityQueryManager->get('flagging');
+
+    $query->condition('flag_id', $flag->id());
+
+    if (!empty($account) && !$flag->isGlobal()) {
+      $query->condition('uid', $account->id());
     }
 
     if (!empty($entity)) {
       $query->condition('entity_type', $entity->getEntityTypeId())
-                     ->condition('entity_id', $entity->id());
+        ->condition('entity_id', $entity->id());
     }
+
+    $ids = $query->execute();
+
+    return $this->getFlaggingsByIds($ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAllEntityFlaggings(EntityInterface $entity, AccountInterface $account = NULL) {
+    $query = $this->entityQueryManager->get('flagging');
+
+    if (!empty($account)) {
+      $query->condition('uid', $account->id());
+    }
+
+    $query->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('entity_id', $entity->id());
 
     $ids = $query->execute();
 
@@ -140,7 +179,8 @@ class FlagService implements FlagServiceInterface {
    * {@inheritdoc}
    */
   public function getFlaggableById(FlagInterface $flag, $entity_id) {
-    return $this->entityTypeManager->getStorage($flag->getFlaggableEntityTypeId())->load($entity_id);
+    return $this->entityTypeManager->getStorage($flag->getFlaggableEntityTypeId())
+      ->load($entity_id);
   }
 
   /**
@@ -164,7 +204,8 @@ class FlagService implements FlagServiceInterface {
       $user_ids[] = $flagging->get('uid')->first()->getValue()['target_id'];
     }
 
-    return $this->entityTypeManager->getStorage('user')->loadMultiple($user_ids);
+    return $this->entityTypeManager->getStorage('user')
+      ->loadMultiple($user_ids);
   }
 
   /**
@@ -236,8 +277,45 @@ class FlagService implements FlagServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function unflagAll(FlagInterface $flag = NULL, EntityInterface $entity = NULL, AccountInterface $account = NULL) {
-    $flaggings = $this->getFlaggings($flag, $entity, $account);
+  public function unflagAllByFlag(FlagInterface $flag) {
+    $query = $this->entityQueryManager->get('flagging');
+
+    $query->condition('flag_id', $flag->id());
+
+    $ids = $query->execute();
+
+    $flaggings = $this->getFlaggingsByIds($ids);
+
+    $this->entityTypeManager->getStorage('flagging')->delete($flaggings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unflagAllByEntity(EntityInterface $entity) {
+    $query = $this->entityQueryManager->get('flagging');
+
+    $query->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('entity_id', $entity->id());
+
+    $ids = $query->execute();
+
+    $flaggings = $this->getFlaggingsByIds($ids);
+
+    $this->entityTypeManager->getStorage('flagging')->delete($flaggings);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function unflagAllByUser(AccountInterface $account) {
+    $query = $this->entityQueryManager->get('flagging');
+
+    $query->condition('uid', $account->id());
+
+    $ids = $query->execute();
+
+    $flaggings = $this->getFlaggingsByIds($ids);
 
     $this->entityTypeManager->getStorage('flagging')->delete($flaggings);
   }
@@ -247,10 +325,10 @@ class FlagService implements FlagServiceInterface {
    */
   public function userFlagRemoval(UserInterface $account) {
     // Remove flags by this user.
-    $this->unflagAll(NULL, NULL, $account);
+    $this->unflagAllByUser($account);
 
     // Remove flags that have been done to this user.
-    $this->unflagAll(NULL, $account);
+    $this->unflagAllByEntity($account);
   }
 
   /**

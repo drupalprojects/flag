@@ -93,7 +93,64 @@ interface FlagServiceInterface {
    * @return array
    *   An array of flaggings.
    */
-  public function getFlaggings(FlagInterface $flag = NULL, EntityInterface $entity = NULL, AccountInterface $account = NULL);
+  public function getAllFlaggings();
+
+  /**
+   * Get all flaggings for the given flag, and optionally, user.
+   *
+   * @param \Drupal\flag\FlagInterface $flag
+   *   The flag entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   (optional) The account of the flagging user. If NULL, flaggings for any
+   *   user will be returned.
+   *
+   * @return array
+   *   An array of flaggings.
+   */
+  public function getFlagFlaggings(FlagInterface $flag, AccountInterface $account = NULL);
+
+  /**
+   * Get flaggings for the given entity, flag, and optionally, user.
+   *
+   * This method works very much like FlagServiceInterface::getFlagging() only
+   * it returns all flaggings matching the given parameters.
+   *
+   * @code
+   *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
+   *   $node = Node::load($node_id);
+   *   $flaggings = \Drupal::service('flag')->getFlaggings($flag, $node);
+   *
+   *   foreach ($flaggings as $flagging) {
+   *     // Do something with each flagging.
+   *   }
+   * @endcode
+   *
+   * @param \Drupal\flag\FlagInterface $flag
+   *   The flag entity.
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The flaggable entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   (optional) The account of the flagging user. If NULL, flaggings for any
+   *   user will be returned.
+   *
+   * @return array
+   *   An array of flaggings.
+   */
+  public function getEntityFlaggings(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL);
+
+  /**
+   * Get all flaggings for the given entity, and optionally, user.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The flaggable entity.
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   (optional) The account of the flagging user. If NULL, flaggings for any
+   *   user will be returned.
+   *
+   * @return array
+   *   An array of flaggings.
+   */
+  public function getAllEntityFlaggings(EntityInterface $entity, AccountInterface $account = NULL);
 
   /**
    * Load the flag entity given the ID.
@@ -211,20 +268,28 @@ interface FlagServiceInterface {
   public function unflag(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL);
 
   /**
-   * Remove all flaggings from an entity / made by an account.
+   * Remove all flaggings from a flag.
    *
-   * If no parameters are provided, all flaggings will be removed.
-   *
-   * @param \Drupal\Flag\FlagInterface|NULL $flag
-   *   (Optional) If provided, will remove all flaggings for this flag.
-   * @param \Drupal\Core\Entity\EntityInterface|NULL $entity
-   *   (Optional) If provided, will remove all flaggings done to this entity.
-   *   If NULL, flaggings for any entity will be removed.
-   * @param \Drupal\Core\Session\AccountInterface|NULL $account
-   *   (Optional) If provided, will remove all flaggings by this account.
-   *   If NULL, flaggings for any account will be removed.
+   * @param \Drupal\Flag\FlagInterface $flag
+   *   The flag object.
    */
-  public function unflagAll(FlagInterface $flag = NULL, EntityInterface $entity = NULL, AccountInterface $account = NULL);
+  public function unflagAllByFlag(FlagInterface $flag);
+
+  /**
+   * Remove all flaggings from an entity.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $entity
+   *   The entity object.
+   */
+  public function unflagAllByEntity(EntityInterface $entity);
+
+  /**
+   * Remove all of a user's flaggings.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The user object.
+   */
+  public function unflagAllByUser(AccountInterface $account);
 
   /**
    * Shared helper for user account cancellation or deletion.

@@ -197,7 +197,7 @@ function flag_form_save(EntityInterface $entity, $values) {
   // For existing entities, get any existing flaggings per flag.
   $flagging_ids = array();
   if (!$entity->isNew()) {
-    $flaggings = $flag_service->getFlaggings(NULL, $entity, $account);
+    $flaggings = $flag_service->getAllEntityFlaggings($entity, $account);
     $flagging_ids = array_map(function($flagging) {
       return $flagging->getFlagId();
     }, $flaggings);
@@ -365,7 +365,7 @@ function flag_entity_predelete(EntityInterface $entity) {
     return;
   }
 
-  \Drupal::service('flag')->unflagAll(NULL, $entity);
+  \Drupal::service('flag')->unflagAllByEntity($entity);
 }
 
 /**
