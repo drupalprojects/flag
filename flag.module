@@ -252,11 +252,8 @@ function flag_entity_extra_field_info() {
 
       if ($flag_type_plugin->showAsField()) {
         $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['flag_' . $flag->id()] = [
-          // It would be nicer to use % as the placeholder, but the label is
-          // run through check_plain() by field_ui_display_overview_form()
-          // (arguably incorrectly; see http://drupal.org/node/1991292).
-          'label' => t('Flag: @title', [
-            '@title' => $flag->label,
+          'label' => t('Flag: %title', [
+            '%title' => $flag->label,
           ]),
           'description' => t('Individual flag link'),
           'weight' => 10,
