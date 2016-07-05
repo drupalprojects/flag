@@ -2,7 +2,6 @@
 
 namespace Drupal\flag\Form;
 
-use Drupal\Core\Url;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\FlagInterface;
@@ -31,7 +30,8 @@ class FlagResetForm extends ConfirmFormBase {
   /**
    * Class constructor.
    *
-   * @param \Drupal\flag\FlagServiceInterface $flagging_service
+   * @param \Drupal\flag\FlagServiceInterface $flag_service
+   *   The Flag Service.
    */
   public function __construct(FlagServiceInterface $flag_service) {
     $this->flagService = $flag_service;
@@ -61,7 +61,6 @@ class FlagResetForm extends ConfirmFormBase {
   public function getFormId() {
     return 'flag_reset_confirm_form';
   }
-
 
   /**
    * {@inheritdoc}
