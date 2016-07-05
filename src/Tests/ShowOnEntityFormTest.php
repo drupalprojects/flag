@@ -26,10 +26,14 @@ class ShowOnEntityFormTest extends FlagTestBase {
 
     // Create the flag with show_on_form, and grant permissions.
     $edit = [
-      'bundles[' . $this->nodeType . ']' => $this->nodeType,
-      'show_on_form' => '1',
+      'bundles' => [$this->nodeType],
+      'flagTypeConfig' => [
+        'show_as_field' => TRUE,
+        'show_on_form' => TRUE,
+        'show_contextual_link' => FALSE,
+        ],
     ];
-    $flag = $this->createFlagWithForm('node', $edit);
+    $flag = $this->createFlagFromArray($edit);
     $this->grantFlagPermissions($flag);
     $flag_checkbox_id = 'edit-flag-' . $flag->id();
 

@@ -57,15 +57,15 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
    */
   public function doCreateFlag() {
     $edit = [
-      'bundles[' . $this->nodeType . ']' => $this->nodeType,
-      'flag_confirmation' => $this->flagConfirmMessage,
-      'unflag_confirmation' => $this->unflagConfirmMessage,
+      'bundles' => [$this->nodeType],
+      'linkTypeConfig' => [
+        'flag_confirmation' => $this->flagConfirmMessage,
+        'unflag_confirmation' => $this->unflagConfirmMessage,
+      ],
+      'link_type' => 'confirm'
     ];
-    $this->flag = $this->createFlagWithForm('node', $edit, 'confirm');
-
-    // Check to see if the flag was created.
-    $this->assertText(t('Flag @this_label has been added.', ['@this_label' => $this->flag->label()]));
-  }
+    $this->flag = $this->createFlagFromArray($edit);
+   }
 
   /**
    * Create a node, flag it and unflag it.

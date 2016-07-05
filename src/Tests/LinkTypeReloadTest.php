@@ -39,13 +39,7 @@ class LinkTypeReloadTest extends FlagTestBase {
    * Create a node type and a flag.
    */
   public function doCreateFlag() {
-    $edit = [
-      'bundles[' . $this->nodeType . ']' => $this->nodeType,
-    ];
-    $this->flag = $this->createFlagWithForm('node', $edit, 'reload');
-
-    // Check to see if the flag was created.
-    $this->assertText(t('Flag @this_label has been added.', ['@this_label' => $this->flag->label()]));
+    $this->flag = $this->createFlag('node', [$this->nodeType], 'reload');
   }
 
   /**

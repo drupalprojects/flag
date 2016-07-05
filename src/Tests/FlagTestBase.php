@@ -105,6 +105,7 @@ abstract class FlagTestBase extends WebTestBase {
       'entity_type' => $entity_type,
       'bundles' => $bundles,
       'link_type' => $link_type,
+      'flag_type' => $this->getFlagType($entity_type),
     ]);
   }
 
@@ -164,10 +165,47 @@ abstract class FlagTestBase extends WebTestBase {
       'unflag_message' => $this->randomString(32),
       'flag_type' => $this->getFlagType('node'),
       'link_type' => 'reload',
-      'flagTypeConfig' => [],
+      'flagTypeConfig' => [
+        'show_as_field' => TRUE,
+        'show_on_form' => FALSE,
+        'show_contextual_link' => FALSE,
+        ],
       'linkTypeConfig' => [],
       'global' => FALSE,
     ];
+
+    $link_type = array_key_exists('link_type', $edit) ? $edit['link_type'] : 'reload';
+
+    // TODO make this list comprehensive.
+    // see flag.schema.yml
+    switch ($link_type) {
+      case 'comment':
+        $default = array_merge($default, [
+          'flagTypeCpnfig' => [
+            'access_author' => $this->randomString(),
+          ]
+        ]);
+        break;
+      case 'confirm':
+        $default = array_merge($default, [
+          'linkTypeConfig' => [
+            'flag_confirmation' => $this->randomString(),
+            'unflag_confirmation' => $this->randomString(),
+          ]
+        ]);
+        break;
+      case 'field_entry':
+        $default = array_merge($default, [
+          'linkTypeConfig' => [
+            'flag_confirmation' => $this->randomString(),
+            'unflag_confirmation' => $this->randomString(),
+            'edit_flagging' => $this->randomString(),
+          ]
+        ]);
+        break;
+      default:
+        break;
+    }
 
     foreach ($default as $key => $value) {
       if (empty($edit[$key])) {

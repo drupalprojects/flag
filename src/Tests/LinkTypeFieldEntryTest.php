@@ -78,15 +78,15 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
    */
   public function doCreateFlag() {
     $edit = [
-      'bundles[' . $this->nodeType . ']' => $this->nodeType,
-      'flag_confirmation' => $this->flagConfirmMessage,
-      'unflag_confirmation' => $this->unflagConfirmMessage,
-      'flagging_edit_title' => $this->flagDetailsMessage,
+      'bundles' => [$this->nodeType],
+      'linkTypeConfig' => [
+        'flag_confirmation' => $this->flagConfirmMessage,
+        'unflag_confirmation' => $this->unflagConfirmMessage,
+        'edit_flagging' => $this->flagDetailsMessage,
+      ],
+      'link_type' => 'field_entry',
     ];
-    $this->flag = $this->createFlagWithForm('node', $edit, 'field_entry');
-
-    // Check to see if the flag was created.
-    $this->assertText(t('Flag @this_label has been added.', ['@this_label' => $this->flag->label()]));
+    $this->flag = $this->createFlagFromArray($edit);
   }
 
   /**

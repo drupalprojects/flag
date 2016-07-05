@@ -41,11 +41,14 @@ class UserFlagTypeTest extends FlagTestBase {
     // Login as the admin user.
     $this->drupalLogin($this->adminUser);
 
-    $flag = $this->createFlagWithForm('user', [], 'reload');
+    $flag = $this->createFlagFromArray([
+      'link_type' => 'reload',
+      'entity_type' => 'user',
+      'bundles' => array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('user')),
+      'flag_type' => $this->getFlagType('user'),
+      'show_on_profile' => TRUE,
+      ]);
     $this->grantFlagPermissions($flag);
-
-    // Check to see if the flag was created.
-    $this->assertText($this->t('Flag @this_label has been added.', ['@this_label' => $flag->label()]));
 
     $this->drupalGet('admin/structure/flags/manage/' . $flag->id());
     $this->assertFieldChecked('edit-access-uid');
