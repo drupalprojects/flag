@@ -48,7 +48,7 @@ class UserFlagType extends EntityFlagType {
       '#type' => 'checkbox',
       '#title' => t('Users may flag themselves'),
       '#description' => t('Disabling this option may be useful when setting up a "friend" flag, when a user flagging themselves does not make sense.'),
-      '#default_value' => $this->getAccessUidSetting(),
+      '#default_value' => $this->canUsersFlagThemselves(),
     ];
     $form['display']['show_on_profile'] = [
       '#type' => 'checkbox',
@@ -77,7 +77,7 @@ class UserFlagType extends EntityFlagType {
    * @return bool|mixed
    *   TRUE if users are able to flag themselves, FALSE otherwise.
    */
-  public function getAccessUidSetting() {
+  public function canUsersFlagThemselves() {
     return $this->configuration['access_uid'];
   }
 
