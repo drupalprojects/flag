@@ -8,7 +8,7 @@
 /**
  * Update the dependency information in views that depend on flag.
  */
-function views_post_update_flag_relationship_dependencies() {
+function flag_post_update_flag_relationship_dependencies() {
   // Load all views.
   $views = \Drupal::entityManager()->getStorage('view')->loadMultiple();
 
