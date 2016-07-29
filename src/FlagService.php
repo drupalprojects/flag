@@ -103,17 +103,6 @@ class FlagService implements FlagServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getAllFlaggings() {
-    $query = $this->entityQueryManager->get('flagging');
-
-    $ids = $query->execute();
-
-    return $this->getFlaggingsByIds($ids);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFlagFlaggings(FlagInterface $flag, AccountInterface $account = NULL) {
     $query = $this->entityQueryManager->get('flagging');
 

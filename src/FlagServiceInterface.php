@@ -65,37 +65,6 @@ interface FlagServiceInterface {
   public function getFlagging(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL);
 
   /**
-   * Get all flaggings for the given entity, flag, and optionally, user.
-   *
-   * This method works very much like FlagServiceInterface::getFlagging() only
-   * it returns all flaggings matching the given parameters.
-   *
-   * @code
-   *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
-   *   $node = Node::load($node_id);
-   *   $flaggings = \Drupal::service('flag')->getFlaggings($flag, $node);
-   *
-   *   foreach ($flaggings as $flagging) {
-   *     // Do something with each flagging.
-   *   }
-   * @endcode
-   *
-   * @param \Drupal\flag\FlagInterface $flag
-   *   (optional) The flag entity. If NULL, flaggings for any flag will be
-   *   returned.
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   (optional) The flaggable entity. If NULL, flaggings for any entity will
-   *   be returned.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   (optional) The account of the flagging user. If NULL, flaggings for any
-   *   user will be returned.
-   *
-   * @return array
-   *   An array of flaggings.
-   */
-  public function getAllFlaggings();
-
-  /**
    * Get all flaggings for the given flag, and optionally, user.
    *
    * @param \Drupal\flag\FlagInterface $flag
