@@ -28,12 +28,12 @@ class FlagListBuilder extends DraggableListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = t('Flag');
-    $header['flag_type'] = t('Flag Type');
-    $header['roles'] = t('Roles');
-    $header['bundles'] = t('Entity Bundles');
-    $header['global'] = t('Scope');
-    $header['status'] = t('Status');
+    $header['label'] = $this->t('Flag');
+    $header['flag_type'] = $this->t('Flag Type');
+    $header['roles'] = $this->t('Roles');
+    $header['bundles'] = $this->t('Entity Bundles');
+    $header['global'] = $this->t('Scope');
+    $header['status'] = $this->t('Status');
 
     return $header + parent::buildHeader();
   }
@@ -129,11 +129,11 @@ class FlagListBuilder extends DraggableListBuilder {
     $row['bundles'] = $this->getBundles($entity);
 
     $row['global'] = [
-      '#markup' => $entity->isGlobal() ? t('Global') : t('Personal'),
+      '#markup' => $entity->isGlobal() ? $this->t('Global') : $this->t('Personal'),
     ];
 
     $row['status'] = [
-      '#markup' => $entity->isEnabled() ? t('Enabled') : t('Disabled'),
+      '#markup' => $entity->isEnabled() ? $this->t('Enabled') : $this->t('Disabled'),
     ];
 
     return $row + parent::buildRow($entity);
