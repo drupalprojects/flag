@@ -10,7 +10,7 @@
  */
 function flag_post_update_flag_relationship_dependencies() {
   // Load all views.
-  $views = \Drupal::entityManager()->getStorage('view')->loadMultiple();
+  $views = \Drupal::entityTypeManager()->getStorage('view')->loadMultiple();
 
   /* @var \Drupal\views\Entity\View[] $views */
   foreach ($views as $view) {
