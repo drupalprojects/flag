@@ -20,6 +20,7 @@ use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\user\UserInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\Core\Url;
+use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 
 /**
  * Implements hook_help().
@@ -357,6 +358,149 @@ function flag_entity_view(array &$build, EntityInterface $entity, EntityViewDisp
 }
 
 /**
+ * Implements hook_entity_build_defaults_alter().
+ */
+function flag_entity_build_defaults_alter(array &$build, EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
+  /** @var \Drupal\flag\FlagService $flag_service */
+  $flag_service = \Drupal::service('flag');
+
+  // Get all possible flags for this entity type.
+  $flags = $flag_service->getFlags($entity->getEntityTypeId(), $entity->bundle());
+
+  $no_cache = FALSE;
+  foreach ($flags as $flag) {
+    $flag_type_plugin = $flag->getFlagTypePlugin();
+
+    // Make sure we're dealing with an entity flag type.
+    if (!$flag_type_plugin instanceof EntityFlagType) {
+      continue;
+    }
+
+    // Only add max-age to entity render array if contextual links flag
+    // display is enabled.
+    if (!$flag_type_plugin->showContextualLink()) {
+      continue;
+    }
+
+    $no_cache = TRUE;
+  }
+
+  if ($no_cache) {
+    $build['#cache']['max-age'] = 0;
+  }
+
+  return $build;
+}
+
+/**
+ * Implements hook_entity_view_alter().
+ *
+ * Alters node contextual links placeholder id to contain flag metadata, so that
+ * contextual links cache considers flags granularity.
+ */
+function flag_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisplayInterface $display) {
+  $entity_type = $entity->getEntityTypeId();
+  if (isset($build['#contextual_links'][$entity_type])) {
+    /** @var \Drupal\flag\FlagService $flag_service */
+    $flag_service = \Drupal::service('flag');
+
+    // Get all possible flags for this entity type.
+    $flags = $flag_service->getFlags($entity_type, $entity->bundle());
+
+    foreach ($flags as $flag) {
+      $flag_type_plugin = $flag->getFlagTypePlugin();
+
+      // Make sure we're dealing with an entity flag type.
+      if (!$flag_type_plugin instanceof EntityFlagType) {
+        continue;
+      }
+
+      // Only apply metadata to contextual links if plugin is enabled
+      if (!$flag_type_plugin->showContextualLink()) {
+        continue;
+      }
+
+      $action = 'flag';
+      if ($flag->isFlagged($entity)) {
+        $action = 'unflag';
+      }
+
+      $flag_keys[] = $flag->id . '-' . $action;
+    }
+
+    if (!empty($flag_keys)) {
+      $build['#contextual_links'][$entity_type]['metadata']['flag_keys'] = implode(',', $flag_keys);
+    }
+  }
+}
+
+/**
+ * Implements hook_contextual_links_alter().
+ */
+function flag_contextual_links_alter(array &$links, $group, array $route_parameters) {
+  // Assume that $group is one of known entity types and try to load an entity
+  // based on that.
+  $entity_type = $group;
+  if (isset($route_parameters[$entity_type]) && !is_null(\Drupal::entityTypeManager()->getDefinition($entity_type, FALSE))) {
+    $entity = \Drupal::entityTypeManager()->getStorage($entity_type)->load($route_parameters[$entity_type]);
+  }
+
+  if (!isset($entity)) {
+    return;
+  }
+
+  // Get all possible flags for this entity type.
+  $flag_service = \Drupal::service('flag');
+  $flags = $flag_service->getFlags($entity->getEntityTypeID(), $entity->bundle());
+
+  foreach ($flags as $flag) {
+    /** @var \Drupal\flag\FlagInterface $flag */
+    // Do not display the flag if disabled.
+    if (!$flag->isEnabled()){
+      continue;
+    }
+
+    /** @var \Drupal\flag\Plugin\Flag\EntityFlagType $flag_type_plugin */
+    $flag_type_plugin = $flag->getFlagTypePlugin();
+
+    // Make sure we're dealing with an entity flag type.
+    if (!$flag_type_plugin instanceof EntityFlagType) {
+      continue;
+    }
+
+    // Skip flags for which contextual links setting is disabled.
+    if (!$flag_type_plugin->showContextualLink()) {
+      continue;
+    }
+
+    // Use reload link type plugin for contextual links display.
+    $flag_type_collection = new DefaultSingleLazyPluginCollection(
+      \Drupal::service('plugin.manager.flag.linktype'),
+      'reload', $flag_type_plugin->getConfiguration()
+    );
+
+    /** @var \Drupal\flag\Plugin\ActionLink\Reload $link_type_plugin */
+    $link_type_plugin = $flag_type_collection->get('reload');
+
+    $action = 'flag';
+    if ($flag->isFlagged($entity)) {
+      $action = 'unflag';
+    }
+
+    // Render the link to get the title.
+    $link = $link_type_plugin->buildLink($action, $flag, $entity);
+    $links["flag_{$flag->id()}"] = array(
+      'route_name' => $link_type_plugin->routeName($action),
+      'route_parameters' => array(
+        'flag' => $flag->id(),
+        'entity_id' => $entity->id(),
+      ),
+      'title' => $link['#title'],
+    );
+  }
+}
+
+/*
  * Implements hook_entity_predelete().
  */
 function flag_entity_predelete(EntityInterface $entity) {

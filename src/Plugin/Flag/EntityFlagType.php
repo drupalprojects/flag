@@ -93,7 +93,13 @@ class EntityFlagType extends FlagTypeBase {
       '#type' => 'checkbox',
       '#title' => t('Display in contextual links'),
       '#default_value' => $this->showContextualLink(),
-      '#description' => t('Note that not all entity types support contextual links.'),
+      '#description' => t("Note that not all entity types support contextual links.
+        <br/>
+        <strong>Warning: </strong>Due to how contextual links are cached on frontend
+        we have to set max-age as 0 for entity cache if
+        user has access to contextual links and to this flag. This means that
+        those users will get no cache hits for render elements rendering flaggable
+        entities with contextual links."),
       '#access' => \Drupal::moduleHandler()->moduleExists('contextual'),
       '#weight' => 10,
     ];
