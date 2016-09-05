@@ -537,21 +537,21 @@ function flag_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
     if (!$entity->isEnabled()) {
       $operations['enable'] = [
         'title' => t('Enable'),
-        'url' => $entity->urlInfo('enable'),
+        'url' => $entity->toUrl('enable'),
         'weight' => 50,
       ];
     }
     else {
       $operations['disable'] = [
         'title' => t('Disable'),
-        'url' => $entity->urlInfo('disable'),
+        'url' => $entity->toUrl('disable'),
         'weight' => 50,
       ];
     }
 
     $operations['reset'] = [
       'title' => t('Reset'),
-      'url' => $entity->urlInfo('reset'),
+      'url' => $entity->toUrl('reset'),
       'weight' => 100,
     ];
   }
