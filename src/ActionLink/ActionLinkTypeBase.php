@@ -101,6 +101,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
       $render['#action'] = 'unflag';
     }
     else {
+      assert($action === 'flag', '$action must be one of "flag" or "unflag"');
       $render['#title'] = $flag->getFlagShortText();
       $render['#attributes']['title'] = $flag->getFlagLongText();
       $render['#action'] = 'flag';
