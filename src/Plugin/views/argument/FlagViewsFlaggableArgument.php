@@ -2,11 +2,10 @@
 
 namespace Drupal\flag\Plugin\views\argument;
 
-
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\views\Plugin\views\argument\NumericArgument;
 use Drupal\Core\Database\Connection;
 use Drupal\flag\FlagInterface;
+use Drupal\Component\Utility\Html;
 
 /**
  * Provides an argument handler to get the title of flaggble content.
@@ -66,7 +65,7 @@ class FlagViewsFlaggableArgument extends NumericArgument {
       ->execute();
 
     foreach ($result as $title) {
-      $titles[] = SafeMarkup::checkPlain($title->$entity_keys['label']);
+      $titles[] = Html::escape($title->$entity_keys['label']);
     }
 
     return $titles;
