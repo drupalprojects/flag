@@ -2,8 +2,10 @@
 
 namespace Drupal\flag\Plugin\Flag;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\flag\Plugin\Flag\EntityFlagType;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\flag\FlagInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -77,7 +79,7 @@ class UserFlagType extends EntityFlagType {
    * @return bool|mixed
    *   TRUE if users are able to flag themselves, FALSE otherwise.
    */
-  public function canUsersFlagThemselves() {
+  protected function canUsersFlagThemselves() {
     return $this->configuration['access_uid'];
   }
 
@@ -90,4 +92,20 @@ class UserFlagType extends EntityFlagType {
   public function showOnProfile() {
     return $this->configuration['show_on_profile'];
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function actionAccess($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
+    $access = parent::actionAccess($action, $flag, $account, $flaggable);
+
+    // If the acting upon yourself check for permission.
+    $is_current_user = $account->id() == $flaggable->id();
+    $condition = !$is_current_user || $this->canUsersFlagThemselves();
+    $themselves_access = AccessResult::allowedIf($condition)
+      ->addCacheContexts(['user']);
+
+    return $access->andIf($themselves_access);
+  }
+
 }

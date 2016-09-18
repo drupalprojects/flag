@@ -2,6 +2,7 @@
 
 namespace Drupal\flag\Entity;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -381,30 +382,16 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getPermissions() {
-    return [
-      "flag $this->id" => [
-        'title' => t('Flag %flag_title', [
-          '%flag_title' => $this->label,
-        ]),
-      ],
-      "unflag $this->id" => [
-        'title' => t('Unflag %flag_title', [
-          '%flag_title' => $this->label,
-        ]),
-      ],
-    ];
+  public function actionPermissions() {
+    return $this->getFlagTypePlugin()->actionPermissions($this);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function hasActionAccess($action, AccountInterface $account = NULL) {
-    if ($action === 'flag' || $action === 'unflag') {
-      $account = $account ?: \Drupal::currentUser();
-      $permission = $action . ' ' . $this->id;
-      return $account->hasPermission($permission);
-    }
+  public function actionAccess($action, AccountInterface $account = NULL, EntityInterface $flaggable = NULL) {
+    $account = $account ?: \Drupal::currentUser();
+    return $this->getFlagTypePlugin()->actionAccess($action, $this, $account, $flaggable);
   }
 
   /**

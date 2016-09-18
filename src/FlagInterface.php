@@ -135,9 +135,9 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    * @return array
    *   An array of permissions.
    *
-   * @see \Drupal\flag\Entity\Flag::getPermissions()
+   * @see \Drupal\flag\Entity\Flag::actionPermissions()
    */
-  public function getPermissions();
+  public function actionPermissions();
 
   /**
    * Returns true if the flag is global, false otherwise.
@@ -301,10 +301,12 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    *   The action for which to check permissions, either 'flag' or 'unflag'.
    * @param AccountInterface $account
    *   (optional) An AccountInterface object.
+   * @param \Drupal\Core\Entity\EntityInterface $flaggable
+   *   (optional) The flaggable entity.
    *
-   * @return bool|null
-   *   Returns a bool defining the users access permission for flagging action.
+   * @return \Drupal\Core\Access\AccessResult
+   *   An AccessResult object.
    */
-  public function hasActionAccess($action, AccountInterface $account = NULL);
+  public function actionAccess($action, AccountInterface $account = NULL, EntityInterface $flaggable = NULL);
 
 }

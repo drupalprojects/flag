@@ -2,11 +2,15 @@
 
 namespace Drupal\flag\ActionLink;
 
+use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
-use Drupal\Component\Plugin\PluginBase;
-use Drupal\flag\FlagInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\flag\FlagInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a base class for all link types.
@@ -15,7 +19,14 @@ use Drupal\Core\Form\FormStateInterface;
  * use when a flag link is clicked, and generate the render array to display
  * flag links.
  */
-abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePluginInterface {
+abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePluginInterface, ContainerFactoryPluginInterface {
+
+  /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
 
   /**
    * Build a new link type instance and sets the configuration.
@@ -26,10 +37,25 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
    *   The ID with which to initialize this plugin.
    * @param array $plugin_definition
    *   The plugin definition array.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   The current user.
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, AccountInterface $current_user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->configuration += $this->defaultConfiguration();
+    $this->currentUser = $current_user;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('current_user')
+    );
   }
 
   /**
@@ -101,7 +127,6 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
       $render['#action'] = 'unflag';
     }
     else {
-      assert($action === 'flag', '$action must be one of "flag" or "unflag"');
       $render['#title'] = $flag->getFlagShortText();
       $render['#attributes']['title'] = $flag->getFlagLongText();
       $render['#action'] = 'flag';
@@ -116,17 +141,21 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
   public function getLink(FlagInterface $flag, EntityInterface $entity) {
     $action = $flag->isFlagged($entity) ? 'unflag' : 'flag';
 
-    if ($flag->hasActionAccess($action)) {
-
-      $link = $this->buildLink($action, $flag, $entity);
-
+    $access = $flag->actionAccess($action, $this->currentUser, $entity);
+    if ($access->isAllowed()) {
       // The actual render array must be in a nested key, due to a bug in
       // lazy builder handling that does not properly render top-level #type
-      // elements.
-      return ['link' => $link];
+      // elements.build
+      $link = ['link' => $this->buildLink($action, $flag, $entity)];
+    } else {
+      $link = [];
     }
 
-    return [];
+    CacheableMetadata::createFromRenderArray($link)
+      ->addCacheableDependency($access)
+      ->applyTo($link);
+
+    return $link;
   }
 
   /**

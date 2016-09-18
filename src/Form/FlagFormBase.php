@@ -308,7 +308,7 @@ abstract class FlagFormBase extends EntityForm {
 
     $flag->enable();
     $status = $flag->save();
-    $url = $flag->toUrl();
+    $url = $flag->urlInfo();
     if ($status == SAVED_UPDATED) {
       drupal_set_message(t('Flag %label has been updated.', ['%label' => $flag->label()]));
       $this->logger('flag')->notice('Flag %label has been updated.', ['%label' => $flag->label(), 'link' => $this->l($this->t('Edit'), $url)]);

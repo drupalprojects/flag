@@ -8,6 +8,9 @@
 use Drupal\flag\FlagInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlaggingInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Access\AccessResult;
+
 /**
  * @addtogroup hooks
  * @{
@@ -56,4 +59,23 @@ function hook_flag_options_alter(array &$options, FlagInterface $flag) {
  */
 function hook_flag_link_type_info_alter(array &$link_types) {
 
+}
+
+/**
+ * Perform access checks when acting on a flag.
+ *
+ * @param string $action
+ *   The action about to be carried out. Either 'flag' or 'unflag'.
+ * @param \Drupal\flag\FlagInterface $flag
+ *   The flag object.
+ * @param \Drupal\Core\Session\AccountInterface $account
+ *   The user account performing the action.
+ * @param \Drupal\Core\Entity\EntityInterface $flaggable
+ *   The flaggable entity.
+ *
+ * @return \Drupal\Core\Access\AccessResult
+ *   An AccessResult object.
+ */
+function hook_flag_action_access($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
+  return AccessResult::neutral();
 }

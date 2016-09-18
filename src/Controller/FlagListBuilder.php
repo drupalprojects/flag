@@ -50,7 +50,7 @@ class FlagListBuilder extends DraggableListBuilder {
   protected function getFlagRoles(FlagInterface $flag) {
     $all_roles = [];
 
-    foreach (array_keys($flag->getPermissions()) as $perm) {
+    foreach (array_keys($flag->actionPermissions()) as $perm) {
       $roles = user_roles(FALSE, $perm);
 
       foreach ($roles as $rid => $role) {

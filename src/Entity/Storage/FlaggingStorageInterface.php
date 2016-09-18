@@ -22,6 +22,7 @@ interface FlaggingStorageInterface extends ContentEntityStorageInterface {
    * @return string[]
    *   A list of flag_ids that for which the given entity is flagged, either
    *   globally or for the given account.
+   *
    */
   public function loadIsFlagged(EntityInterface $entity, AccountInterface $account);
 

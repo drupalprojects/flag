@@ -2,6 +2,7 @@
 
 namespace Drupal\flag\Plugin\Flag;
 
+use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\flag\FlagType\FlagTypeBase;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -28,9 +29,9 @@ class EntityFlagType extends FlagTypeBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ModuleHandlerInterface $module_handler) {
     $this->entityType = $plugin_definition['entity_type'];
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $module_handler);
   }
 
   /**

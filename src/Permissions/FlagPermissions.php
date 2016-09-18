@@ -2,10 +2,38 @@
 
 namespace Drupal\flag\Permissions;
 
+use Drupal\flag\FlagServiceInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+
 /**
  * Provides dynamic permissions for defined flags.
  */
-class FlagPermissions {
+class FlagPermissions implements ContainerInjectionInterface {
+
+  /**
+   * The flag service.
+   *
+   * @var \Drupal\flag\FlagServiceInterface
+   */
+  protected $flagService;
+
+  /**
+   * Constructs a FlagPermissions instance.
+   *
+   * @param FlagServiceInterface $flag
+   *   The flag service.
+   */
+  public function __construct(FlagServiceInterface $flag) {
+    $this->flagService = $flag;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('flag'));
+  }
 
   /**
    * Returns an array of dynamic flag permissions.
@@ -19,11 +47,11 @@ class FlagPermissions {
     $permissions = [];
 
     // Get a list of flags from the FlagService.
-    $flags = \Drupal::service('flag')->getFlags();
+    $flags = $this->flagService->getFlags();
 
     // Provide flag and unflag permissions for each flag.
     foreach ($flags as $flag_name => $flag) {
-      $permissions += $flag->getPermissions();
+      $permissions += $flag->actionPermissions();
     }
 
     return $permissions;

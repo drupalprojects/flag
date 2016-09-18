@@ -2,11 +2,16 @@
 
 namespace Drupal\flag\FlagType;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\flag\FlagType\FlagTypePluginInterface;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\flag\FlagInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Provides a base class for flag type plugins.
@@ -14,11 +19,31 @@ use Drupal\Core\Session\AccountInterface;
 abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterface {
 
   /**
+   * The module handler.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, array $plugin_definition) {
+  public function __construct(array $configuration, $plugin_id, array $plugin_definition, ModuleHandlerInterface $module_handler) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->moduleHandler = $module_handler;
     $this->configuration += $this->defaultConfiguration();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('module_handler')
+    );
   }
 
   /**
@@ -102,4 +127,47 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
     // Override this.
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function actionPermissions(FlagInterface $flag) {
+    return [
+      'flag ' . $flag->id() => [
+        'title' => t('Flag %flag_title', [
+          '%flag_title' => $flag->label(),
+        ]),
+      ],
+      'unflag ' . $flag->id() => [
+        'title' => t('Unflag %flag_title', [
+          '%flag_title' => $flag->label(),
+        ]),
+      ],
+    ];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function actionAccess($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
+    // Collect access results from objects.
+    $results = $this->moduleHandler->invokeAll('flag_action_access', [
+      $action,
+      $flag,
+      $account,
+      $flaggable,
+    ]);
+
+    // Add default access check.
+    $results[] = AccessResult::allowedIfHasPermission($account, $action . ' ' . $flag->id());
+
+    /** @var \Drupal\Core\Access\AccessResultInterface $return */
+    $return = array_shift($results);
+    foreach ($results as $next) {
+      $return = $return->orIf($next);
+    }
+
+    return $return;
+  }
+
 }
