@@ -2,7 +2,6 @@
 
 namespace Drupal\flag\Tests;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flag\FlagInterface;
 use Drupal\simpletest\WebTestBase;
@@ -170,40 +169,42 @@ abstract class FlagTestBase extends WebTestBase {
         'show_as_field' => TRUE,
         'show_on_form' => FALSE,
         'show_contextual_link' => FALSE,
-        ],
+      ],
       'linkTypeConfig' => [],
       'global' => FALSE,
     ];
 
     $link_type = array_key_exists('link_type', $edit) ? $edit['link_type'] : 'reload';
 
-    // TODO make this list comprehensive.
-    // see flag.schema.yml
+    // To keep this up-to-date see flag.schema.yml.
     switch ($link_type) {
       case 'comment':
         $default = array_merge($default, [
           'flagTypeCpnfig' => [
             'access_author' => $this->randomString(),
-          ]
+          ],
         ]);
         break;
+
       case 'confirm':
         $default = array_merge($default, [
           'linkTypeConfig' => [
             'flag_confirmation' => $this->randomString(),
             'unflag_confirmation' => $this->randomString(),
-          ]
+          ],
         ]);
         break;
+
       case 'field_entry':
         $default = array_merge($default, [
           'linkTypeConfig' => [
             'flag_confirmation' => $this->randomString(),
             'unflag_confirmation' => $this->randomString(),
             'edit_flagging' => $this->randomString(),
-          ]
+          ],
         ]);
         break;
+
       default:
         break;
     }
@@ -300,7 +301,8 @@ abstract class FlagTestBase extends WebTestBase {
    */
   protected function grantFlagPermissions(FlagInterface $flag,
                                       $role_id = RoleInterface::AUTHENTICATED_ID,
-                                      $can_flag = TRUE, $can_unflag = TRUE) {
+                                      $can_flag = TRUE,
+                                      $can_unflag = TRUE) {
 
     // Grant the flag permissions to the authenticated role, so that both
     // users have the same roles and share the render cache.
