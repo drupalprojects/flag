@@ -32,7 +32,7 @@ class FlagViewsRelationship extends RelationshipPluginBase {
     parent::buildOptionsForm($form, $form_state);
 
     $entity_type = $this->definition['flaggable'];
-    $form['label']['#description'] .= ' ' . t('The name of the selected flag makes a good label.');
+    $form['label']['#description'] .= ' ' .$this-> t('The name of the selected flag makes a good label.');
 
     $flags = \Drupal::service('flag')->getFlags($entity_type);
 
@@ -43,7 +43,7 @@ class FlagViewsRelationship extends RelationshipPluginBase {
 
     $form['flag'] = [
       '#type' => 'radios',
-      '#title' => t('Flag'),
+      '#title' => $this->t('Flag'),
       '#default_value' => $default_value,
       '#required' => TRUE,
     ];
@@ -56,18 +56,18 @@ class FlagViewsRelationship extends RelationshipPluginBase {
 
     $form['user_scope'] = [
       '#type' => 'radios',
-      '#title' => t('By'),
-      '#options' => ['current' => t('Current user'), 'any' => t('Any user')],
+      '#title' => $this->t('By'),
+      '#options' => ['current' => $this->t('Current user'), 'any' => $this->t('Any user')],
       '#default_value' => $this->options['user_scope'],
     ];
 
-    $form['required']['#title'] = t('Include only flagged content');
-    $form['required']['#description'] = t('If checked, only content that has this flag will be included. Leave unchecked to include all content; or, in combination with the <em>Flagged</em> filter, <a href="@unflagged-url">to limit the results to specifically unflagged content</a>.', ['@unflagged-url' => 'http://drupal.org/node/299335']);
+    $form['required']['#title'] = $this->t('Include only flagged content');
+    $form['required']['#description'] = $this->t('If checked, only content that has this flag will be included. Leave unchecked to include all content; or, in combination with the <em>Flagged</em> filter, <a href="@unflagged-url">to limit the results to specifically unflagged content</a>.', ['@unflagged-url' => 'http://drupal.org/node/299335']);
 
     if (!$form['flag']['#options']) {
       $form = [
         'error' => [
-          '#markup' => '<p class="error form-item">' . t('No %type flags exist. You must first <a href="@create-url">create a %type flag</a> before being able to use this relationship type.', ['%type' => $entity_type, '@create-url' => Url::fromRoute('entity.flag.collection')->toString()]) . '</p>',
+          '#markup' => '<p class="error form-item">' . $this->t('No %type flags exist. You must first <a href="@create-url">create a %type flag</a> before being able to use this relationship type.', ['%type' => $entity_type, '@create-url' => Url::fromRoute('entity.flag.collection')->toString()]) . '</p>',
         ],
       ];
     }

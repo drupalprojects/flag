@@ -9,6 +9,7 @@ use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flag\FlagInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -27,6 +28,8 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
    * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
+
+  use StringTranslationTrait;
 
   /**
    * Build a new link type instance and sets the configuration.

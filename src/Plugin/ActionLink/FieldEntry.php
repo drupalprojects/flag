@@ -49,7 +49,7 @@ class FieldEntry extends ActionLinkTypeBase {
     $form['display']['settings']['link_options_field'] = [
       '#type' => 'details',
       '#open' => TRUE,
-      '#title' => t('Options for the "Field entry" link type'),
+      '#title' => $this->t('Options for the "Field entry" link type'),
       // Any "link type" provider module must put its settings fields inside
       // a fieldset whose HTML ID is link-options-LINKTYPE, where LINKTYPE is
       // the machine-name of the link type. This is necessary for the
@@ -59,27 +59,27 @@ class FieldEntry extends ActionLinkTypeBase {
 
     $form['display']['settings']['link_options_field']['flag_confirmation'] = [
       '#type' => 'textfield',
-      '#title' => t('Flag confirmation message'),
+      '#title' => $this->t('Flag confirmation message'),
       '#default_value' => $this->configuration['flag_confirmation'],
-      '#description' => t('Message displayed if the user has clicked the "flag this" link and field entry is required. Usually presented in the form such as, "Please enter the flagging details."'),
+      '#description' => $this->t('Message displayed if the user has clicked the "flag this" link and field entry is required. Usually presented in the form such as, "Please enter the flagging details."'),
       // This will get changed to a state by flag_link_type_options_states().
       '#required' => TRUE,
     ];
 
     $form['display']['settings']['link_options_field']['flagging_edit_title'] = [
       '#type' => 'textfield',
-      '#title' => t('Enter flagging details message'),
+      '#title' => $this->t('Enter flagging details message'),
       '#default_value' => $this->configuration['edit_flagging'],
-      '#description' => t('Message displayed if the user has clicked the "Edit flag" link. Usually presented in the form such as, "Please enter the flagging details."'),
+      '#description' => $this->t('Message displayed if the user has clicked the "Edit flag" link. Usually presented in the form such as, "Please enter the flagging details."'),
       // This will get changed to a state by flag_link_type_options_states().
       '#required' => TRUE,
     ];
 
     $form['display']['settings']['link_options_field']['unflag_confirmation'] = [
       '#type' => 'textfield',
-      '#title' => t('Unflag confirmation message'),
+      '#title' => $this->t('Unflag confirmation message'),
       '#default_value' => $this->configuration['unflag_confirmation'],
-      '#description' => t('Message displayed if the user has clicked the "delete flag" link in the field entry form. Usually presented in the form of a question such as, "Are you sure you want to unflag this content?"'),
+      '#description' => $this->t('Message displayed if the user has clicked the "delete flag" link in the field entry form. Usually presented in the form of a question such as, "Are you sure you want to unflag this content?"'),
       // This will get changed to a state by flag_link_type_options_states().
       '#required' => TRUE,
     ];

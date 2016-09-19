@@ -26,7 +26,7 @@ class FlagViewsFlaggedField extends Boolean {
     parent::init($view, $display, $options);
 
     // Add our boolean labels.
-    $this->formats['flag'] = [t('Flagged'), t('Not flagged')];
+    $this->formats['flag'] = [$this->t('Flagged'), $this->t('Not flagged')];
     // TODO: We could probably lift the '(Un)Flagged message' strings from the
     // flag object, but a) we need to lift that from the relationship we're on
     // and b) they will not necessarily make sense in a static context.

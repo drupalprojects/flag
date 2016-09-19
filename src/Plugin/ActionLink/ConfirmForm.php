@@ -50,7 +50,7 @@ class ConfirmForm extends ActionLinkTypeBase {
     $form['display']['settings']['link_options_confirm'] = [
       '#type' => 'details',
       '#open' => TRUE,
-      '#title' => t('Options for the "Confirmation form" link type'),
+      '#title' => $this->t('Options for the "Confirmation form" link type'),
       // Any "link type" provider module must put its settings fields inside
       // a fieldset whose HTML ID is link-options-LINKTYPE, where LINKTYPE is
       // the machine-name of the link type. This is necessary for the
@@ -60,18 +60,18 @@ class ConfirmForm extends ActionLinkTypeBase {
 
     $form['display']['settings']['link_options_confirm']['flag_confirmation'] = [
       '#type' => 'textfield',
-      '#title' => t('Flag confirmation message'),
+      '#title' => $this->t('Flag confirmation message'),
       '#default_value' => $this->getFlagQuestion(),
-      '#description' => t('Message displayed if the user has clicked the "flag this" link and confirmation is required. Usually presented in the form of a question such as, "Are you sure you want to flag this content?"'),
+      '#description' => $this->t('Message displayed if the user has clicked the "flag this" link and confirmation is required. Usually presented in the form of a question such as, "Are you sure you want to flag this content?"'),
       // This will get changed to a state by flag_link_type_options_states().
       '#required' => TRUE,
     ];
 
     $form['display']['settings']['link_options_confirm']['unflag_confirmation'] = [
       '#type' => 'textfield',
-      '#title' => t('Unflag confirmation message'),
+      '#title' => $this->t('Unflag confirmation message'),
       '#default_value' => $this->getUnflagQuestion(),
-      '#description' => t('Message displayed if the user has clicked the "unflag this" link and confirmation is required. Usually presented in the form of a question such as, "Are you sure you want to unflag this content?"'),
+      '#description' => $this->t('Message displayed if the user has clicked the "unflag this" link and confirmation is required. Usually presented in the form of a question such as, "Are you sure you want to unflag this content?"'),
       // This will get changed to a state by flag_link_type_options_states().
       '#required' => TRUE,
     ];

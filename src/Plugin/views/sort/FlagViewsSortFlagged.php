@@ -18,8 +18,8 @@ class FlagViewsSortFlagged extends SortPluginBase {
    */
   protected function sortOptions() {
     return [
-      'ASC' => t('Unflagged first'),
-      'DESC' => t('Flagged first'),
+      'ASC' => $this->t('Unflagged first'),
+      'DESC' => $this->t('Flagged first'),
     ];
   }
 
@@ -28,7 +28,7 @@ class FlagViewsSortFlagged extends SortPluginBase {
    */
   public function adminSummary() {
     if (!empty($this->options['exposed'])) {
-      return t('Exposed');
+      return $this->t('Exposed');
     }
 
     // Get the labels defined in sortOptions().

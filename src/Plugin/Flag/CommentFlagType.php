@@ -39,16 +39,16 @@ class CommentFlagType extends EntityFlagType {
 
     $form['access']['access_author'] = [
       '#type' => 'radios',
-      '#title' => t('Flag access by content authorship'),
+      '#title' => $this->t('Flag access by content authorship'),
       '#options' => [
-        '' => t('No additional restrictions'),
-        'comment_own' => t('Users may only flag own comments'),
-        'comment_others' => t('Users may only flag comments by others'),
-        'node_own' => t('Users may only flag comments of nodes they own'),
-        'node_others' => t('Users may only flag comments of nodes by others'),
+        '' => $this->t('No additional restrictions'),
+        'comment_own' => $this->t('Users may only flag own comments'),
+        'comment_others' => $this->t('Users may only flag comments by others'),
+        'node_own' => $this->t('Users may only flag comments of nodes they own'),
+        'node_others' => $this->t('Users may only flag comments of nodes by others'),
       ],
       '#default_value' => $this->configuration['access_author'],
-      '#description' => t("Restrict access to this flag based on the user's ownership of the content. Users must also have access to the flag through the role settings."),
+      '#description' => $this->t("Restrict access to this flag based on the user's ownership of the content. Users must also have access to the flag through the role settings."),
     ];
 
     return $form;

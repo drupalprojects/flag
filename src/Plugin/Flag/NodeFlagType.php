@@ -40,14 +40,14 @@ class NodeFlagType extends EntityFlagType {
 
     $form['access']['access_author'] = [
       '#type' => 'radios',
-      '#title' => t('Flag access by content authorship'),
+      '#title' => $this->t('Flag access by content authorship'),
       '#options' => [
-        '' => t('No additional restrictions'),
-        'own' => t('Users may only flag content they own'),
-        'others' => t('Users may only flag content of others'),
+        '' => $this->t('No additional restrictions'),
+        'own' => $this->t('Users may only flag content they own'),
+        'others' => $this->t('Users may only flag content of others'),
       ],
       '#default_value' => $this->getAccessAuthorSetting(),
-      '#description' => t("Restrict access to this flag based on the user's ownership of the content. Users must also have access to the flag through the role settings."),
+      '#description' => $this->t("Restrict access to this flag based on the user's ownership of the content. Users must also have access to the flag through the role settings."),
     ];
 
     return $form;

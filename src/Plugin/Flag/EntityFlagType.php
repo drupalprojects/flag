@@ -5,6 +5,7 @@ namespace Drupal\flag\Plugin\Flag;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\flag\FlagType\FlagTypeBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides a flag type for all entity types.
@@ -18,6 +19,8 @@ use Drupal\Core\Form\FormStateInterface;
  * )
  */
 class EntityFlagType extends FlagTypeBase {
+
+  use StringTranslationTrait;
 
   /**
    * The entity type defined in plugin definition.
@@ -63,19 +66,19 @@ class EntityFlagType extends FlagTypeBase {
 
     $form['display']['show_as_field'] = [
       '#type' => 'checkbox',
-      '#title' => t('Display link as field'),
-      '#description' => t('Show the flag link as a field, which can be ordered among other entity elements in the "Manage display" settings for the entity type.'),
+      '#title' => $this->t('Display link as field'),
+      '#description' => $this->t('Show the flag link as a field, which can be ordered among other entity elements in the "Manage display" settings for the entity type.'),
       '#default_value' => $this->showAsField(),
     ];
     /*
     if (empty($entity_info['fieldable'])) {
       $form['display']['show_as_field']['#disabled'] = TRUE;
-      $form['display']['show_as_field']['#description'] = t("This entity type is not fieldable.");
+      $form['display']['show_as_field']['#description'] = $this->t("This entity type is not fieldable.");
     }
     */
     $form['display']['show_on_form'] = [
       '#type' => 'checkbox',
-      '#title' => t('Display checkbox on entity edit form'),
+      '#title' => $this->t('Display checkbox on entity edit form'),
       '#default_value' => $this->showOnForm(),
       '#weight' => 5,
     ];
@@ -87,14 +90,14 @@ class EntityFlagType extends FlagTypeBase {
     /*
     if (empty($entity_info['fieldable'])) {
       $form['display']['show_on_form']['#disabled'] = TRUE;
-      $form['display']['show_on_form']['#description'] = t('This is only possible on entities which are fieldable.');
+      $form['display']['show_on_form']['#description'] = $this->t('This is only possible on entities which are fieldable.');
     }
     */
     $form['display']['show_contextual_link'] = [
       '#type' => 'checkbox',
-      '#title' => t('Display in contextual links'),
+      '#title' => $this->t('Display in contextual links'),
       '#default_value' => $this->showContextualLink(),
-      '#description' => t("Note that not all entity types support contextual links.
+      '#description' => $this->t("Note that not all entity types support contextual links.
         <br/>
         <strong>Warning: </strong>Due to how contextual links are cached on frontend
         we have to set max-age as 0 for entity cache if
@@ -114,7 +117,7 @@ class EntityFlagType extends FlagTypeBase {
     $view_modes = $entity_display_service->getViewModes($this->entityType);
 
     foreach ($view_modes as $name => $view_mode) {
-      $options[$name] = t('Display on @name view mode', ['@name' => $view_mode['label']]);
+      $options[$name] = $this->t('Display on @name view mode', ['@name' => $view_mode['label']]);
       if ($this->showInLinks($name)) {
         $defaults[$name] = $name;
       }
@@ -122,8 +125,8 @@ class EntityFlagType extends FlagTypeBase {
 
     $form['display']['show_in_links'] = [
       '#type' => 'checkboxes',
-      '#title' => t('Display in entity links'),
-      '#description' => t('Show the flag link with the other links on the entity.'),
+      '#title' => $this->t('Display in entity links'),
+      '#description' => $this->t('Show the flag link with the other links on the entity.'),
       '#options' => $options,
       '#default_value' => $defaults,
       '#weight' => 15,
