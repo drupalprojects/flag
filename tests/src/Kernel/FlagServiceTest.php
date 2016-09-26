@@ -138,6 +138,16 @@ class FlagServiceTest extends FlagKernelTestBase {
     catch (\LogicException $e) {
       $this->pass("The unflag() method throws an exception when the flaggable entity is not flagged by the user with the flag.");
     }
+
+    // Demonstrate a valid combination can be unflagged without throwing an
+    // exception.
+    try {
+      $this->flagService->unflag($flag, $flaggable_node, $account);
+      $this->pass('The unflag() method throws no exception when the flaggable entity and user is correct');
+    }
+    catch (\LogicException $e){
+      $this->fail('The unfag() method threw an exception where processing a valid unflag request.');
+    }
   }
 
   /**
