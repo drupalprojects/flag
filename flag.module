@@ -497,7 +497,7 @@ function flag_contextual_links_alter(array &$links, $group, array $route_paramet
  * Implements hook_entity_predelete().
  */
 function flag_entity_predelete(EntityInterface $entity) {
-  // User flags handle things through the entity type delete hook.
+  // User flags handle things through user entity hooks.
   // @todo: make this configurable in the flag type definition?
   if ($entity->getEntityTypeId() == 'user') {
     return;
@@ -514,7 +514,7 @@ function flag_user_cancel($edit, $account, $method) {
 }
 
 /**
- * Implements hook_user_delete().
+ * Implements hook_user_predelete().
  */
 function flag_user_predelete(UserInterface $account) {
   \Drupal::service('flag')->userFlagRemoval($account);
