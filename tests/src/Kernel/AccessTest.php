@@ -149,6 +149,9 @@ class AccessTest extends FlagKernelTestBase {
     $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_alice, $user_alice)->isNeutral());
     $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_alice, $user_bob)->isAllowed());
 
+    // When no flaggable is supplied UserFlagType::actionAccess() tests are bypassed.
+    $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_alice)->isAllowed());
+    $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_bob)->isNeutral());
   }
 
 }
