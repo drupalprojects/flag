@@ -129,6 +129,15 @@ class FlagService implements FlagServiceInterface {
     if (!empty($account) && !$flag->isGlobal()) {
       $query->condition('uid', $account->id());
     }
+    if (isset($account) && $account->isAnonymous()) {
+      $session = \Drupal::request()->getSession();
+      if ($session && ($flaggings = $session->get('flaggings', []))) {
+        $query->condition('id', $flaggings, 'IN');
+      }
+      else {
+        return [];
+      }
+    }
 
     if (!empty($entity)) {
       $query->condition('entity_type', $entity->getEntityTypeId())

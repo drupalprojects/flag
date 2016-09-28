@@ -84,8 +84,16 @@ class FlaggingStorage extends SqlContentEntityStorage implements FlaggingStorage
     // The flagging must either match the user or be global, avoid an empty IN
     // condition if there are no global flags.
     $user_or_global_condition = $query->orConditionGroup()
-      ->condition('uid', $account->id())
       ->condition('global', 1);
+    if ($account->isAnonymous()) {
+      if ($session_flaggings = \Drupal::request()->getSession()->get('flaggings', [])) {
+        $user_or_global_condition->condition('id', $session_flaggings, 'IN');
+      }
+    }
+    else {
+      $user_or_global_condition->condition('uid', $account->id());
+    }
+
     $result = $query
       ->condition($user_or_global_condition)
       ->execute();
