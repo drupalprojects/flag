@@ -26,25 +26,25 @@ flag.flag.*:
       type: boolean
       label: 'Whether the flag is global'
     flag_short:
-      type: string
+      type: label
       label: 'Flag link text'
     flag_long:
-      type: string
+      type: label
       label: 'Flag link description text'
     flag_message:
       type: string
       label: 'Flag message'
     unflag_short:
-      type: string
+      type: label
       label: 'Unflag link text'
     unflag_long:
-      type: string
+      type: label
       label: 'Unflag link description text'
     unflag_message:
-      type: string
+      type: label
       label: 'Unflag message'
     unflag_denied_text:
-      type: string
+      type: label
       label: 'Unflag denied text'
     weight:
       type: integer
@@ -121,10 +121,10 @@ flag.link_type.plugin.confirm:
   label: 'Confirm Form link type'
   mapping:
     flag_confirmation:
-      type: string
+      type: label
       label: 'Flag confirmation'
     unflag_confirmation:
-       type: string
+       type: label
        label: 'Unflag confirmation'
 
 flag.link_type.plugin.field_entry:
@@ -132,11 +132,11 @@ flag.link_type.plugin.field_entry:
   label: 'Field Entry link type'
   mapping:
     flag_confirmation:
-      type: string
+      type: label
       label: 'Flag confirmation'
     edit_flagging:
-      type: string
+      type: label
       label: 'Edit flagging'
     unflag_confirmation:
-      type: string
+      type: label
       label: 'Unflag confirmation'
