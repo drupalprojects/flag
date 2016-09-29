@@ -18,6 +18,33 @@ class FlaggingViewsData extends EntityViewsData {
     // Remove the 'delete flagging' link that Views provides.
     unset($data['delete_flagging']);
 
+    // Flag counts.
+    $data['flag_counts']['table']['group'] = t('Flagging');
+    $data['flag_counts']['table']['join']['flagging'] = [
+      'left_field' => 'flag_id',
+      'field' => 'flag_id',
+      'extra' => [[
+        'left_field' => 'entity_id',
+        'field' => 'entity_id',
+      ]],
+    ];
+    $data['flag_counts']['count'] = [
+      'title' => $this->t('Flagging count'),
+      'help' => $this->t('The number of flaggings an entity has.'),
+      'field' => ['id' => 'numeric'],
+      'filter' => ['id' => 'numeric'],
+      'sort' => ['id' => 'standard'],
+      'argument' => ['id' => 'numeric'],
+    ];
+    $data['flag_counts']['last_updated'] = [
+      'title' => $this->t('Last flagging'),
+      'help' => $this->t('Last time this entity has been flagged.'),
+      'field' => ['id' => 'date'],
+      'filter' => ['id' => 'date'],
+      'sort' => ['id' => 'date'],
+      'argument' => ['id' => 'date'],
+    ];
+
     // Flag link.
     $data['flagging']['link_flag'] = [
       'field' => [

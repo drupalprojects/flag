@@ -139,12 +139,12 @@ class FlagFollowerUITest extends WebTestBase {
   /**
    * Test user flagging.
    *
-   * User A follows user B. B follows A and C. C follows no one.
+   * User A follows user C. B follows A and C. C follows no one.
    */
   public function doUserFlagging() {
-    // User A follows user B.
+    // User A follows user C.
     $this->drupalLogin($this->userA);
-    $this->drupalGet('user/' . $this->userB->id());
+    $this->drupalGet('user/' . $this->userC->id());
     $this->clickLink(t('Follow this user'));
 
     // User B follows user A.
@@ -165,13 +165,16 @@ class FlagFollowerUITest extends WebTestBase {
   public function doFollowerView() {
     $this->drupalLogin($this->userA);
     $this->drupalGet('flag-followers');
-    $this->assertNoText($this->userC->getAccountName());
-    $this->assertText($this->userB->getAccountName());
+    $this->assertNoText($this->userB->getAccountName());
+    $this->assertText($this->userC->getAccountName());
+    $this->assertText('2', 'A sees C has two followers.');
 
     $this->drupalLogin($this->userB);
     $this->drupalGet('flag-followers');
     $this->assertText($this->userA->getAccountName());
     $this->assertText($this->userC->getAccountName());
+    $this->assertText('2', 'B sees C has two followers.');
+    $this->assertText('1', 'B sees A has one follower.');
 
     $this->drupalLogin($this->userC);
     $this->drupalGet('flag-followers');
@@ -185,8 +188,8 @@ class FlagFollowerUITest extends WebTestBase {
   public function doContentView() {
     $this->drupalLogin($this->userA);
     $this->drupalGet('flag-followers/content');
-    $this->assertText($this->nodeB->label());
-    $this->assertNoText($this->nodeC->label());
+    $this->assertText($this->nodeC->label());
+    $this->assertNoText($this->nodeB->label());
 
     $this->drupalLogin($this->userB);
     $this->drupalGet('flag-followers/content');
