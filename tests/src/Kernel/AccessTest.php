@@ -6,31 +6,11 @@ use Drupal\node\Entity\Node;
 use Drupal\flag\Entity\Flag;
 
 /**
- * Tests default hook_flag_action_access() can be overriden by other modules.
+ * Tests default hook_flag_action_access() can be overridden by other modules.
  *
  * @group flag
  */
 class AccessTest extends FlagKernelTestBase {
-
-  /**
-   * Alice has all permission.
-   *
-   * @var \Drupal\user\Entity\User|false
-   */
-  protected $userAlice;
-
-  /**
-   * Bob has no permission.
-   *
-   * @var \Drupal\user\Entity\User|false
-   */
-  protected $userBob;
-
-  /**
-   *
-   * @var \Drupal\user\Entity\User|false
-   */
-  protected $userJill;
 
   /**
    * {@inheritdoc}
@@ -75,7 +55,7 @@ class AccessTest extends FlagKernelTestBase {
       'flag example',
     ]);
 
-    // Create a user who may not flag.
+    // Create a user who may not flag or unflag.
     $user_bob = $this->createUser();
 
     $article = Node::create([
@@ -89,8 +69,8 @@ class AccessTest extends FlagKernelTestBase {
     $this->assertTrue($flag->actionAccess('unflag', $user_alice, $article)->isAllowed(), 'Alice can unflag.');
 
     // Test with only flag permission.
-    $this->assertTrue($flag->actionAccess('flag', $user_jill, $article)->isAllowed(), 'Alice can flag.');
-    $this->assertTrue($flag->actionAccess('unflag', $user_jill, $article)->isNeutral(), 'Alice can unflag.');
+    $this->assertTrue($flag->actionAccess('flag', $user_jill, $article)->isAllowed(), 'Jill can flag.');
+    $this->assertTrue($flag->actionAccess('unflag', $user_jill, $article)->isNeutral(), 'Jill cannot unflag.');
 
     // Test without permissions.
     $this->assertTrue($flag->actionAccess('flag', $user_bob, $article)->isNeutral(), 'Bob cannot flag.');
@@ -101,8 +81,8 @@ class AccessTest extends FlagKernelTestBase {
    * User permissions.
    */
   public function testUserFlag() {
-    // Cannot flag yourself.
-    $selfiesFlag = Flag::create([
+    // Self flagging permitted.
+    $selfies_flag = Flag::create([
       'id' => 'selfies',
       'label' => $this->randomString(),
       'entity_type' => 'user',
@@ -114,10 +94,10 @@ class AccessTest extends FlagKernelTestBase {
       ],
       'linkTypeConfig' => [],
     ]);
-    $selfiesFlag->save();
+    $selfies_flag->save();
 
-    // Self flagging permitted.
-    $noSelfiesFlag = Flag::create([
+    // Cannot flag yourself.
+    $no_selfies_flag = Flag::create([
       'id' => 'no_selfies',
       'label' => $this->randomString(),
       'entity_type' => 'user',
@@ -129,7 +109,7 @@ class AccessTest extends FlagKernelTestBase {
       ],
       'linkTypeConfig' => [],
     ]);
-    $noSelfiesFlag->save();
+    $no_selfies_flag->save();
 
     // Create a user who may flag.
     $user_alice = $this->createUser([
@@ -142,16 +122,16 @@ class AccessTest extends FlagKernelTestBase {
     $user_bob = $this->createUser();
 
     // What happens when selfies are permitted.
-    $this->assertTrue($selfiesFlag->actionAccess('flag', $user_alice, $user_alice)->isAllowed());
-    $this->assertTrue($selfiesFlag->actionAccess('flag', $user_alice, $user_bob)->isAllowed());
+    $this->assertTrue($selfies_flag->actionAccess('flag', $user_alice, $user_alice)->isAllowed());
+    $this->assertTrue($selfies_flag->actionAccess('flag', $user_alice, $user_bob)->isAllowed());
 
     // What happens when selfies are banned.
-    $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_alice, $user_alice)->isNeutral());
-    $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_alice, $user_bob)->isAllowed());
+    $this->assertTrue($no_selfies_flag->actionAccess('flag', $user_alice, $user_alice)->isNeutral());
+    $this->assertTrue($no_selfies_flag->actionAccess('flag', $user_alice, $user_bob)->isAllowed());
 
     // When no flaggable is supplied UserFlagType::actionAccess() tests are bypassed.
-    $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_alice)->isAllowed());
-    $this->assertTrue($noSelfiesFlag->actionAccess('flag', $user_bob)->isNeutral());
+    $this->assertTrue($no_selfies_flag->actionAccess('flag', $user_alice)->isAllowed());
+    $this->assertTrue($no_selfies_flag->actionAccess('flag', $user_bob)->isNeutral());
   }
 
 }
