@@ -8,6 +8,7 @@ use Drupal\simpletest\WebTestBase;
 use Drupal\flag\Entity\Flag;
 use Drupal\user\RoleInterface;
 use Drupal\user\Entity\Role;
+use Drupal\Core\Template\Attribute;
 
 /**
  * Provides common methods for Flag tests.
@@ -341,6 +342,37 @@ abstract class FlagTestBase extends WebTestBase {
 
     // Return the generic entity flag type plugin ID.
     return 'entity';
+  }
+
+
+  /**
+   * Asserts that a contextual link placeholder with the given id exists.
+   *
+   * @see \Drupal\contextual\Tests\ContextualDynamicContextTest::assertContextualLinkPlaceHolder().
+   *
+   * @param string $id
+   *   A contextual link id.
+   *
+   * @return bool
+   *   The result of the assertion.
+   */
+  protected function assertContextualLinkPlaceHolder($id) {
+    return $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+  }
+
+  /**
+   * Asserts that a contextual link placeholder with the given id exists.
+   *
+   * @see \Drupal\contextual\Tests\ContextualDynamicContextTest::assertContextualLinkPlaceHolder().
+   *
+   * @param string $id
+   *   A contextual link id.
+   *
+   * @return bool
+   *   The result of the assertion.
+   */
+  protected function assertNoContextualLinkPlaceholder($id) {
+    return $this->assertNoRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
   }
 
 }

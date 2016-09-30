@@ -44,16 +44,8 @@ class LinkOutputLocationTest extends FlagTestBase {
     // Create a flag.
     $this->flag = $this->createFlag('node', ['article'], 'reload');
 
-    // Create a user who may flag and log them in. This ensures we don't have
-    // to worry about flag access.
-    $this->adminUser = $this->drupalCreateUser([
-      'administer flags',
-      // This permission is needed to change the view mode settings to show and
-      // hide the flag link field.
-      'administer node display',
-    ]);
+    // Log in as the admin user so we don't have to worry about flag access.
     $this->grantFlagPermissions($this->flag);
-
     $this->drupalLogin($this->adminUser);
 
     // Create a node to flag.
@@ -138,6 +130,33 @@ class LinkOutputLocationTest extends FlagTestBase {
     // Check the full and teaser view modes.
     // Turn off the entity link for one view mode.
     // Check both view modes are as expected.
+  }
+
+  /**
+   * Tests that when no display types are selected, no flag links appear.
+   */
+  public function testNoLinkLocation() {
+    $flag_config = $this->flag->getFlagTypePlugin()->getConfiguration();
+    $flag_config['show_as_field'] = FALSE;
+    $flag_config['show_in_links'] = [];
+    $flag_config['show_on_form'] = FALSE;
+    $flag_config['show_contextual_link'] = FALSE;
+    $this->flag->getFlagTypePlugin()->setConfiguration($flag_config);
+    $this->flag->save();
+
+    $contextual_links_id = 'node:node=' . $this->node->id() . ':changed=' . $this->node->getChangedTime() . '&flag_keys=' . $this->flag->id() . '-flag&langcode=en';
+    $this->drupalGet('node');
+    $this->assertNoPseudofield($this->flag, $this->node);
+    $this->assertNoContextualLinkPlaceholder($contextual_links_id);
+
+    $this->drupalGet('node/' . $this->node->id());
+    $this->assertNoPseudofield($this->flag, $this->node);
+    $this->assertNoContextualLinkPlaceHolder($contextual_links_id);
+    // TODO: check no entity field link.
+
+    $this->drupalGet('node/' . $this->node->id() . '/edit');
+    $this->assertNoField('flag[' . $this->flag->id() . ']');
+    $this->assertNoContextualLinkPlaceholder($contextual_links_id);
   }
 
   /**

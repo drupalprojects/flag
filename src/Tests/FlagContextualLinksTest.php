@@ -7,7 +7,6 @@
 namespace Drupal\flag\Tests;
 
 use Drupal\Component\Utility\UrlHelper;
-use Drupal\Core\Template\Attribute;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
@@ -108,21 +107,6 @@ class FlagContextualLinksTest extends FlagTestBase {
 
     $flag_action_url = $this->getFlagContextualLinkUrl($this->flag, $node, $contextual_links_id, 'flag');
     $this->assertTrue($flag_action_url, "Flag link found in contextual links.");
-  }
-
-  /**
-   * Asserts that a contextual link placeholder with the given id exists.
-   *
-   * @see \Drupal\contextual\Tests\ContextualDynamicContextTest::assertContextualLinkPlaceHolder().
-   *
-   * @param string $id
-   *   A contextual link id.
-   *
-   * @return bool
-   *   The result of the assertion.
-   */
-  protected function assertContextualLinkPlaceHolder($id) {
-    return $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
   }
 
   /**
