@@ -28,6 +28,6 @@ flagTypeConfig:
   show_as_field: 1
   show_on_form: 0
   show_contextual_link: 0
-  show_on_profile: null
+  show_on_profile: 0
   access_uid: null
 linkTypeConfig: {  }
