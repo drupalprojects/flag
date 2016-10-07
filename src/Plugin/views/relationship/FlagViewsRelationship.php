@@ -37,9 +37,6 @@ class FlagViewsRelationship extends RelationshipPluginBase {
     $flags = \Drupal::service('flag')->getFlags($entity_type);
 
     $default_value = $this->options['flag'];
-    if (!empty($flags)) {
-      $default_value = current(array_keys($flags));
-    }
 
     $form['flag'] = [
       '#type' => 'radios',
