@@ -306,7 +306,6 @@ abstract class FlagFormBase extends EntityForm {
     $flag->getFlagTypePlugin()->submitConfigurationForm($form, $form_state);
     $flag->getLinkTypePlugin()->submitConfigurationForm($form, $form_state);
 
-    $flag->enable();
     $status = $flag->save();
     $url = $flag->urlInfo();
     if ($status == SAVED_UPDATED) {

@@ -41,4 +41,17 @@ class FlagAddForm extends FlagFormBase {
     $actions['submit']['#value'] = t('Create Flag');
     return $actions;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\flag\FlagInterface $flag */
+    $flag = $this->entity;
+
+    // Enable new flags by default.
+    $flag->enable();
+    parent::save($form, $form_state);
+  }
+
 }
