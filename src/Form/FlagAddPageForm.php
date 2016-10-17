@@ -60,7 +60,7 @@ class FlagAddPageForm extends FormBase {
       '#type' => 'radios',
       '#title' => t('Flag Type'),
       '#required' => TRUE,
-      '#description' => t('The type of object this flag will affect. This cannot be changed once the flag is created.'),
+      '#description' => t('Type of item to reference. This cannot be changed once the flag is created.'),
       '#default_value' => 'entity:node',
       '#options' => $this->flagTypeManager->getAllFlagTypes(),
     ];
