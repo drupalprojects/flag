@@ -5,6 +5,9 @@
  * Flag module install/schema/update hooks.
  */
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Config\Entity\ConfigEntityStorage;
+
 /**
  * Implements hook_schema().
  */
@@ -15,27 +18,26 @@ function flag_schema() {
     'description' => 'The number of times an item has been flagged.',
     'fields' => [
       'flag_id' => [
-        'type' => 'varchar',
+        'type' => 'varchar_ascii',
         'length' => '32',
         'not null' => TRUE,
       ],
       'entity_type' => [
         'description' => 'The flag type, for example "node", "comment", or "user".',
-        'type' => 'varchar',
-        'length' => '128',
+        'type' => 'varchar_ascii',
+        'length' => EntityTypeInterface::ID_MAX_LENGTH,
+        'not null' => TRUE,
       ],
       'entity_id' => [
         'description' => 'The unique ID of the flagged entity, for example the uid, cid, or nid.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'disp-width' => '10',
+        'type' => 'varchar_ascii',
+        'length' => ConfigEntityStorage::MAX_ID_LENGTH,
         'not null' => TRUE,
       ],
       'count' => [
         'description' => 'The number of times this object has been flagged for this flag.',
         'type' => 'int',
         'unsigned' => TRUE,
-        'disp-width' => '10',
       ],
       'last_updated' => [
         'description' => 'The UNIX time stamp representing when the flag was last updated.',
