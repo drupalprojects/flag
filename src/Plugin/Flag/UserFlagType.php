@@ -76,7 +76,7 @@ class UserFlagType extends EntityFlagType {
   /**
    * Specifies if users are able to flag themselves.
    *
-   * @return bool|mixed
+   * @return bool
    *   TRUE if users are able to flag themselves, FALSE otherwise.
    */
   protected function canUsersFlagThemselves() {

@@ -73,13 +73,13 @@ flag.flag.*:
         type: string
         label: 'View mode'
     show_as_field:
-      type: integer
+      type: boolean
       label: 'Show as field'
     show_on_form:
-      type: integer
+      type: boolean
       label: 'Show on form'
     show_contextual_link:
-      type: integer
+      type: boolean
       label: 'Show contextual link'
 
 flag.flag_type.plugin.entity:comment:
@@ -103,13 +103,13 @@ flag.flag_type.plugin.entity:node:
 
 flag.flag_type.plugin.entity:user:
   type: "flag.flag_type.plugin.entity:*"
-  label: 'Flag type for  for user entities'
+  label: 'Flag type for user entities'
   mapping:
     show_on_profile:
       type: boolean
       label: 'Show on profile'
     access_uid:
-      type: string
+      type: boolean
       label: 'Access uid'
 
 flag.link_type.plugin.*:

@@ -25,9 +25,9 @@ flag_type: 'entity:user'
 link_type: reload
 flagTypeConfig:
   show_in_links: {  }
-  show_as_field: 1
-  show_on_form: 0
-  show_contextual_link: 0
-  show_on_profile: null
-  access_uid: null
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  show_on_profile: false
+  access_uid: false
 linkTypeConfig: {  }
