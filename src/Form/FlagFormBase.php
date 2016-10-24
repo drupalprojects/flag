@@ -62,7 +62,7 @@ abstract class FlagFormBase extends EntityForm {
     $flag = $this->entity;
 
     $form['#flag'] = $flag;
-    $form['#flag_name'] = $flag->id;
+    $form['#flag_name'] = $flag->id();
 
     $form['label'] = [
       '#type' => 'textfield',
@@ -77,7 +77,7 @@ abstract class FlagFormBase extends EntityForm {
     $form['id'] = [
       '#type' => 'machine_name',
       '#title' => $this->t('Machine name'),
-      '#default_value' => $flag->id,
+      '#default_value' => $flag->id(),
       '#description' => $this->t('The machine-name for this flag. It may be up to 32 characters long and may only contain lowercase letters, underscores, and numbers. It will be used in URLs and in all API calls.'),
       '#weight' => -2,
       '#machine_name' => [
@@ -327,7 +327,7 @@ abstract class FlagFormBase extends EntityForm {
     // permissions for different flag types: http://drupal.org/node/879988
 
     // If the flag ID has changed, clean up all the obsolete permissions.
-    if ($flag->id != $form['#flag_name']) {
+    if ($flag->id() != $form['#flag_name']) {
       $old_name = $form['#flag_name'];
       $permissions = ["flag $old_name", "unflag $old_name"];
       foreach (array_keys(user_roles()) as $rid) {

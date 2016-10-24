@@ -133,7 +133,7 @@ class FlagViewsRelationship extends RelationshipPluginBase {
         'value' => '***CURRENT_USER***',
         'numeric' => TRUE,
       ];
-      $flag_roles = user_roles(FALSE, "flag $flag->id()");
+      $flag_roles = user_roles(FALSE, "flag " . $flag->id());
       if (isset($flag_roles[RoleInterface::ANONYMOUS_ID])) {
         // Disable page caching for anonymous users.
         $this->pageCacheKillSwitch->trigger();

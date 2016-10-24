@@ -75,7 +75,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    *
    * @var string
    */
-  public $id;
+  protected $id;
 
   /**
    * The flag UUID.

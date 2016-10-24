@@ -418,7 +418,7 @@ function flag_entity_view_alter(&$build, EntityInterface $entity, EntityViewDisp
         $action = 'unflag';
       }
 
-      $flag_keys[] = $flag->id . '-' . $action;
+      $flag_keys[] = $flag->id() . '-' . $action;
     }
 
     if (!empty($flag_keys)) {
