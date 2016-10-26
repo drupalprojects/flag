@@ -78,13 +78,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   protected $id;
 
   /**
-   * The flag UUID.
-   *
-   * @var string
-   */
-  public $uuid;
-
-  /**
    * The entity type this flag works with.
    *
    * @var string
@@ -218,7 +211,7 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    *
    * @var int
    */
-  public $weight = 0;
+  protected $weight = 0;
 
   /**
    * {@inheritdoc}
