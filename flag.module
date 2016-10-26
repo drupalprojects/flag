@@ -254,7 +254,7 @@ function flag_entity_extra_field_info() {
       if ($flag_type_plugin->showAsField()) {
         $extra[$flag->getFlaggableEntityTypeId()][$bundle_name]['display']['flag_' . $flag->id()] = [
           'label' => t('Flag: %title', [
-            '%title' => $flag->label,
+            '%title' => $flag->label(),
           ]),
           'description' => t('Individual flag link'),
           'weight' => 10,

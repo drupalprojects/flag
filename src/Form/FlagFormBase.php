@@ -67,7 +67,7 @@ abstract class FlagFormBase extends EntityForm {
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#default_value' => $flag->label,
+      '#default_value' => $flag->label(),
       '#description' => $this->t('A short, descriptive title for this flag. It will be used in administrative interfaces to refer to this flag, and in page titles and menu items of some views this module provides (these are customizable, though). Some examples could be <em>Bookmarks</em>, <em>Favorites</em>, or <em>Offensive</em>.'),
       '#maxlength' => 255,
       '#required' => TRUE,
