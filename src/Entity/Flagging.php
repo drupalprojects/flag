@@ -32,7 +32,8 @@ use Drupal\user\UserInterface;
  *  entity_keys = {
  *    "id" = "id",
  *    "bundle" = "flag_id",
- *    "uuid" = "uuid"
+ *    "uuid" = "uuid",
+ *    "uid" = "uid"
  *  },
  *  bundle_entity_type = "flag",
  *  field_ui_base_route = "entity.flag.edit_form",
