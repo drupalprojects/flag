@@ -108,7 +108,7 @@ class LinkOutputLocationTest extends FlagTestBase {
 
     // Hide the flag field on teaser view mode.
     $edit = [
-      'fields[flag_' . $this->flag->id() . '][type]' => 'hidden',
+      'fields[flag_' . $this->flag->id() . '][region]' => 'hidden',
     ];
     $this->drupalPostForm('admin/structure/types/manage/article/display/teaser', $edit, $this->t('Save'));
 
