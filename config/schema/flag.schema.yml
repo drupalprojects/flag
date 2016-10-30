@@ -19,9 +19,6 @@ flag.flag.*:
     entity_type:
       type: string
       label: 'Flaggable entity type'
-    enabled:
-      type: boolean
-      label: 'Whether the flag is enabled'
     global:
       type: boolean
       label: 'Whether the flag is global'

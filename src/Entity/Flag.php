@@ -39,7 +39,6 @@ use Drupal\flag\FlagInterface;
  *     "label",
  *     "bundles",
  *     "entity_type",
- *     "enabled",
  *     "global",
  *     "weight",
  *     "flag_short",
@@ -97,13 +96,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    * @var bool
    */
   protected $global = FALSE;
-
-  /**
-   * Whether this flag is enabled.
-   *
-   * @var bool
-   */
-  protected $enabled = TRUE;
 
   /**
    * The bundles this flag applies to.
@@ -212,27 +204,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
    * @var int
    */
   protected $weight = 0;
-
-  /**
-   * {@inheritdoc}
-   */
-  public function enable() {
-    $this->enabled = TRUE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function disable() {
-    $this->enabled = FALSE;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function isEnabled() {
-    return $this->enabled;
-  }
 
   /**
    * {@inheritdoc}
@@ -570,13 +541,13 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     // Check if the entities are flags, if not go with the default.
     if ($a instanceof FlagInterface && $b instanceof FlagInterface) {
 
-      if ($a->isEnabled() && $b->isEnabled()) {
+      if ($a->status() && $b->status()) {
         return parent::sort($a, $b);
       }
-      elseif (!$a->isEnabled()) {
+      elseif (!$a->status()) {
         return -1;
       }
-      elseif (!$b->isEnabled()) {
+      elseif (!$b->status()) {
         return 1;
       }
     }

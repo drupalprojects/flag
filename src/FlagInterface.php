@@ -33,24 +33,6 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   /* @todo: Add getters and setters as necessary. */
 
   /**
-   * Enables the Flag for use.
-   */
-  public function enable();
-
-  /**
-   * Disables the Flag for use.
-   */
-  public function disable();
-
-  /**
-   * Returns the status of the flag.
-   *
-   * @return bool
-   *   TRUE if the flag is enabled, FALSE otherwise.
-   */
-  public function isEnabled();
-
-  /**
    * Returns true of there's a flagging for this flag and the given entity.
    *
    * @param EntityInterface $entity

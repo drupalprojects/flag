@@ -328,7 +328,7 @@ function flag_entity_view(array &$build, EntityInterface $entity, EntityViewDisp
     $build['#cache']['tags'] = Cache::mergeTags($build['#cache']['tags'], $flag->getCacheTags());
 
     // Do not display the flag if disabled.
-    if (!$flag->isEnabled()){
+    if (!$flag->status()){
       continue;
     }
 
@@ -449,7 +449,7 @@ function flag_contextual_links_alter(array &$links, $group, array $route_paramet
   foreach ($flags as $flag) {
     /** @var \Drupal\flag\FlagInterface $flag */
     // Do not display the flag if disabled.
-    if (!$flag->isEnabled()){
+    if (!$flag->status()){
       continue;
     }
 
@@ -527,7 +527,7 @@ function flag_entity_operation(\Drupal\Core\Entity\EntityInterface $entity) {
   $operations = [];
 
   if ($entity instanceof \Drupal\flag\FlagInterface) {
-    if (!$entity->isEnabled()) {
+    if (!$entity->status()) {
       $operations['enable'] = [
         'title' => t('Enable'),
         'url' => $entity->toUrl('enable'),

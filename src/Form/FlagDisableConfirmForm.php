@@ -39,7 +39,7 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    if ($this->flag->isEnabled()) {
+    if ($this->flag->status()) {
       return t('Disable flag @name?', array('@name' => $this->flag->label()));
     }
 
@@ -57,7 +57,7 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    if ($this->flag->isEnabled()) {
+    if ($this->flag->status()) {
       return t('Users will no longer be able to use the flag, but no data will be lost.');
     }
 
@@ -68,7 +68,7 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function getConfirmText() {
-    if ($this->flag->isEnabled()) {
+    if ($this->flag->status()) {
       return $this->t('Disable');
     }
 
@@ -80,7 +80,7 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Toggle the flag state.
-    if ($this->flag->isEnabled()) {
+    if ($this->flag->status()) {
       $this->flag->disable();
     }
     else {
