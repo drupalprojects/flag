@@ -86,7 +86,7 @@ class FlaggingStorage extends SqlContentEntityStorage implements FlaggingStorage
     $user_or_global_condition = $query->orConditionGroup()
       ->condition('global', 1);
     if ($account->isAnonymous()) {
-      if ($session_flaggings = \Drupal::request()->getSession()->get('flaggings', [])) {
+      if (($session = \Drupal::request()->getSession()) && ($session_flaggings = $session->get('flaggings', []))) {
         $user_or_global_condition->condition('id', $session_flaggings, 'IN');
       }
     }
