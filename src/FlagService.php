@@ -78,10 +78,10 @@ class FlagService implements FlagServiceInterface {
     }
 
     $filtered_flags = [];
-    foreach ($flags as $flag) {
+    foreach ($flags as $flag_id => $flag) {
       if ($flag->actionAccess('flag', $account)->isAllowed() ||
           $flag->actionAccess('unflag', $account)->isAllowed()) {
-        $filtered_flags[] = $flag;
+        $filtered_flags[$flag_id] = $flag;
       }
     }
 
