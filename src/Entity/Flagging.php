@@ -182,10 +182,11 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
    */
   public function postSave(EntityStorageInterface $storage, $update = TRUE) {
     if ($this->uid->entity && $this->uid->entity->isAnonymous()) {
-      $session = \Drupal::request()->getSession();
-      $session_flaggings = $session->get('flaggings', []);
-      $session_flaggings[] = $this->id();
-      $session->set('flaggings', $session_flaggings);
+      if ($session = \Drupal::request()->getSession()) {
+        $session_flaggings = $session->get('flaggings', []);
+        $session_flaggings[] = $this->id();
+        $session->set('flaggings', $session_flaggings);
+      }
     }
     parent::postSave($storage, $update);
 
