@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\yourmodule\Functional;
+namespace Drupal\Tests\flag\Functional;
 
 use Behat\Mink\Session;
 use Drupal\Core\Session\AccountInterface;
