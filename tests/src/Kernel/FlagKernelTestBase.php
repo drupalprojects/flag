@@ -1,6 +1,7 @@
 <?php
 namespace Drupal\Tests\flag\Kernel;
 
+use Drupal\flag\Tests\FlagCreateTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\simpletest\UserCreationTrait;
 
@@ -9,6 +10,7 @@ use Drupal\simpletest\UserCreationTrait;
  */
 abstract class FlagKernelTestBase extends KernelTestBase {
 
+  use FlagCreateTrait;
   use UserCreationTrait;
 
   /**
@@ -23,7 +25,15 @@ abstract class FlagKernelTestBase extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['flag', 'node', 'user', 'system'];
+  public static $modules = [
+    'field',
+    'filter',
+    'flag',
+    'node',
+    'text',
+    'user',
+    'system',
+  ];
 
   /**
    * {@inheritdoc}
@@ -37,6 +47,7 @@ abstract class FlagKernelTestBase extends KernelTestBase {
     $this->installSchema('system', ['sequences']);
     $this->installSchema('flag', ['flag_counts']);
     $this->installSchema('node', ['node_access']);
+    $this->installConfig(['filter', 'node']);
 
     $this->flagService = \Drupal::service('flag');
   }
