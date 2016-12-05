@@ -2,8 +2,11 @@
 
 namespace Drupal\flag\Plugin\ActionLink;
 
+use Drupal\Core\Url;
 use Drupal\flag\ActionLink\ActionLinkTypeBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\flag\FlagInterface;
+use Drupal\Core\Entity\EntityInterface;
 
 /**
  * Class FieldEntry
@@ -16,15 +19,19 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class FieldEntry extends ActionLinkTypeBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function routeName($action = NULL) {
-    if ($action == 'unflag') {
-      return 'flag.field_entry.edit';
+  public function getUrl($action, FlagInterface $flag, EntityInterface $entity) {
+    switch($action) {
+      case 'flag':
+        return Url::fromRoute('flag.field_entry', [
+          'flag' => $flag->id(),
+          'entity_id' => $entity->id(),
+        ]);
+      default:
+        return Url::fromRoute('flag.field_entry.edit', [
+          'flag' => $flag->id(),
+          'entity_id' => $entity->id(),
+        ]);
     }
-
-    return 'flag.field_entry';
   }
 
   /**

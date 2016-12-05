@@ -4,6 +4,9 @@ namespace Drupal\flag\Plugin\ActionLink;
 
 use Drupal\flag\ActionLink\ActionLinkTypeBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\flag\FlagInterface;
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 
 /**
  * Provides the Confirm Form link type.
@@ -16,15 +19,19 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class ConfirmForm extends ActionLinkTypeBase {
 
-  /**
-   * {@inheritdoc}
-   */
-  public function routeName($action = NULL) {
-    if ($action == 'unflag') {
-      return 'flag.confirm_unflag';
+  public function getUrl($action, FlagInterface $flag, EntityInterface $entity) {
+    switch($action) {
+      case 'flag':
+        return Url::fromRoute('flag.confirm_flag', [
+          'flag' => $flag->id(),
+          'entity_id' => $entity->id(),
+        ]);
+      default:
+        return Url::fromRoute('flag.confirm_unflag', [
+          'flag' => $flag->id(),
+          'entity_id' => $entity->id(),
+        ]);
     }
-
-    return 'flag.confirm_flag';
   }
 
   /**

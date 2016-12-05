@@ -466,29 +466,16 @@ function flag_contextual_links_alter(array &$links, $group, array $route_paramet
       continue;
     }
 
-    // Use reload link type plugin for contextual links display.
-    $flag_type_collection = new DefaultSingleLazyPluginCollection(
-      \Drupal::service('plugin.manager.flag.linktype'),
-      'reload', $flag_type_plugin->getConfiguration()
-    );
+    $flag_link = $flag
+      ->getLinkTypePlugin()
+      ->getAsLink($flag, $entity);
 
-    /** @var \Drupal\flag\Plugin\ActionLink\Reload $link_type_plugin */
-    $link_type_plugin = $flag_type_collection->get('reload');
+    $flag_url = $flag_link->getUrl();
 
-    $action = 'flag';
-    if ($flag->isFlagged($entity)) {
-      $action = 'unflag';
-    }
-
-    // Render the link to get the title.
-    $link = $link_type_plugin->buildLink($action, $flag, $entity);
     $links["flag_{$flag->id()}"] = array(
-      'route_name' => $link_type_plugin->routeName($action),
-      'route_parameters' => array(
-        'flag' => $flag->id(),
-        'entity_id' => $entity->id(),
-      ),
-      'title' => $link['#title'],
+      'route_name' => $flag_url->getRouteName(),
+      'route_parameters' => $flag_url->getRouteParameters(),
+      'title' => $flag_link->getText(),
     );
   }
 }
