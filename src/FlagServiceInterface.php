@@ -87,7 +87,7 @@ interface FlagServiceInterface {
    * @code
    *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
    *   $node = Node::load($node_id);
-   *   $flaggings = \Drupal::service('flag')->getFlaggings($flag, $node);
+   *   $flaggings = \Drupal::service('flag')->getEntityFlaggings($flag, $node);
    *
    *   foreach ($flaggings as $flagging) {
    *     // Do something with each flagging.
