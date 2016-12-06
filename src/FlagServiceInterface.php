@@ -31,7 +31,7 @@ interface FlagServiceInterface {
    *   (optional) The user account to filter available flags. If not set, all
    *   flags for the given entity and bundle will be returned.
    *
-   * @return array
+   * @return \Drupal\flag\FlagInterface[]
    *   An array of flag entities, keyed by the entity IDs.
    */
   public function getFlags($entity_type = NULL, $bundle = NULL, AccountInterface $account = NULL);
