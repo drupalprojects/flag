@@ -17,6 +17,7 @@ use Drupal\node\NodeInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\system\Entity\Action;
 use Drupal\user\UserInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\Core\Url;
@@ -555,4 +556,58 @@ function flag_hook_info() {
   );
 
   return $hooks;
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_insert().
+ */
+function flag_flag_insert(FlagInterface $flag) {
+  // The action plugin cache needs to detect the new flag.
+  /** @var \Drupal\Core\Action\ActionManager $action_manager */
+  $action_manager = \Drupal::service('plugin.manager.action');
+  $action_manager->clearCachedDefinitions();
+
+  // Add the flag/unflag actions for this flag and entity combination.
+  $flag_id = 'flag_action.' . $flag->id() . '.flag';
+  if (!Action::load($flag_id)) {
+    $action = Action::create([
+      'id' => $flag_id,
+      'type' => $flag->getFlaggableEntityTypeId(),
+      'label' => $flag->getFlagShortText(),
+      'plugin' => 'flag_action:' . $flag->id() . '.flag',
+      'configuration' => [
+        'flag_id' => $flag->id(),
+        'flag_action' => 'flag'
+      ],
+    ]);
+    $action->trustData()->save();
+  }
+  $unflag_id = 'flag_action.' . $flag->id() . '.unflag';
+  if (!Action::load($unflag_id)) {
+    $action = Action::create([
+      'id' => $unflag_id,
+      'type' => $flag->getFlaggableEntityTypeId(),
+      'label' => $flag->getUnflagShortText(),
+      'plugin' => 'flag_action:' . $flag->id() . '.unflag',
+      'configuration' => [
+        'flag_id' => $flag->id(),
+        'flag_action' => 'unflag'
+      ],
+    ]);
+    $action->trustData()->save();
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function flag_flag_delete(FlagInterface $flag) {
+  // Remove the flag/unflag actions for this flag and entity combination.
+  $actions = Action::loadMultiple([
+    'flag_action.' . $flag->id() . '.flag',
+    'flag_action.' . $flag->id() . '.unflag',
+  ]);
+  foreach ($actions as $action) {
+    $action->delete();
+  }
 }

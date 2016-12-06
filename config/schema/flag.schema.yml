@@ -137,3 +137,14 @@ flag.link_type.plugin.field_entry:
     unflag_confirmation:
       type: label
       label: 'Unflag confirmation'
+
+action.configuration.flag_action:*.*:
+  type: mapping
+  label: 'Configuration for flag actions'
+  mapping:
+    flag_id:
+      type: string
+      label: 'The flag ID'
+    flag_action:
+      type: string
+      label: 'Flag action (flag or unflag)'
