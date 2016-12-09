@@ -30,6 +30,8 @@ class FlagAddForm extends FlagFormBase {
 
     $form = parent::buildForm($form, $form_state);
 
+    $form['global']['#description'] = $this->t('The scope cannot be changed once a flag has been saved.');
+
     return $form;
   }
 
