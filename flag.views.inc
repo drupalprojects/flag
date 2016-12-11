@@ -56,7 +56,7 @@ function flag_views_data_alter(array &$data) {
   $flags = \Drupal::service('flag')->getFlags();
   $entity_type_manager = \Drupal::entityTypeManager();
 
-  foreach ($flags as $flag_id => $flag) {
+  foreach ($flags as $flag) {
     $entity_type_id = $flag->getFlaggableEntityTypeId();
 
     $entity_type = $entity_type_manager->getDefinition($entity_type_id);
