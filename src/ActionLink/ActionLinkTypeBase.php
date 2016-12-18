@@ -103,7 +103,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
         '#theme' => 'flag',
         '#flag' => $flag,
         '#flaggable' => $entity,
-        '#action' => FALSE,
+        '#action' => $action,
         '#access' => $access->isAllowed(),
         '#title' => $action === 'unflag' ? $flag->getUnflagShortText() : $flag->getFlagShortText(),
         '#attributes' => [
