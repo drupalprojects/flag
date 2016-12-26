@@ -43,7 +43,7 @@ class EntityFlagActionDeriver extends DeriverBase implements ContainerDeriverInt
    * {@inheritdoc}
    */
   public function getDerivativeDefinitions($base_plugin_definition) {
-    foreach ($this->flagService->getFlags() as $flag_id => $flag) {
+    foreach ($this->flagService->getAllFlags() as $flag_id => $flag) {
       foreach (['flag', 'unflag'] as $action) {
         $this->derivatives[$flag_id . '.' . $action] = [
           'id' => $flag_id . '.' . $action,
