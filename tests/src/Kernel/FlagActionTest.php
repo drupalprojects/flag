@@ -5,6 +5,7 @@ namespace Drupal\Tests\flag\Kernel;
 use Drupal\Component\Utility\Unicode;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\flag\Entity\Flag;
+use Drupal\flag\Plugin\Action\DeleteFlaggingAction;
 
 /**
  * Test flag actions are added/removed when flags are added/deleted.
@@ -129,6 +130,51 @@ class FlagActionTest extends FlagKernelTestBase {
 
     // Admin should have access.
     $this->assertTrue($plugin->access($test_entity, $this->admin));
+  }
+
+  /**
+   * Tests the flagging delete action.
+   */
+  public function testFlaggingDeleteAction() {
+    // Action should be available upon install.
+    /** @var \Drupal\system\ActionConfigEntityInterface $action */
+    $action = $this->container->get('entity_type.manager')->getStorage('action')->load('flag_delete_flagging');
+    $plugin = $action->getPlugin();
+    $this->assertInstanceOf(DeleteFlaggingAction::class, $plugin);
+
+    /** @var \Drupal\flag\FlagInterface $entity_flag */
+    $entity_flag = Flag::create([
+      'id' => Unicode::strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'entity_test',
+      'flag_type' => 'entity:entity_test',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+    ]);
+    $entity_flag->save();
+
+    // Flag the entity.
+    $test_entity = EntityTest::create();
+    $test_entity->save();
+    $this->flagService->flag($entity_flag, $test_entity);
+    $flaggings = $this->flagService->getEntityFlaggings($entity_flag, $test_entity);
+    $flagging = reset($flaggings);
+
+    // Verify plugin access for other user is false.
+    $other_user = $this->createUser();
+    $this->assertFalse($plugin->access($flagging, $other_user));
+    $access = $plugin->access($flagging, $other_user, TRUE);
+    $this->assertFalse($access->isAllowed());
+
+    // Access for flag owner should be true.
+    $this->assertFalse($plugin->access($flagging));
+    $access = $plugin->access($flagging, NULL, TRUE);
+    $this->assertFalse($access->isAllowed());
+
+    // Execute and verify the flagging is gone.
+    $plugin->execute($flagging);
+    $this->assertEmpty($this->flagService->getEntityFlaggings($entity_flag, $test_entity));
   }
 
 }
