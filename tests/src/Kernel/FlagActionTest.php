@@ -67,10 +67,7 @@ class FlagActionTest extends FlagKernelTestBase {
       'entity_type' => 'user',
       'flag_type' => 'entity:user',
       'link_type' => 'reload',
-      'flagTypeConfig' => [
-        // Sefies permitted.
-        'access_uid' => TRUE,
-      ],
+      'flagTypeConfig' => [],
       'linkTypeConfig' => [],
     ]);
     $selfies_flag->save();
