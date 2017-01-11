@@ -27,6 +27,7 @@ use Drupal\user\UserInterface;
  *  bundle_label = @Translation("Flagging"),
  *  handlers = {
  *    "storage" = "Drupal\flag\Entity\Storage\FlaggingStorage",
+ *    "storage_schema" = "Drupal\flag\Entity\Storage\FlaggingStorageSchema",
  *    "form" = {
  *      "add" = "Drupal\flag\Form\FlaggingForm",
  *      "edit" = "Drupal\flag\Form\FlaggingForm",
