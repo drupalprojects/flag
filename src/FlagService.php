@@ -144,10 +144,8 @@ class FlagService implements FlagServiceInterface {
       }
     }
 
-    if (!empty($entity)) {
-      $query->condition('entity_type', $entity->getEntityTypeId())
-        ->condition('entity_id', $entity->id());
-    }
+    $query->condition('entity_type', $entity->getEntityTypeId())
+      ->condition('entity_id', $entity->id());
 
     $ids = $query->execute();
 
