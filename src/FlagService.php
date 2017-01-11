@@ -131,16 +131,20 @@ class FlagService implements FlagServiceInterface {
 
     $query->condition('flag_id', $flag->id());
 
-    if (!empty($account) && !$flag->isGlobal()) {
-      $query->condition('uid', $account->id());
-    }
-    if (isset($account) && $account->isAnonymous()) {
-      $session = \Drupal::request()->getSession();
-      if ($session && ($flaggings = $session->get('flaggings', []))) {
-        $query->condition('id', $flaggings, 'IN');
+    if (!is_null($account)) {
+      if (!$flag->isGlobal()) {
+        $query->condition('uid', $account->id());
       }
-      else {
-        return [];
+
+      if ($account->isAnonymous()) {
+        $session = \Drupal::request()->getSession();
+
+        if ($session && ($flaggings = $session->get('flaggings', []))) {
+          $query->condition('id', $flaggings, 'IN');
+        }
+        else {
+          return [];
+        }
       }
     }
 
