@@ -21,7 +21,7 @@ class AJAXactionLink extends Reload {
 
   public function getAsFlagLink(FlagInterface $flag, EntityInterface $entity) {
     $build = parent::getAsFlagLink($flag, $entity);
-    $build['#attached']['library'] = 'core/drupal.ajax';
+    $build['#attached']['library'][] = 'core/drupal.ajax';
     $build['#attributes']['class'][] = 'use-ajax';
     return $build;
   }
