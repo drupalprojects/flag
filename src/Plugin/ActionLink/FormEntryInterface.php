@@ -31,4 +31,25 @@ interface FormEntryInterface {
    */
   public function getUnflagQuestion();
 
+  /**
+   * Returns the create button text.
+   *
+   * @return string
+   */
+  public function getCreateButtonText();
+
+  /**
+   * Returns the delete button text.
+   *
+   * @return string
+   */
+  public function getDeleteButtonText();
+
+  /**
+   * Returns the update button text.
+   *
+   * @return string
+   */
+  public function getUpdateButtonText();
+
 }

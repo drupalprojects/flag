@@ -115,6 +115,15 @@ flag.link_type.plugin.confirm:
     unflag_confirmation:
        type: label
        label: 'Unflag confirmation'
+    flag_create_button:
+      type: label
+      label: 'Create flagging button text'
+    flag_delete_button:
+      type: label
+      label: 'Delete flagging button text'
+    flag_update_button:
+      type: label
+      label: 'Update flagging button text'
 
 flag.link_type.plugin.field_entry:
   type: mapping
@@ -129,6 +138,15 @@ flag.link_type.plugin.field_entry:
     unflag_confirmation:
       type: label
       label: 'Unflag confirmation'
+    flag_create_button:
+      type: label
+      label: 'Create flagging button text'
+    flag_delete_button:
+      type: label
+      label: 'Delete flagging button text'
+    flag_update_button:
+      type: label
+      label: 'Update flagging button text'
 
 action.configuration.flag_action:*.*:
   type: mapping

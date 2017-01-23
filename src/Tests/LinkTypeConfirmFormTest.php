@@ -16,6 +16,8 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
 
   protected $flagConfirmMessage = 'Flag test label 123?';
   protected $unflagConfirmMessage = 'Unflag test label 123?';
+  protected $createButtonText = 'Create flagging 123?';
+  protected $deleteButtonText = 'Delete flagging 123?';
 
   /**
    * The flag object.
@@ -61,6 +63,8 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
       'linkTypeConfig' => [
         'flag_confirmation' => $this->flagConfirmMessage,
         'unflag_confirmation' => $this->unflagConfirmMessage,
+        'flag_create_button' => $this->createButtonText,
+        'flag_delete_button' => $this->deleteButtonText,
       ],
       'link_type' => 'confirm'
     ];
@@ -99,7 +103,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
     $this->assertText($this->flagConfirmMessage);
 
     // Submit the confirm form.
-    $this->drupalPostForm('flag/confirm/flag/' . $flag_id . '/' . $node_id, [], t('Flag'));
+    $this->drupalPostForm('flag/confirm/flag/' . $flag_id . '/' . $node_id, [], $this->createButtonText);
     $this->assertResponse(200);
 
     // Check that the node is flagged.
@@ -122,7 +126,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
     $this->assertText($this->unflagConfirmMessage);
 
     // Submit the confirm form.
-    $this->drupalPostForm(NULL, [], t('Unflag'));
+    $this->drupalPostForm(NULL, [], $this->deleteButtonText);
     $this->assertResponse(200);
 
     // Check that the node is no longer flagged.

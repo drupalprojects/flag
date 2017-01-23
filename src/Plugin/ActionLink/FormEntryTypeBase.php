@@ -19,6 +19,8 @@ abstract class FormEntryTypeBase extends ActionLinkTypeBase implements FormEntry
     $options += [
       'flag_confirmation' => $this->t('Flag this content?'),
       'unflag_confirmation' => $this->t('Unflag this content?'),
+      'flag_create_button' => $this->t('Create flagging'),
+      'flag_delete_button' => $this->t('Delete flagging'),
     ];
 
     return $options;
@@ -58,6 +60,23 @@ abstract class FormEntryTypeBase extends ActionLinkTypeBase implements FormEntry
       '#title' => $this->t('Unflag confirmation message'),
       '#default_value' => $this->getUnflagQuestion(),
       '#description' => $this->t('Message displayed if the user has clicked the "unflag this" link and confirmation is required. Usually presented in the form of a question such as, "Are you sure you want to unflag this content?"'),
+      // This will get changed to a state by flag_link_type_options_states().
+      '#required' => TRUE,
+    ];
+    $form['display']['settings']['link_options_' . $plugin_id]['flag_create_button'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Create flagging button text'),
+      '#default_value' => $this->configuration['flag_create_button'],
+      '#description' => $this->t('The text for the submit button when creating a flagging.'),
+      // This will get changed to a state by flag_link_type_options_states().
+      '#required' => TRUE,
+    ];
+
+    $form['display']['settings']['link_options_' . $plugin_id]['flag_delete_button'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Delete flagging button text'),
+      '#default_value' => $this->configuration['flag_delete_button'],
+      '#description' => $this->t('The text for the submit button when deleting a flagging.'),
       // This will get changed to a state by flag_link_type_options_states().
       '#required' => TRUE,
     ];
@@ -110,6 +129,27 @@ abstract class FormEntryTypeBase extends ActionLinkTypeBase implements FormEntry
    */
   public function getUnflagQuestion() {
     return $this->configuration['unflag_confirmation'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getCreateButtonText() {
+    return $this->configuration['flag_create_button'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDeleteButtonText() {
+    return $this->configuration['flag_delete_button'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUpdateButtonText() {
+    return $this->configuration['flag_update_button'];
   }
 
 }
