@@ -62,7 +62,9 @@ abstract class FlagTestBase extends WebTestBase {
       'administer node display',
       'administer modules',
       'administer nodes',
+      'create ' . $this->nodeType . ' content',
       'edit any ' . $this->nodeType . ' content',
+      'delete any ' . $this->nodeType . ' content',
     ]);
   }
 

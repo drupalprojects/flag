@@ -223,6 +223,19 @@ class EntityFlagType extends FlagTypeBase {
   }
 
   /**
+   * Determines if the given form operation is add or edit.
+   *
+   * @param string $operation
+   *   The form operation.
+   *
+   * @return bool
+   *   Returns TRUE if the operation is an add edit operation.
+   */
+  public function isAddEditForm($operation) {
+    return in_array($operation, ['default', 'edit']);
+  }
+
+  /**
    * Returns the show on contextual link setting.
    *
    * @return bool

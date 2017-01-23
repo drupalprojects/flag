@@ -132,6 +132,15 @@ class UserFlagType extends EntityFlagType {
   /**
    * {@inheritdoc}
    */
+  public function isAddEditForm($operation) {
+    // The user profile form uses 'default' as the operation for editing, and
+    // 'register' for adding.
+    return in_array($operation, ['register', 'default']);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function actionAccess($action, FlagInterface $flag, AccountInterface $account, EntityInterface $flaggable = NULL) {
     $access = parent::actionAccess($action, $flag, $account, $flaggable);
 
