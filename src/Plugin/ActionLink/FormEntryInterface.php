@@ -35,6 +35,7 @@ interface FormEntryInterface {
    * Returns the create button text.
    *
    * @return string
+   *   The string stored in configuration.
    */
   public function getCreateButtonText();
 
@@ -42,6 +43,7 @@ interface FormEntryInterface {
    * Returns the delete button text.
    *
    * @return string
+   *   The string stored in configuration.
    */
   public function getDeleteButtonText();
 
@@ -49,6 +51,7 @@ interface FormEntryInterface {
    * Returns the update button text.
    *
    * @return string
+   *   The string stored in configuration.
    */
   public function getUpdateButtonText();
 

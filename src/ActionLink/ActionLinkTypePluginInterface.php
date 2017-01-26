@@ -16,8 +16,6 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
   /**
    * Get the action link formatted for use in entity links.
    *
-   * @param string $action
-   *   The action, flag or unflag.
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag entity.
    * @param \Drupal\Core\Entity\EntityInterface $entity
@@ -31,14 +29,13 @@ interface ActionLinkTypePluginInterface extends PluginFormInterface, Configurabl
   /**
    * Get the action link as a Link object.
    *
-   * @param string $action
-   *   The action, flag or unflag.
    * @param \Drupal\flag\FlagInterface $flag
    *   The flag entity.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The flaggable entity.
    *
-   * @return Link
+   * @return \Drupal\Core\Link
+   *   The action Link.
    */
   public function getAsLink(FlagInterface $flag, EntityInterface $entity);
 

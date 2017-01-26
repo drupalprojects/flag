@@ -44,7 +44,7 @@ class FlaggingStorage extends SqlContentEntityStorage implements FlaggingStorage
   /**
    * {@inheritdoc}
    */
-  public function loadIsFlaggedMultiple($entities, AccountInterface $account) {
+  public function loadIsFlaggedMultiple(array $entities, AccountInterface $account) {
     $flag_ids_by_entity = [];
 
     if (!$entities) {
