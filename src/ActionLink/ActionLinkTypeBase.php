@@ -108,7 +108,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
         '#title' => $action === 'unflag' ? $flag->getUnflagShortText() : $flag->getFlagShortText(),
         '#attributes' => [
           'title' => $action === 'unflag' ? $flag->getUnflagLongText() : $flag->getFlagLongText(),
-        ]
+        ],
       ];
       // Build the URL. It is important that bubbleable metadata is explicitly
       // collected and applied to the render array, as it might be rendered on
