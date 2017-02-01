@@ -2,8 +2,11 @@
 
 namespace Drupal\flag\Plugin\ActionLink;
 
+use Drupal\Component\Serialization\Json;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\ActionLink\ActionLinkTypeBase;
+use Drupal\flag\FlagInterface;
 
 /**
  * Base class for link types using form entry.
@@ -21,6 +24,7 @@ abstract class FormEntryTypeBase extends ActionLinkTypeBase implements FormEntry
       'unflag_confirmation' => $this->t('Unflag this content?'),
       'flag_create_button' => $this->t('Create flagging'),
       'flag_delete_button' => $this->t('Delete flagging'),
+      'form_behavior' => 'default',
     ];
 
     return $options;
@@ -81,6 +85,18 @@ abstract class FormEntryTypeBase extends ActionLinkTypeBase implements FormEntry
       '#required' => TRUE,
     ];
 
+    $form['display']['settings']['link_options_' . $plugin_id]['form_behavior'] = [
+      '#type' => 'radios',
+      '#title' => $this->t('Form behavior'),
+      '#options' => [
+        'default' => $this->t('New page'),
+        'dialog' => $this->t('Dialog'),
+        'modal' => $this->t('Modal dialog'),
+      ],
+      '#description' => $this->t('If an option other than <em>new page</em> is selected, the form will open via AJAX on the same page.'),
+      '#default_value' => $this->configuration['form_behavior'],
+    ];
+
     return $form;
   }
 
@@ -108,6 +124,22 @@ abstract class FormEntryTypeBase extends ActionLinkTypeBase implements FormEntry
     foreach (array_keys($this->defaultConfiguration()) as $key) {
       $this->configuration[$key] = $form_state->getValue($key);
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAsFlagLink(FlagInterface $flag, EntityInterface $entity) {
+    $render = parent::getAsFlagLink($flag, $entity);
+    if ($this->configuration['form_behavior'] !== 'default') {
+      $render['#attached']['library'][] = 'core/drupal.ajax';
+      $render['#attributes']['class'][] = 'use-ajax';
+      $render['#attributes']['data-dialog-type'] = $this->configuration['form_behavior'];
+      $render['#attributes']['data-dialog-options'] = Json::encode([
+        'width' => 'auto',
+      ]);
+    }
+    return $render;
   }
 
   /**

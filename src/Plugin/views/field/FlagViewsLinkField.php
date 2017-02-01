@@ -2,7 +2,9 @@
 
 namespace Drupal\flag\Plugin\views\field;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Link;
+use Drupal\flag\Plugin\ActionLink\FormEntryInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\Core\Form\FormStateInterface;
@@ -122,7 +124,22 @@ class FlagViewsLinkField extends FieldPluginBase {
 
     $link = $link_type_plugin->getAsLink($flag, $entity);
 
-    return $link->toRenderable();
+    $renderable = $link->toRenderable();
+
+    if ($link_type_plugin instanceof FormEntryInterface) {
+      // Check if form should be in a modal or dialog.
+      $configuration = $link_type_plugin->getConfiguration();
+      if ($configuration['form_behavior'] !== 'default') {
+        $renderable['#attached']['library'][] = 'core/drupal.ajax';
+        $renderable['#attributes']['class'][] = 'use-ajax';
+        $renderable['#attributes']['data-dialog-type'] = $configuration['form_behavior'];
+        $renderable['#attributes']['data-dialog-options'] = Json::encode([
+          'width' => 'auto',
+        ]);
+      }
+    }
+
+    return $renderable;
   }
 
 }

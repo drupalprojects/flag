@@ -124,6 +124,9 @@ flag.link_type.plugin.confirm:
     flag_update_button:
       type: label
       label: 'Update flagging button text'
+    form_behavior:
+      type: string
+      label: 'Where should the form open (new page, modal, etc)'
 
 flag.link_type.plugin.field_entry:
   type: mapping
@@ -147,6 +150,9 @@ flag.link_type.plugin.field_entry:
     flag_update_button:
       type: label
       label: 'Update flagging button text'
+    form_behavior:
+      type: string
+      label: 'Where should the form open (new page, modal, etc)'
 
 action.configuration.flag_action:*.*:
   type: mapping
