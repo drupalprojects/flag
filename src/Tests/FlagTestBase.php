@@ -83,6 +83,7 @@ abstract class FlagTestBase extends WebTestBase {
     'text',
     'block',
     'contextual',
+    'flag_event_test',
   );
 
   /**

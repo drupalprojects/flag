@@ -54,6 +54,9 @@ class FlagUninstallTest extends FlagTestBase {
     $this->flagService->flag($this->flags[0], $this->nodes[1]);
     $this->flagService->flag($this->flags[0], $this->nodes[2]);
     $this->flagService->flag($this->flags[1], $this->nodes[2]);
+
+    // Uninstall test module that depends on flag.
+    $this->container->get('module_installer')->uninstall(['flag_event_test']);
   }
 
   /**
