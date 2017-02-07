@@ -6,6 +6,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceItem;
 use Drupal\flag\Event\UnflaggingEvent;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\Event\FlagEvents;
@@ -57,16 +58,6 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = array()) {
-    if (isset($values['entity_id'])) {
-      $values['flagged_entity'] = $values['entity_id'];
-    }
-    parent::__construct($values, $entity_type, $bundle, $translations);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFlagId() {
     return $this->get('flag_id')->value;
   }
@@ -82,14 +73,14 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
    * {@inheritdoc}
    */
   public function getFlaggableType() {
-    return $this->get('entity_type')->value;
+    return $this->get('flagged_entity')->target_type;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getFlaggableId() {
-    return $this->get('entity_id')->value;
+    return $this->get('flagged_entity')->target_id;
   }
 
   /**
@@ -124,19 +115,11 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
 
     // This field is on flaggings even though it duplicates the entity type
     // field on the flag so that flagging queries can use it.
-    $fields['entity_type'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Entity Type'))
-      ->setDescription(t('The Entity Type.'));
-
-    $fields['entity_id'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Entity ID'))
-      ->setRequired(TRUE)
-      ->setDescription(t('The Entity ID.'));
-
-    $fields['flagged_entity'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Entity'))
-      ->setDescription(t('The flagged entity.'))
-      ->setComputed(TRUE);
+    $fields['flagged_entity'] = BaseFieldDefinition::create('dynamic_entity_reference')
+      ->setLabel(t('Flagged entity'))
+      ->setDescription(t('The entity that has been flagged.'))
+      ->setCardinality(1)
+      ->setRequired(TRUE);
 
     // Also duplicates data on flag entity for querying purposes.
     $fields['global'] = BaseFieldDefinition::create('boolean')
@@ -162,10 +145,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
    * {@inheritdoc}
    */
   public function onChange($name) {
-    if ($name == 'entity_id' && $this->get('flagged_entity')->isEmpty()) {
-      $this->flagged_entity->target_id = $this->entity_id->value;
-    }
-    if (in_array($name, ['flagged_entity', 'entity_id']) && $this->flagged_entity->target_id != $this->entity_id->value) {
+    if (in_array($name, ['flagged_entity']) && $this->flagged_entity->entity->id() != $this->flagged_entity->target_id) {
       throw new \LogicException("A flagging can't be moved to another entity.");
     }
     parent::onChange($name);

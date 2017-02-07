@@ -16,8 +16,8 @@ class EntityFlagTypeDeriver extends DeriverBase {
   public function getDerivativeDefinitions($base_plugin_def) {
     $derivatives = array();
     foreach (\Drupal::entityTypeManager()->getDefinitions() as $entity_id => $entity_type) {
-      // Skip config entity types.
-      if (!$entity_type instanceof ContentEntityTypeInterface) {
+      // Skip entity types without labels.
+      if (!$entity_type->getLabel()) {
         continue;
       }
       $derivatives[$entity_id] = [

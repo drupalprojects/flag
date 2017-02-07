@@ -182,8 +182,8 @@ class AdminUITest extends FlagTestBase {
 
     $ids_before = $this->entityQueryManager->get('flagging')
       ->condition('flag_id', $this->flag->id())
-      ->condition('entity_type', 'node')
-      ->condition('entity_id', $this->node->id())
+      ->condition('flagged_entity__target_type', 'node')
+      ->condition('flagged_entity__target_id', $this->node->id())
       ->execute();
 
     $this->assertEqual(count($ids_before), 1, "The flag has one flagging.");
@@ -197,8 +197,8 @@ class AdminUITest extends FlagTestBase {
 
     $ids_after = $this->entityQueryManager->get('flagging')
       ->condition('flag_id', $this->flag->id())
-      ->condition('entity_type', 'node')
-      ->condition('entity_id', $this->node->id())
+      ->condition('flagged_entity__target_type', 'node')
+      ->condition('flagged_entity__target_id', $this->node->id())
       ->execute();
 
     $this->assertEqual(count($ids_after), 0, "The flag has no flaggings after being reset.");

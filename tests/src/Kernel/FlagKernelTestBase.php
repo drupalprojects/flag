@@ -26,6 +26,7 @@ abstract class FlagKernelTestBase extends KernelTestBase {
    * @var array
    */
   public static $modules = [
+    'dynamic_entity_reference',
     'field',
     'filter',
     'flag',

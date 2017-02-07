@@ -2,14 +2,13 @@
 
 namespace Drupal\flag\Entity;
 
-use Drupal\Core\Access\AccessResult;
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\FlagInterface;
 
 /**
@@ -511,9 +510,14 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     */
 
     // Reset the render cache for the entity.
-    \Drupal::entityTypeManager()
-      ->getViewBuilder($this->getFlaggableEntityTypeId())
-      ->resetCache();
+    try {
+      \Drupal::entityTypeManager()
+        ->getViewBuilder($this->getFlaggableEntityTypeId())
+        ->resetCache();
+    }
+    catch (InvalidPluginDefinitionException $e) {
+      // Nothing to do.
+    }
 
     // Clear entity extra field caches.
     // @todo Inject the entity field manager into the object?

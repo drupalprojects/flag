@@ -4,6 +4,8 @@
  * Contains views API hooks for Flag module.
  */
 
+use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceItem;
+
 /**
  * Implements hook_views_data().
  */
@@ -69,7 +71,7 @@ function flag_views_data_alter(array &$data) {
           'group' => t('Flag'),
           'label' => t('Flags'),
           'base' => 'flagging',
-          'base field' => 'entity_id',
+          'base field' => DynamicEntityReferenceItem::getTargetIdColumnName('flagging', 'flagged_entity', $entity_type_id),
           'relationship field' => $entity_type->getKey('id'),
           'id' => 'flag_relationship',
           'flaggable' => $entity_type_id,

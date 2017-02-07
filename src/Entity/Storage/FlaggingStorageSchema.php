@@ -17,7 +17,7 @@ class FlaggingStorageSchema extends SqlContentEntityStorageSchema {
     $schema = parent::getEntitySchema($entity_type, $reset);
 
     $schema['flagging']['indexes'] += array(
-      'entity_id__uid' => array('entity_id', 'uid'),
+      'entity_id__uid' => array('flagged_entity__target_id', 'uid'),
     );
 
     return $schema;

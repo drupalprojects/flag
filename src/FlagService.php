@@ -7,6 +7,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceItem;
 use Drupal\user\UserInterface;
 
 /**
@@ -148,8 +149,8 @@ class FlagService implements FlagServiceInterface {
       }
     }
 
-    $query->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('entity_id', $entity->id());
+    $query->condition('flagged_entity__target_type', $entity->getEntityTypeId())
+      ->condition('flagged_entity__target_id', $entity->id());
 
     $ids = $query->execute();
 
@@ -166,8 +167,8 @@ class FlagService implements FlagServiceInterface {
       $query->condition('uid', $account->id());
     }
 
-    $query->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('entity_id', $entity->id());
+    $query->condition('flagged_entity__target_type', $entity->getEntityTypeId())
+      ->condition('flagged_entity__target_id', $entity->id());
 
     $ids = $query->execute();
 
@@ -194,8 +195,8 @@ class FlagService implements FlagServiceInterface {
    */
   public function getFlaggingUsers(EntityInterface $entity, FlagInterface $flag = NULL) {
     $query = $this->entityQueryManager->get('flagging')
-      ->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('entity_id', $entity->id());
+      ->condition('flagged_entity__target_type', $entity->getEntityTypeId())
+      ->condition('flagged_entity__target_id', $entity->id());
 
     if (!empty($flag)) {
       $query->condition('flag_id', $flag->id());
@@ -243,8 +244,10 @@ class FlagService implements FlagServiceInterface {
     $flagging = $this->entityTypeManager->getStorage('flagging')->create([
       'uid' => $account->id(),
       'flag_id' => $flag->id(),
-      'entity_id' => $entity->id(),
-      'entity_type' => $entity->getEntityTypeId(),
+      'flagged_entity' => [
+        'target_id' => $entity->id(),
+        'target_type' => $entity->getEntityTypeId(),
+      ],
       'global' => $flag->isGlobal(),
     ]);
 
@@ -301,8 +304,8 @@ class FlagService implements FlagServiceInterface {
   public function unflagAllByEntity(EntityInterface $entity) {
     $query = $this->entityQueryManager->get('flagging');
 
-    $query->condition('entity_type', $entity->getEntityTypeId())
-      ->condition('entity_id', $entity->id());
+    $query->condition('flagged_entity__target_type', $entity->getEntityTypeId())
+      ->condition('flagged_entity__target_id', $entity->id());
 
     $ids = $query->execute();
 

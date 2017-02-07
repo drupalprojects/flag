@@ -194,4 +194,36 @@ class FlagServiceTest extends FlagKernelTestBase {
     }
   }
 
+  /**
+   * Tests flagging of config entities.
+   */
+  public function testFlagConfigEntity() {
+    // Create one user, then a user to flag with, just to ensure a higher uid
+    // than 1.
+    $this->createUser();
+    $account = $this->createUser();
+    $flag = Flag::create([
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'node_type',
+      'flag_type' => 'entity:node_type',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+    ]);
+    $flag->save();
+
+    $node_type = NodeType::create([
+      'type' => strtolower($this->randomMachineName()),
+      'name' => $this->randomString(),
+    ]);
+    $node_type->save();
+
+    $this->flagService->flag($flag, $node_type, $account);
+    $flagging_users = $this->flagService->getFlaggingUsers($node_type, $flag);
+    $this->assertEquals(1, count($flagging_users));
+    $this->assertTrue(in_array($account->id(), array_keys($flagging_users)));
+  }
+
+
 }

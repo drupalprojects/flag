@@ -5,6 +5,7 @@ namespace Drupal\flag\Entity\Storage;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\dynamic_entity_reference\Plugin\Field\FieldType\DynamicEntityReferenceItem;
 
 /**
  * Default SQL flagging storage.
@@ -86,9 +87,9 @@ class FlaggingStorage extends SqlContentEntityStorage implements FlaggingStorage
     // Directly query the table to avoid he overhead of loading the content
     // entities.
     $query = $this->database->select('flagging', 'f')
-      ->fields('f', ['entity_id', 'flag_id', 'global'])
-      ->condition('entity_type', $entity_type_id)
-      ->condition('entity_id', array_keys($ids_to_load));
+      ->fields('f', ['flagged_entity__target_id', 'flag_id', 'global'])
+      ->condition('flagged_entity__target_type', $entity_type_id)
+      ->condition(DynamicEntityReferenceItem::getTargetIdColumnName('flagging', 'flagged_entity', $entity_type_id), array_keys($ids_to_load));
 
     // The flagging must either match the user or be global, avoid an empty IN
     // condition if there are no global flags.
@@ -111,12 +112,12 @@ class FlaggingStorage extends SqlContentEntityStorage implements FlaggingStorage
     // be returned.
     foreach ($result as $row) {
       if ($row->global) {
-        $this->globalFlagIdsByEntity[$entity_type_id][$row->entity_id][$row->flag_id] = $row->flag_id;
+        $this->globalFlagIdsByEntity[$entity_type_id][$row->flagged_entity__target_id][$row->flag_id] = $row->flag_id;
       }
       else {
-        $this->flagIdsByEntity[$account->id()][$entity_type_id][$row->entity_id][$row->flag_id] = $row->flag_id;
+        $this->flagIdsByEntity[$account->id()][$entity_type_id][$row->flagged_entity__target_id][$row->flag_id] = $row->flag_id;
       }
-      $flag_ids_by_entity[$row->entity_id][$row->flag_id] = $row->flag_id;
+      $flag_ids_by_entity[$row->flagged_entity__target_id][$row->flag_id] = $row->flag_id;
     }
 
     return $flag_ids_by_entity;
@@ -132,14 +133,14 @@ class FlaggingStorage extends SqlContentEntityStorage implements FlaggingStorage
     // After updating or creating a flagging, add it to the cached flagging by entity if already in static cache.
     if ($entity->get('global')->value) {
       // If the global flags by entity for this entity have already been cached, then add the newly created flagging.
-      if (isset($this->globalFlagIdsByEntity[$entity->get('entity_type')->value][$entity->get('entity_id')->value])) {
-        $this->globalFlagIdsByEntity[$entity->get('entity_type')->value][$entity->get('entity_id')->value][$entity->get('flag_id')->value] = $entity->get('flag_id')->value;
+      if (isset($this->globalFlagIdsByEntity[$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id])) {
+        $this->globalFlagIdsByEntity[$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id][$entity->get('flag_id')->value] = $entity->get('flag_id')->value;
       }
     }
     else {
       // If the flags by entity for this entity/user have already been cached, then add the newly created flagging.
-      if (isset($this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('entity_type')->value][$entity->get('entity_id')->value])) {
-        $this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('entity_type')->value][$entity->get('entity_id')->value][$entity->get('flag_id')->value] = $entity->get('flag_id')->value;
+      if (isset($this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id])) {
+        $this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id][$entity->get('flag_id')->value] = $entity->get('flag_id')->value;
       }
     }
   }
@@ -155,13 +156,13 @@ class FlaggingStorage extends SqlContentEntityStorage implements FlaggingStorage
     foreach ($entities as $entity) {
       // After deleting a flagging, remove it from the cached flagging by entity if already in static cache.
       if ($entity->get('global')->value) {
-        if (isset($this->globalFlagIdsByEntity[$entity->get('entity_type')->value][$entity->get('entity_id')->value][$entity->get('flag_id')->value])) {
-          unset($this->globalFlagIdsByEntity[$entity->get('entity_type')->value][$entity->get('entity_id')->value][$entity->get('flag_id')->value]);
+        if (isset($this->globalFlagIdsByEntity[$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id][$entity->get('flag_id')->value])) {
+          unset($this->globalFlagIdsByEntity[$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id][$entity->get('flag_id')->value]);
         }
       }
       else {
-        if (isset($this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('entity_type')->value][$entity->get('entity_id')->value][$entity->get('flag_id')->value])) {
-          unset($this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('entity_type')->value][$entity->get('entity_id')->value][$entity->get('flag_id')->value]);
+        if (isset($this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id][$entity->get('flag_id')->value])) {
+          unset($this->flagIdsByEntity[$entity->get('uid')->target_id][$entity->get('flagged_entity')->target_type][$entity->get('flagged_entity')->target_id][$entity->get('flag_id')->value]);
         }
       }
     }

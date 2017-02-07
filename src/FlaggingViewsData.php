@@ -24,7 +24,8 @@ class FlaggingViewsData extends EntityViewsData {
       'left_field' => 'flag_id',
       'field' => 'flag_id',
       'extra' => [[
-        'left_field' => 'entity_id',
+        // @todo Can we switch `target_id` and `target_id_int` as needed here?
+        'left_field' => 'flagged_entity__target_id',
         'field' => 'entity_id',
       ]],
     ];

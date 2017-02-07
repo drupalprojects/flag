@@ -33,8 +33,10 @@ class FieldEntryFormController extends ControllerBase {
 
     $flagging = $this->entityTypeManager()->getStorage('flagging')->create([
       'flag_id' => $flag->id(),
-      'entity_type' => $flag->getFlaggableEntityTypeId(),
-      'entity_id' => $entity_id,
+      'flagged_entity' => [
+        'target_type' => $flag->getFlaggableEntityTypeId(),
+        'target_id' => $entity_id,
+      ],
       'uid' => $account->id(),
     ]);
 

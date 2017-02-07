@@ -92,7 +92,7 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
       $result = $this->connection->select('flagging', 'f')
         ->fields('f', ['flag_id'])
         ->condition('flag_id', $flag_id)
-        ->condition('entity_type', $entity_type)
+        ->condition('flagged_entity__target_type', $entity_type)
         ->countQuery()
         ->execute()
         ->fetchField();

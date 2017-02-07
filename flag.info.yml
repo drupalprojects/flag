@@ -4,3 +4,5 @@ core: 8.x
 type: module
 package: Flags
 configure: entity.flag.collection
+dependencies:
+  - dynamic_entity_reference:dynamic_entity_reference (2.x)
