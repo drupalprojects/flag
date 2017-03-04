@@ -48,10 +48,7 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
   }
 
   /**
-   * Provides the default configuration values for the flag type.
-   *
-   * @return array
-   *   The flag type's default plugin configuration.
+   * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return [];
@@ -65,20 +62,14 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
   }
 
   /**
-   * Returns this flag type plugin's configuration array.
-   *
-   * @return array
-   *   The plugin configuration array.
+   * {@inheritdoc}
    */
   public function getConfiguration() {
     return $this->configuration;
   }
 
   /**
-   * Replaces the plugin's configurations with those given in the parameter.
-   *
-   * @param array $configuration
-   *   The plugin configuration array.
+   * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
     $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);

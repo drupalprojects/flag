@@ -215,32 +215,21 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
   }
 
   /**
-   * Provides the action link plugin's default configuration.
-   *
-   * Derived classes will want to override this method.
-   *
-   * @return array
-   *   The plugin configuration array.
+   * {@inheritdoc}
    */
   public function defaultConfiguration() {
     return [];
   }
 
   /**
-   * Provides the action link plugin's current configuration array.
-   *
-   * @return array
-   *   An array containing the plugin's current configuration.
+   * {@inheritdoc}
    */
   public function getConfiguration() {
     return $this->configuration;
   }
 
   /**
-   * Updates the plugin's current configuration.
-   *
-   * @param array $configuration
-   *   An array containing the plugin's configuration.
+   * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
     $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
