@@ -2,6 +2,7 @@
 
 namespace Drupal\flag\FlagType;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Access\AccessResult;
 use Drupal\flag\FlagType\FlagTypePluginInterface;
 use Drupal\Component\Plugin\PluginBase;
@@ -80,7 +81,7 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
    *   The plugin configuration array.
    */
   public function setConfiguration(array $configuration) {
-    $this->configuration = $configuration;
+    $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
   }
 
   /**

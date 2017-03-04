@@ -3,6 +3,7 @@
 namespace Drupal\flag\ActionLink;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\Core\Entity\EntityInterface;
@@ -242,7 +243,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
    *   An array containing the plugin's configuration.
    */
   public function setConfiguration(array $configuration) {
-    $this->configuration = $configuration;
+    $this->configuration = NestedArray::mergeDeep($this->defaultConfiguration(), $configuration);
   }
 
 }
