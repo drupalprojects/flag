@@ -564,6 +564,10 @@ function flag_hook_info() {
  * Implements hook_ENTITY_TYPE_insert().
  */
 function flag_flag_insert(FlagInterface $flag) {
+  if ($flag->isSyncing()) {
+    // Do not create actions when config is progress of synchronization.
+    return;
+  }
   // The action plugin cache needs to detect the new flag.
   /** @var \Drupal\Core\Action\ActionManager $action_manager */
   $action_manager = \Drupal::service('plugin.manager.action');
@@ -604,6 +608,10 @@ function flag_flag_insert(FlagInterface $flag) {
  * Implements hook_ENTITY_TYPE_delete().
  */
 function flag_flag_delete(FlagInterface $flag) {
+  if ($flag->isSyncing()) {
+    // Do not delete actions when config is progress of synchronization.
+    return;
+  }
   // Remove the flag/unflag actions for this flag and entity combination.
   $actions = Action::loadMultiple([
     'flag_action.' . $flag->id() . '.flag',
