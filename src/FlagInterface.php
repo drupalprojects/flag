@@ -126,7 +126,8 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    *
    * Global flags disable the default behavior of a Flag. Instead of each
    * user being able to flag or unflag the entity, a global flag may be flagged
-   * once for all users.
+   * once for all users. The flagging's uid base field is set to the account
+   * that performed the flagging action in all cases.
    *
    * @return bool
    *   TRUE if the flag is global, FALSE otherwise.

@@ -145,7 +145,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('User ID'))
-      ->setDescription(t('The user ID of the flagging user.'))
+      ->setDescription(t('The user ID of the flagging user. This is recorded for both global and personal flags.'))
       ->setSettings([
         'target_type' => 'user',
         'default_value' => 0,
