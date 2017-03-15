@@ -39,8 +39,6 @@ class FlagViewsFilter extends BooleanOperator {
     ];
     $form['value']['#default_value'] = empty($this->options['value']) ? FALSE : $this->options['value'];
     $form['value']['#description'] = '<p>' . $this->t('This filter is only needed if the relationship used has the "Include only flagged content" option <strong>unchecked</strong>. Otherwise, this filter is useless, because all records are already limited to flagged content.') . '</p><p>' . $this->t('By choosing <em>Not flagged</em>, it is possible to create a list of content <a href="@unflagged-url">that is specifically not flagged</a>.', array('@unflagged-url' => 'http://drupal.org/node/299335')) . '</p>';
-
-    $form['relationship']['#default_value'] = $this->options['relationship'];
   }
 
   /**
