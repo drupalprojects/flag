@@ -236,7 +236,7 @@ class FlagService implements FlagServiceInterface {
 
     // Check whether there is an existing flagging for the combination of flag,
     // entity, and user.
-    if ($this->getFlagging($flag, $entity, $account)) {
+    if ($flag->isFlagged($entity, $account)) {
       throw new \LogicException('The user has already flagged the entity with the flag.');
     }
 
