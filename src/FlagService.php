@@ -259,6 +259,10 @@ class FlagService implements FlagServiceInterface {
   public function unflag(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL) {
     $bundles = $flag->getBundles();
 
+    if (empty($account)) {
+      $account = $this->currentUser;
+    }
+
     // Check the entity type corresponds to the flag type.
     if ($flag->getFlaggableEntityTypeId() != $entity->getEntityTypeId()) {
       throw new \LogicException('The flag does not apply to entities of this type.');
