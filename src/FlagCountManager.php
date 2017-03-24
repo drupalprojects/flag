@@ -255,7 +255,7 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     $events[FlagEvents::ENTITY_FLAGGED][] = array('incrementFlagCounts', -100);
     $events[FlagEvents::ENTITY_UNFLAGGED][] = array(
       'decrementFlagCounts',
-      -100
+      -100,
     );
     return $events;
   }
