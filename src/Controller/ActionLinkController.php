@@ -158,4 +158,5 @@ class ActionLinkController extends ControllerBase implements ContainerInjectionI
     }
 
   }
+
 }

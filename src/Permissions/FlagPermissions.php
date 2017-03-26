@@ -56,4 +56,5 @@ class FlagPermissions implements ContainerInjectionInterface {
 
     return $permissions;
   }
+
 }

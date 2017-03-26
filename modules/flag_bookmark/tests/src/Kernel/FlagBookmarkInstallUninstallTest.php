@@ -38,4 +38,5 @@ class FlagBookmarkInstallUninstallTest extends FlagKernelTestBase {
     $this->assertEquals(['flag_bookmark'], Flag::load('bookmark')->getDependencies()['module']);
     $this->assertEquals(['flag.flag.bookmark', 'system.menu.main'], View::load('flag_bookmark')->getDependencies()['config']);
   }
+
 }

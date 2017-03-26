@@ -99,4 +99,5 @@ class FlagAddPageForm extends FormBase {
     // @todo: Make this injected like ActionFormBase::exists().
     return \Drupal::entityTypeManager()->getStorage('flag')->load($id);
   }
+
 }

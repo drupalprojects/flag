@@ -121,4 +121,5 @@ class FlagUninstallTest extends FlagTestBase {
 
     $this->assertEqual($result, 0, 'The flag_counts table is empty.');
   }
+
 }

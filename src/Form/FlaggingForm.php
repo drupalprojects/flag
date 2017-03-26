@@ -82,4 +82,5 @@ class FlaggingForm extends ContentEntityForm {
     $entity = $this->entity;
     $entity->save();
   }
+
 }

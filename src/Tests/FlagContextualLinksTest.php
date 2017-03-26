@@ -167,4 +167,5 @@ class FlagContextualLinksTest extends FlagTestBase {
 
     return FALSE;
   }
+
 }
