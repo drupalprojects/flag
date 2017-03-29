@@ -89,14 +89,12 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     // We check to see if the flag count is already in the cache,
     // if it's not, run the query.
     if (!isset($this->flagCounts[$flag_id][$entity_type])) {
-      $result = $this->connection->select('flagging', 'f')
-        ->fields('f', ['flag_id'])
+      $query = $this->connection->select('flagging', 'f')
         ->condition('flag_id', $flag_id)
-        ->condition('entity_type', $entity_type)
-        ->countQuery()
-        ->execute()
-        ->fetchField();
-      $this->flagCounts[$flag_id][$entity_type] = $result;
+        ->condition('entity_type', $entity_type);
+      // Using an expression is faster than using countQuery().
+      $query->addExpression('COUNT(*)');
+      $this->flagCounts[$flag_id][$entity_type] = $query->execute()->fetchField();
     }
 
     return $this->flagCounts[$flag_id][$entity_type];
@@ -109,12 +107,10 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     $flag_id = $flag->id();
 
     if (!isset($this->flagEntityCounts[$flag_id])) {
-      $this->flagEntityCounts[$flag_id] = $this->connection->select('flag_counts', 'fc')
-        ->fields('fc', array('flag_id'))
-        ->condition('flag_id', $flag_id)
-        ->countQuery()
-        ->execute()
-        ->fetchField();
+      $query = $this->connection->select('flag_counts', 'fc')
+        ->condition('flag_id', $flag_id);
+      $query->addExpression('COUNT(*)');
+      $this->flagEntityCounts[$flag_id] = $query->execute()->fetchField();
     }
 
     return $this->flagEntityCounts[$flag_id];
@@ -130,14 +126,10 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     // We check to see if the flag count is already in the cache,
     // if it's not, run the query.
     if (!isset($this->userFlagCounts[$flag_id][$uid])) {
-      $result = $this->connection->select('flagging', 'f')
-        ->fields('f', ['flag_id'])
-        ->condition('flag_id', $flag_id)
-        ->condition('uid', $uid)
-        ->countQuery()
-        ->execute()
-        ->fetchField();
-      $this->userFlagCounts[$flag_id][$uid] = $result;
+      $query = $this->connection->select('flagging', 'f')
+        ->condition('uid', $uid);
+      $query->addExpression('COUNT(*)');
+      $this->userFlagCounts[$flag_id][$uid] = $query->execute()->fetchField();
     }
 
     return $this->userFlagCounts[$flag_id][$uid];

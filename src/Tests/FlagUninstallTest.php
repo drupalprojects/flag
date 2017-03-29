@@ -96,11 +96,9 @@ class FlagUninstallTest extends FlagTestBase {
     $connection = Database::getConnection();
 
     // Query the table for counts.
-    $result = $connection->select('flag_counts', 'fc')
-      ->fields('fc', ['flag_id', 'count'])
-      ->countQuery()
-      ->execute()
-      ->fetchField();
+    $query = $connection->select('flag_counts', 'fc');
+    $query->addExpression('COUNT(*)');
+    $result = $query->execute()->fetchField();
 
     $this->assertNotEqual($result, 0, 'The flag_counts table is not empty.');
   }
@@ -113,11 +111,9 @@ class FlagUninstallTest extends FlagTestBase {
     $connection = Database::getConnection();
 
     // Query the table for counts.
-    $result = $connection->select('flag_counts', 'fc')
-      ->fields('fc', ['flag_id', 'count'])
-      ->countQuery()
-      ->execute()
-      ->fetchField();
+    $query = $connection->select('flag_counts', 'fc');
+    $query->addExpression('COUNT(*)');
+    $result = $query->execute()->fetchField();
 
     $this->assertEqual($result, 0, 'The flag_counts table is empty.');
   }
