@@ -127,6 +127,7 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
     // if it's not, run the query.
     if (!isset($this->userFlagCounts[$flag_id][$uid])) {
       $query = $this->connection->select('flagging', 'f')
+        ->condition('flag_id', $flag_id)
         ->condition('uid', $uid);
       $query->addExpression('COUNT(*)');
       $this->userFlagCounts[$flag_id][$uid] = $query->execute()->fetchField();
