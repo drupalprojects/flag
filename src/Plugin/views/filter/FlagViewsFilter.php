@@ -47,7 +47,7 @@ class FlagViewsFilter extends BooleanOperator {
   public function query() {
     $this->ensureMyTable();
 
-    $operator = $this->options['value'] ? 'IS NOT' : 'IS';
+    $operator = $this->value ? 'IS NOT' : 'IS';
     $operator .= ' NULL';
 
     $this->query->addWhere($this->options['group'], "$this->tableAlias.uid", NULL, $operator);
