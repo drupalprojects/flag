@@ -96,7 +96,7 @@ class FieldEntryFormController extends ControllerBase {
     $entity = $flag_service->getFlaggableById($flag, $entity_id);
 
     // If we can't find the flaggable entity, throw a 404.
-    if (!entity) {
+    if (!$entity) {
       throw new NotFoundHttpException('The flagging could not be found.');
     }
 
