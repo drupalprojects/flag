@@ -6,12 +6,38 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlaggingInterface;
 use Drupal\flag\Entity\Flag;
+use Drupal\Core\Session\SessionManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Provides a controller for the Field Entry link type.
  */
 class FieldEntryFormController extends ControllerBase {
+
+  /*
+   * The session manager.
+   *
+   * @var Drupal\Core\Session\SessionManagerInterface
+   */
+  protected $sessionManager;
+
+  /**
+   * Constructor.
+   *
+   * @param \Drupal\Core\Session\SessionManagerInterface $session_manager
+   *   The session manager.
+   */
+  public function __construct(SessionManagerInterface $session_manager) {
+    $this->sessionManager = $session_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('session_manager'));
+  }
 
   /**
    * Performs a flagging when called via a route.
@@ -29,13 +55,16 @@ class FieldEntryFormController extends ControllerBase {
   public function flag(FlagInterface $flag, $entity_id) {
     $flag_id = $flag->id();
 
-    $account = $this->currentUser();
+    // Set account and session ID to NULL to get the current user.
+    $account = $session_id = NULL;
+    \Drupal::service('flag')->populateFlaggerDefaults($account, $session_id);
 
     $flagging = $this->entityTypeManager()->getStorage('flagging')->create([
       'flag_id' => $flag->id(),
       'entity_type' => $flag->getFlaggableEntityTypeId(),
       'entity_id' => $entity_id,
       'uid' => $account->id(),
+      'session_id' => $session_id,
     ]);
 
     return $this->getForm($flagging, 'add');

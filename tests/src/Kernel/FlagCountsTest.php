@@ -5,6 +5,8 @@ use Drupal\flag\Entity\Flag;
 use Drupal\Tests\flag\Kernel\FlagKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\user\Entity\Role;
+use Drupal\user\Entity\User;
 
 /**
  * Tests the Flag counts API.
@@ -42,6 +44,13 @@ class FlagCountsTest extends FlagKernelTestBase {
   protected $adminUser;
 
   /**
+   * Anonymous user object.
+   *
+   * @var \Drupal\user\Entity\User|false
+   */
+  protected $anonymousUser;
+
+  /**
    * {@inheritdoc}
    */
   protected function setUp() {
@@ -49,12 +58,16 @@ class FlagCountsTest extends FlagKernelTestBase {
 
     $this->installSchema('user', 'users_data');
 
+    // Create the anonymous role.
+    $this->installConfig(['user']);
+
     $this->flagCountService = \Drupal::service('flag.count');
 
-    // Create a flag.
+    // Create a flag. ( Non global ).
     $this->flag = Flag::create([
       'id' => strtolower($this->randomMachineName()),
       'label' => $this->randomString(),
+      'global' => FALSE,
       'entity_type' => 'node',
       'bundles' => ['article'],
       'flag_type' => 'entity:node',
@@ -64,10 +77,20 @@ class FlagCountsTest extends FlagKernelTestBase {
     ]);
     $this->flag->save();
 
-    // Create a user who may flag.
+    // Create admin user who may flag everything.
     $this->adminUser = $this->createUser([
       'administer flags',
     ]);
+
+    // Grant the anonymous role permission to flag.
+    /* @var \Drupal\user\RoleInterface $anonymous_role */
+    $anonymous_role = Role::load(Role::ANONYMOUS_ID);
+    $anonymous_role->grantPermission('flag ' . $this->flag->id());
+    $anonymous_role->grantPermission('unflag ' . $this->flag->id());
+    $anonymous_role->save();
+
+    // Get the anonymous user.
+    $this->anonymousUser = User::getAnonymousUser();
 
     $article = NodeType::create(['type' => 'article']);
     $article->save();
@@ -91,9 +114,6 @@ class FlagCountsTest extends FlagKernelTestBase {
     $flag_get_entity_flag_counts = $this->flagCountService->getFlagFlaggingCount($this->flag);
     $this->assertEqual($flag_get_entity_flag_counts, 1, "getFlagFlaggingCount() returns the expected count.");
 
-    $flag_get_user_flag_counts = $this->flagCountService->getUserFlagFlaggingCount($this->flag, $this->adminUser);
-    $this->assertEqual($flag_get_user_flag_counts, 1, "getUserFlagFlaggingCount() returns the expected count.");
-
     $flag_get_counts = $this->flagCountService->getEntityFlagCounts($this->node);
     $this->assertEqual($flag_get_counts[$this->flag->id()], 1, "getEntityFlagCounts() returns the expected count.");
 
@@ -103,6 +123,36 @@ class FlagCountsTest extends FlagKernelTestBase {
     $this->flagService->unflagAllByFlag($this->flag);
     $flag_get_flag_counts = $this->flagCountService->getFlagEntityCount($this->flag);
     $this->assertEqual($flag_get_flag_counts, 0, "getFlagEntityCount() on reset flag returns the expected count.");
+  }
+
+  /**
+   * Tests the differing counting rules between global and non-global flags.
+   *
+   * Global flags count all users as if they were are single user.
+   * Non-global flags uniquely identify anonymous users by session_id.
+   */
+  public function testAnonymousFlagCount() {
+    // Consider two distinct anonymous users.
+    $anon1_session_id = 'Unknown user 1';
+    $anon2_session_id = 'Unknown user 2';
+
+    // Both users flag the node - using a non-global flag.
+    $this->flagService->flag($this->flag, $this->node, $this->anonymousUser, $anon1_session_id);
+    $this->flagService->flag($this->flag, $this->node, $this->anonymousUser, $anon2_session_id);
+
+    // For non-global flags anonymous users can uniquely identifed by session_id.
+    $anon1_count = $this->flagCountService->getUserFlagFlaggingCount($this->flag, $this->anonymousUser, $anon1_session_id);
+    $this->assertEqual($anon1_count, 1, "getUserFlagFlaggingCount() counts only the first user.");
+    $anon2_count = $this->flagCountService->getUserFlagFlaggingCount($this->flag, $this->anonymousUser, $anon2_session_id);
+    $this->assertEqual($anon2_count, 1, "getUserFlagFlaggingCount() counts only the second user.");
+
+    // Switch to a global flag, the accounting rules.
+    $this->flag->setGlobal(TRUE);
+    $this->flag->save();
+
+    // Despite being a global flag, queries about specific anonymous users can still be made.
+    $rejected_count = $this->flagCountService->getUserFlagFlaggingCount($this->flag, $this->anonymousUser, $anon1_session_id);
+    $this->assertEqual($rejected_count, 1, "getUserFlagFlaggingCount() ignores the session id.");
   }
 
   /**
@@ -124,8 +174,8 @@ class FlagCountsTest extends FlagKernelTestBase {
     $article2->save();
 
     // Flag both.
-    $this->flagService->flag($this->flag, $article1);
-    $this->flagService->flag($this->flag, $article2);
+    $this->flagService->flag($this->flag, $article1, $this->adminUser);
+    $this->flagService->flag($this->flag, $article2, $this->adminUser);
 
     // Confirm the counts have been incremented.
     $article1_count_before = $this->flagCountService->getEntityFlagCounts($article1);
@@ -171,8 +221,8 @@ class FlagCountsTest extends FlagKernelTestBase {
     $article2->save();
 
     // Flag both.
-    $this->flagService->flag($this->flag, $article1);
-    $this->flagService->flag($this->flag, $article2);
+    $this->flagService->flag($this->flag, $article1, $this->adminUser);
+    $this->flagService->flag($this->flag, $article2, $this->adminUser);
 
     // Confirm the counts have been incremented.
     $article1_count_before = $this->flagCountService->getEntityFlagCounts($article1);

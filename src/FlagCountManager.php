@@ -119,21 +119,51 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
   /**
    * {@inheritdoc}
    */
-  public function getUserFlagFlaggingCount(FlagInterface $flag, AccountInterface $user) {
+  public function getUserFlagFlaggingCount(FlagInterface $flag, AccountInterface $user, $session_id = NULL) {
     $flag_id = $flag->id();
     $uid = $user->id();
+    $get_by_session_id = $user->isAnonymous();
 
-    // We check to see if the flag count is already in the cache,
-    // if it's not, run the query.
-    if (!isset($this->userFlagCounts[$flag_id][$uid])) {
-      $query = $this->connection->select('flagging', 'f')
-        ->condition('flag_id', $flag_id)
-        ->condition('uid', $uid);
-      $query->addExpression('COUNT(*)');
-      $this->userFlagCounts[$flag_id][$uid] = $query->execute()->fetchField();
+    // Return the flag count if it is already in the cache.
+    if ($get_by_session_id) {
+      if (is_null($session_id)) {
+        throw new \LogicException('Anonymous users must be identifed by session_id');
+      }
+
+      // Return the flag count if it is already in the cache.
+      if (isset($this->userFlagCounts[$flag_id][$uid][$session_id])) {
+        return $this->userFlagCounts[$flag_id][$uid][$session_id];
+      }
+    }
+    elseif (isset($this->userFlagCounts[$flag_id][$uid])) {
+      return $this->userFlagCounts[$flag_id][$uid];
     }
 
-    return $this->userFlagCounts[$flag_id][$uid];
+    // Run the query.
+    $query = $this->connection->select('flagging', 'f')
+      ->condition('flag_id', $flag_id)
+      ->condition('uid', $uid);
+
+    if ($get_by_session_id) {
+      $query->condition('session_id', $session_id);
+    }
+
+    $query->addExpression('COUNT(*)');
+
+    $result = $query->execute()
+      ->fetchField();
+
+    // Cache the result.
+    if ($get_by_session_id) {
+      // Cached by flag, by uid and by session_id.
+      $this->userFlagCounts[$flag_id][$uid][$session_id] = $result;
+    }
+    else {
+      // Cached by flag, by uid.
+      $this->userFlagCounts[$flag_id][$uid] = $result;
+    }
+
+    return $result;
   }
 
   /**

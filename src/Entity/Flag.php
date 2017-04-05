@@ -208,16 +208,13 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function isFlagged(EntityInterface $entity, AccountInterface $account = NULL) {
-    // Get the current user if one wasn't passed to the method.
-    if ($account == NULL) {
-      $account = \Drupal::currentUser();
-    }
+  public function isFlagged(EntityInterface $entity, AccountInterface $account = NULL, $session_id = NULL) {
+    \Drupal::service('flag')->populateFlaggerDefaults($account, $session_id);
 
     // Load the is flagged list from the flagging storage, check if this flag
     // is in the list.
     $flag_ids = \Drupal::entityTypeManager()->getStorage('flagging')
-      ->loadIsFlagged($entity, $account);
+      ->loadIsFlagged($entity, $account, $session_id);
     return isset($flag_ids[$this->id()]);
 
   }

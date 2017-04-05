@@ -39,9 +39,16 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
    *   The flaggable entity.
    * @param AccountInterface $account
    *   (optional) The account of the user that flagged the entity.
+   * @param string $session_id
+   *   (optional) The session ID. This must be supplied if $account is the
+   *   anonymous user.
    *
    * @return bool
    *   True if the given entity is flagged, FALSE otherwise.
+   *
+   * @throws \LogicException
+   *   Thrown when $account is anonymous but no associated session ID is
+   *   specified.
    */
   public function isFlagged(EntityInterface $entity, AccountInterface $account = NULL);
 
