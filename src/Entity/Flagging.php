@@ -68,7 +68,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
    * {@inheritdoc}
    */
   public function getFlagId() {
-    return $this->get('flag_id')->value;
+    return $this->get('flag_id')->target_id;
   }
 
   /**
@@ -105,22 +105,11 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Flagging ID'))
-      ->setDescription(t('The flagging ID.'))
-      ->setSetting('unsigned', TRUE)
-      ->setReadOnly(TRUE);
+    $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The flagging UUID.'))
-      ->setReadOnly(TRUE);
-
-    $fields['flag_id'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Flag ID'))
-      ->setDescription(t('The Flag ID.'))
-      ->setRequired(TRUE)
-      ->setReadOnly(TRUE);
+    // Add descriptions to the fields defined by the parent method.
+    $fields['id']->setDescription(t('The flagging ID.'));
+    $fields['flag_id']->setDescription(t('The Flag ID.'));
 
     // This field is on flaggings even though it duplicates the entity type
     // field on the flag so that flagging queries can use it.
