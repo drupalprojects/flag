@@ -47,8 +47,8 @@ class FieldEntryFormController extends ControllerBase {
    * @param int $entity_id
    *   The flaggable ID.
    *
-   * @return AjaxResponse
-   *   The response object.
+   * @return array
+   *   The processed form to create the flagging.
    *
    * @see \Drupal\flag\Plugin\ActionLink\AJAXactionLink
    */
