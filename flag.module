@@ -118,16 +118,6 @@ function flag_help($route_name, RouteMatchInterface $route_match) {
 }
 
 /**
- * Implements hook_form_FORM_ID_alter(): user_admin_permissions().
- *
- * Disable permission on the permissions form that don't make sense for
- * anonymous users when Session API module is not enabled.
- */
-/*function flag_form_user_admin_permissions_alter(&$form, FormStateInterface $form_state, $form_id) {
-  @todo: Conditionally disable anon flagging permissions.
-}*/
-
-/**
  * Implements hook_form_alter().
  */
 function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
