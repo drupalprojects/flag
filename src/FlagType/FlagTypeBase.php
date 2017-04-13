@@ -131,7 +131,14 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
   }
 
   /**
-   * {@inheritdoc}
+   * Determines whether the flag is set to have the extra permissions set.
+   *
+   * @param string $option
+   *   The name of an extra permissions set. These are defined in
+   *   getExtraPermissionsOptions().
+   *
+   * @return bool
+   *   TRUE if the flag is configured to have the permissions, FALSE if not.
    */
   protected function hasExtraPermission($option) {
     return in_array($option, $this->configuration['extra_permissions']);
