@@ -83,7 +83,7 @@ class ModalFormTest extends JavascriptTestBase {
   public function testModalOption() {
     // Verify default, non-modal behavior.
     $this->drupalGet($this->node->toUrl());
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
 
     // Should be on the confirm form page, since this isn't using a modal.
     $expected = Url::fromRoute('flag.confirm_flag', [
@@ -95,7 +95,7 @@ class ModalFormTest extends JavascriptTestBase {
     $this->assertSession()->addressEquals($this->node->toUrl());
 
     // Unflag.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
     $expected = Url::fromRoute('flag.confirm_unflag', [
       'flag' => $this->flag->id(),
       'entity_id' => $this->node->id(),
@@ -111,7 +111,7 @@ class ModalFormTest extends JavascriptTestBase {
     $this->flag->save();
 
     $this->drupalGet($this->node->toUrl());
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
 
     // Should still be on the node url, as this is using a modal.
@@ -125,7 +125,7 @@ class ModalFormTest extends JavascriptTestBase {
       ->getInternalPath());
 
     // Unflag.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->addressEquals($this->node->toUrl()
       ->getInternalPath());

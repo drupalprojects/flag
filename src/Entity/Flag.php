@@ -384,15 +384,15 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFlagShortText() {
-    return $this->flag_short;
+  public function getShortText($action) {
+    return $action === 'unflag' ? $this->unflag_short : $this->flag_short;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getFlagLongText() {
-    return $this->flag_long;
+  public function getLongText($action) {
+    return $action === 'unflag' ? $this->unflag_long : $this->flag_long;
   }
 
   /**
@@ -405,8 +405,8 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFlagMessage() {
-    return $this->flag_message;
+  public function getMessage($action) {
+    return $action === 'unflag' ? $this->unflag_message : $this->flag_message;
   }
 
   /**
@@ -419,13 +419,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUnflagLongText() {
-    return $this->unflag_long;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUnflagLongText($unflag_long) {
     $this->unflag_long = $unflag_long;
   }
@@ -433,22 +426,8 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUnflagMessage() {
-    return $this->unflag_message;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUnflagMessage($unflag_message) {
     $this->unflag_message = $unflag_message;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUnflagShortText() {
-    return $this->unflag_short;
   }
 
   /**

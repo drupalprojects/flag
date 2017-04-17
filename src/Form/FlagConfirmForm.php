@@ -32,7 +32,7 @@ class FlagConfirmForm extends FlagConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->flag->getFlagLongText();
+    return $this->flag->getLongText('flag');
   }
 
   /**

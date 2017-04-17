@@ -88,27 +88,27 @@ class LinkTypeAjaxTest extends JavascriptTestBase {
     $this->drupalGet($this->node->toUrl());
 
     // Confirm the flag link exists.
-    $this->assertSession()->linkExists($this->flag->getFlagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
 
     // Click the flag link.
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->addressEquals($this->node->toUrl());
-    $this->assertSession()->linkExists($this->flag->getUnflagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
     $this->assertTrue($this->flagService->getFlagging($this->flag, $this->node, $auth_user));
 
     // Click the unflag link, repeat the check.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->addressEquals($this->node->toUrl());
-    $this->assertSession()->linkExists($this->flag->getFlagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
     $this->assertFalse($this->flagService->getFlagging($this->flag, $this->node, $auth_user));
 
     // And flag again.
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->addressEquals($this->node->toUrl());
-    $this->assertSession()->linkExists($this->flag->getUnflagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
     $this->assertTrue($this->flagService->getFlagging($this->flag, $this->node, $auth_user));
 
     // Add an unrelated flag, and enable flag events.
@@ -125,33 +125,33 @@ class LinkTypeAjaxTest extends JavascriptTestBase {
     $this->drupalGet($this->node->toUrl());
 
     // Confirm the flag link exists.
-    $this->assertSession()->linkExists($this->flag->getFlagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
 
     // Click the flag link.
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->addressEquals($this->node->toUrl());
-    $this->assertSession()->linkExists($this->flag->getUnflagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
     $this->assertTrue($this->flagService->getFlagging($this->flag, $this->node, $auth_user));
 
     // Verifies that the event subscriber was called.
     $this->assertTrue($this->container->get('state')->get('flag_test.is_flagged', FALSE));
 
     // Click the unflag link, repeat the check.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->addressEquals($this->node->toUrl());
-    $this->assertSession()->linkExists($this->flag->getFlagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('flag'));
     $this->assertFalse($this->flagService->getFlagging($this->flag, $this->node, $auth_user));
 
     // Verifies that the event subscriber was called.
     $this->assertTrue($this->container->get('state')->get('flag_test.is_unflagged', FALSE));
 
     // And flag again.
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
     $this->assertSession()->assertWaitOnAjaxRequest();
     $this->assertSession()->addressEquals($this->node->toUrl());
-    $this->assertSession()->linkExists($this->flag->getUnflagShortText());
+    $this->assertSession()->linkExists($this->flag->getShortText('unflag'));
     $this->assertTrue($this->flagService->getFlagging($this->flag, $this->node, $auth_user));
   }
 

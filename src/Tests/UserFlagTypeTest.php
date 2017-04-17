@@ -70,7 +70,7 @@ class UserFlagTypeTest extends FlagTestBase {
 
     // Assert flag appears on the profile page.
     $this->drupalGet('user/' . $user->id());
-    $this->assertLink($flag->getFlagShortText());
+    $this->assertLink($flag->getShortText('flag'));
 
     // Uncheck extra permssions.
     $edit = [
@@ -84,7 +84,7 @@ class UserFlagTypeTest extends FlagTestBase {
 
     // Assert the flag disapears from the profile page.
     $this->drupalGet('user/' . $user->id());
-    $this->assertNoLink($flag->getFlagShortText());
+    $this->assertNoLink($flag->getShortText('flag'));
   }
 
 }

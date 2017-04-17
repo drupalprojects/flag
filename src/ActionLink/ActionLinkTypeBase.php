@@ -85,7 +85,7 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
     $action = $this->getAction($flag, $entity);
     $url = $this->getUrl($action, $flag, $entity);
     $url->setOption('query', ['destination' => $this->getDestination()]);
-    $title = $action === 'unflag' ? $flag->getUnflagShortText() : $flag->getFlagShortText();
+    $title = $flag->getShortText($action);
 
     return Link::fromTextAndUrl($title, $url);
   }
@@ -106,9 +106,9 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
         '#flaggable' => $entity,
         '#action' => $action,
         '#access' => $access->isAllowed(),
-        '#title' => $action === 'unflag' ? $flag->getUnflagShortText() : $flag->getFlagShortText(),
+        '#title' => $flag->getShortText($action),
         '#attributes' => [
-          'title' => $action === 'unflag' ? $flag->getUnflagLongText() : $flag->getFlagLongText(),
+          'title' => $flag->getLongText($action),
         ],
       ];
       // Build the URL. It is important that bubbleable metadata is explicitly

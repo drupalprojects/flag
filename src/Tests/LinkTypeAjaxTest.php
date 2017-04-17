@@ -69,18 +69,18 @@ class LinkTypeAjaxTest extends FlagTestBase {
     $this->drupalGet($node_url);
 
     // Confirm the flag link exists.
-    $this->assertLink($this->flag->getFlagShortText());
+    $this->assertLink($this->flag->getShortText('flag'));
 
     // Click the flag link. This ensures that the non-JS fallback works we are
     // redirected to back to the page and the node is flagged.
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
     $this->assertUrl($node_url);
-    $this->assertLink($this->flag->getUnflagShortText());
+    $this->assertLink($this->flag->getShortText('unflag'));
 
     // Click the unflag link, repeat the check.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
     $this->assertUrl($node_url);
-    $this->assertLink($this->flag->getFlagShortText());
+    $this->assertLink($this->flag->getShortText('flag'));
 
     /* Assert that initially a flag action link is displayed within a wrapper.
      *
@@ -89,7 +89,7 @@ class LinkTypeAjaxTest extends FlagTestBase {
      *
      * div[contains(concat(' ',normalize-space(@class),' '),' flag ')]
      */
-    $links = $this->xpath('//div[contains(concat(" ",normalize-space(@class)," ")," flag ")]/a[normalize-space()=:label]', array(':label' => $this->flag->getFlagShortText()));
+    $links = $this->xpath('//div[contains(concat(" ",normalize-space(@class)," ")," flag ")]/a[normalize-space()=:label]', array(':label' => $this->flag->getShortText('flag')));
     // Use the same logic as clickLink() to get an AJAX response.
     $link_target = $this->getAbsoluteUrl($links[0]['href']);
     $flag_response = $this->drupalGetAjax($link_target);
@@ -104,7 +104,7 @@ class LinkTypeAjaxTest extends FlagTestBase {
     $this->assertTrue($id_class_position !== FALSE);
 
     // Assert the flag response contains a wrapped unflag action link.
-    $this->assertEqual($this->flag->getUnflagShortText(), $flag_xml_data->a->__toString());
+    $this->assertEqual($this->flag->getShortText('unflag'), $flag_xml_data->a->__toString());
 
     // From the payload extract a unflag action link href.
     // Act as if the unflag link has been clicked.
@@ -116,7 +116,7 @@ class LinkTypeAjaxTest extends FlagTestBase {
     $this->assertTrue($unflag_class_position !== FALSE);
 
     // Assert the unflag response contains a wrapped flag action link.
-    $this->assertEqual($this->flag->getFlagShortText(), $unflag_xml_data->a->__toString());
+    $this->assertEqual($this->flag->getShortText('flag'), $unflag_xml_data->a->__toString());
 
   }
 

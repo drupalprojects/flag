@@ -162,18 +162,24 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   /**
    * Gets the flag short text.
    *
+   * @param string $action
+   *   The flag action, either 'flag' or 'unflag'.
+   *
    * @return string
    *   A string containing the flag short text.
    */
-  public function getFlagShortText();
+  public function getShortText($action);
 
   /**
    * Gets the flag long text.
    *
+   * @param string $action
+   *   The flag action, either 'flag' or 'unflag'.
+   *
    * @return string
    *   A string containing the flag long text.
    */
-  public function getFlagLongText();
+  public function getLongText($action);
 
   /**
    * Sets the flag long text.
@@ -186,10 +192,13 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   /**
    * Gets the flag message.
    *
+   * @param string $action
+   *   The flag action, either 'flag' or 'unflag'.
+   *
    * @return string
-   *   A string continaing the flag message.
+   *   The unflag message text to use.
    */
-  public function getFlagMessage();
+  public function getMessage($action);
 
   /**
    * Sets the flag message.
@@ -200,14 +209,6 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   public function setFlagMessage($flag_message);
 
   /**
-   * Gets the unflag short text.
-   *
-   * @return string
-   *   A string containing the unflag short text.
-   */
-  public function getUnflagShortText();
-
-  /**
    * Sets the unflag short text.
    *
    * @param string $flag_short
@@ -216,28 +217,12 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   public function setUnflagShortText($flag_short);
 
   /**
-   * Gets the flag long text.
-   *
-   * @return string
-   *   A string containing the unflag long text.
-   */
-  public function getUnflagLongText();
-
-  /**
    * Sets the unflag long text.
    *
    * @param string $unflag_long
    *   The unflag lnog text to use.
    */
   public function setUnflagLongText($unflag_long);
-
-  /**
-   * Gets the unflag message.
-   *
-   * @return string
-   *   The unflag message text to use.
-   */
-  public function getUnflagMessage();
 
   /**
    * Sets the unflag message.

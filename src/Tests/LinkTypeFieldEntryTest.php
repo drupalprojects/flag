@@ -125,7 +125,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
 
     // Click the flag link.
     $this->drupalGet('node/' . $this->nodeId);
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
 
     // Check if we have the confirm form message displayed.
     $this->assertText($this->flagConfirmMessage);
@@ -138,7 +138,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->drupalPostForm(NULL, $edit, $this->createButtonText);
 
     // Check that the node is flagged.
-    $this->assertLink($this->flag->getUnflagShortText());
+    $this->assertLink($this->flag->getShortText('unflag'));
   }
 
   /**
@@ -150,7 +150,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->drupalGet('node/' . $this->nodeId);
 
     // Get the details form.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
     $this->assertUrl('flag/details/edit/' . $flag_id . '/' . $this->nodeId, [
       'query' => [
         'destination' => 'node/' . $this->nodeId,
@@ -206,7 +206,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
     $this->drupalGet('node/' . $this->nodeId);
 
     // Click the Unflag link.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
 
     // Click the delete link.
     $this->clickLink($this->deleteButtonText);
@@ -220,7 +220,7 @@ class LinkTypeFieldEntryTest extends FlagTestBase {
 
     // Check that the node is no longer flagged.
     $this->drupalGet('node/' . $this->nodeId);
-    $this->assertLink($this->flag->getFlagShortText());
+    $this->assertLink($this->flag->getShortText('flag'));
   }
 
 }

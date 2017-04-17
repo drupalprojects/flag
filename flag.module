@@ -147,7 +147,7 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
       $form['flag'][$flag->id()] = array(
         '#type' => 'checkbox',
         '#title' => $flag->label(),
-        '#description' => $flag->getFlagLongText(),
+        '#description' => $flag->getLongText('flag'),
         '#default_value' => is_null($flagging)? NULL: 1,
         '#return_value' => 1,
         // Used by our drupalSetSummary() on vertical tabs.
@@ -569,7 +569,7 @@ function flag_flag_insert(FlagInterface $flag) {
     $action = Action::create([
       'id' => $flag_id,
       'type' => $flag->getFlaggableEntityTypeId(),
-      'label' => $flag->getFlagShortText(),
+      'label' => $flag->getShortText('flag'),
       'plugin' => 'flag_action:' . $flag->id() . '.flag',
       'configuration' => [
         'flag_id' => $flag->id(),
@@ -583,7 +583,7 @@ function flag_flag_insert(FlagInterface $flag) {
     $action = Action::create([
       'id' => $unflag_id,
       'type' => $flag->getFlaggableEntityTypeId(),
-      'label' => $flag->getUnflagShortText(),
+      'label' => $flag->getShortText('unflag'),
       'plugin' => 'flag_action:' . $flag->id() . '.unflag',
       'configuration' => [
         'flag_id' => $flag->id(),

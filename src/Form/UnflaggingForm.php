@@ -52,7 +52,7 @@ class UnflaggingForm extends FlagConfirmFormBase {
    * {@inheritdoc}
    */
   public function getDescription() {
-    return $this->flag->getUnflagLongText();
+    return $this->flag->getLongText('unflag');
   }
 
   /**

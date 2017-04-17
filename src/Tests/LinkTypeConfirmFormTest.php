@@ -97,7 +97,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
 
     // Click the flag link.
     $this->drupalGet('node/' . $node_id);
-    $this->clickLink($this->flag->getFlagShortText());
+    $this->clickLink($this->flag->getShortText('flag'));
 
     // Check if we have the confirm form message displayed.
     $this->assertText($this->flagConfirmMessage);
@@ -108,7 +108,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
 
     // Check that the node is flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertLink($this->flag->getUnflagShortText());
+    $this->assertLink($this->flag->getShortText('unflag'));
 
     // Check the flag count was incremented.
     $flag_count_flagged = db_query('SELECT count FROM {flag_counts}
@@ -120,7 +120,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
     $this->assertEqual($flag_count_flagged, $flag_count_pre + 1, "The flag count was incremented.");
 
     // Unflag the node.
-    $this->clickLink($this->flag->getUnflagShortText());
+    $this->clickLink($this->flag->getShortText('unflag'));
 
     // Check if we have the confirm form message displayed.
     $this->assertText($this->unflagConfirmMessage);
@@ -131,7 +131,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
 
     // Check that the node is no longer flagged.
     $this->drupalGet('node/' . $node_id);
-    $this->assertLink($this->flag->getFlagShortText());
+    $this->assertLink($this->flag->getShortText('flag'));
 
     // Check the flag count was decremented.
     $flag_count_unflagged = db_query('SELECT count FROM {flag_counts}
