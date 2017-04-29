@@ -128,10 +128,23 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $flag_service = \Drupal::service('flag');
   $entity = $object->getEntity();
 
-  $flags = $flag_service->getUsersFlags(\Drupal::currentUser(), $entity->getEntityTypeId(), $entity->bundle());
-  $filtered_flags = array_filter($flags, function(FlagInterface $flag) use ($object) {
+  $flags = $flag_service->getAllFlags($entity->getEntityTypeId(), $entity->bundle());
+  // Filter the flags to those that apply here:
+  //  - the flag uses the entity type plugin.
+  //  - the plugin is configured to output the flag in the entity form.
+  //  - the form is considered to be an edit form.
+  //  - the current user has access to the flag.
+  $filtered_flags = array_filter($flags, function(FlagInterface $flag) use ($flag_service, $object) {
     $plugin = $flag->getFlagTypePlugin();
-    return $plugin instanceof EntityFlagType && $plugin->showOnForm() && $plugin->isAddEditForm($object->getOperation());
+    $entity = $object->getEntity();
+    $flagging = $flag_service->getFlagging($flag, $entity);
+    $action = is_null($flagging) ? 'flag' : 'unflag';
+    $access = $flag->actionAccess($action, NULL, $entity);
+
+    return ($plugin instanceof EntityFlagType)
+      && $plugin->showOnForm()
+      && $plugin->isAddEditForm($object->getOperation())
+      && $access->isAllowed();
   });
   if (!empty($filtered_flags)) {
     $form['flag'] = array(
@@ -142,8 +155,9 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
       '#tree' => TRUE,
     );
     foreach ($filtered_flags as $flag) {
-      $account = $flag->isGlobal()? NULL : \Drupal::currentUser();
-      $flagging = $flag_service->getFlagging($flag, $entity, $account);
+      // TODO: refactor so we don't check this twice per flag.
+      $flagging = $flag_service->getFlagging($flag, $entity);
+
       $form['flag'][$flag->id()] = array(
         '#type' => 'checkbox',
         '#title' => $flag->label(),
