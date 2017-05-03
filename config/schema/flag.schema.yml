@@ -87,7 +87,7 @@ flag.flag.*:
 
 flag.flag_type.plugin.entity:node:
   type: "flag.flag_type.plugin.entity:*"
-  label: 'Flag type for all content entities'
+  label: 'Flag type for all nodes'
   mapping:
     i18n:
       type: string
