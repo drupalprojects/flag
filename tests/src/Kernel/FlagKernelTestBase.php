@@ -1,6 +1,8 @@
 <?php
 namespace Drupal\Tests\flag\Kernel;
 
+use Drupal\Core\Session\AccountInterface;
+use Drupal\flag\FlagInterface;
 use Drupal\flag\Tests\FlagCreateTrait;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\simpletest\UserCreationTrait;
@@ -52,4 +54,20 @@ abstract class FlagKernelTestBase extends KernelTestBase {
     $this->flagService = \Drupal::service('flag');
   }
 
+  /**
+   * Get all flaggings for the given flag.
+   *
+   * @param \Drupal\flag\FlagInterface $flag
+   *   The flag entity.
+   *
+   * @return \Drupal\flag\FlaggingInterface[]
+   *   An array of flaggings.
+   */
+  protected function getFlagFlaggings(FlagInterface $flag) {
+    $query = \Drupal::entityQuery('flagging');
+    $query->condition('flag_id', $flag->id());
+    $ids = $query->execute();
+
+    return \Drupal::entityTypeManager()->getStorage('flagging')->loadMultiple($ids);
+  }
 }

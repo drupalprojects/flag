@@ -96,23 +96,6 @@ interface FlagServiceInterface {
   public function getFlagging(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL, $session_id = NULL);
 
   /**
-   * Get all flaggings for the given flag, and optionally, user.
-   *
-   * @param \Drupal\flag\FlagInterface $flag
-   *   The flag entity.
-   * @param \Drupal\Core\Session\AccountInterface $account
-   *   (optional) The account of the flagging user. If NULL, flaggings for any
-   *   user will be returned.
-   * @param string $session_id
-   *   (optional) The session ID used to uniquely identify an anonymous
-    *  user.
-   *
-   * @return array
-   *   An array of flaggings.
-   */
-  public function getFlagFlaggings(FlagInterface $flag, AccountInterface $account = NULL, $session_id = NULL);
-
-  /**
    * Get flaggings for the given entity, flag, and optionally, user.
    *
    * This method works very much like FlagServiceInterface::getFlagging() only

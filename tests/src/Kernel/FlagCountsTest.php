@@ -184,14 +184,14 @@ class FlagCountsTest extends FlagKernelTestBase {
     $this->assertEqual(count($article2_count_before[$this->flag->id()]), 1, 'The article2 has been flagged.');
 
     // Confirm the flagging have been created.
-    $flaggings_before = $this->flagService->getFlagFlaggings($this->flag);
+    $flaggings_before = $this->getFlagFlaggings($this->flag);
     $this->assertEqual(count($flaggings_before), 2, 'There are two flaggings associated with the flag');
 
     // Delete the flag.
     $this->flag->delete();
 
     // The list of all flaggings MUST now be empty.
-    $flaggings_after = $this->flagService->getFlagFlaggings($this->flag);
+    $flaggings_after = $this->getFlagFlaggings($this->flag);
     $this->assertEmpty($flaggings_after, 'The flaggings were removed, when the flag was deleted');
 
     // The flag id is now stale, so instead of searching for the flag in the
@@ -231,7 +231,7 @@ class FlagCountsTest extends FlagKernelTestBase {
     $this->assertEqual(count($article2_count_before[$this->flag->id()]), 1, 'The article2 has been flagged.');
 
     // Confirm the flagging have been created.
-    $flaggings_before = $this->flagService->getFlagFlaggings($this->flag);
+    $flaggings_before = $this->getFlagFlaggings($this->flag);
     $this->assertEqual(count($flaggings_before), 2, 'There are two flaggings associated with the flag');
 
     // Delete the entities.
@@ -239,7 +239,7 @@ class FlagCountsTest extends FlagKernelTestBase {
     $article2->delete();
 
     // The list of all flaggings MUST now be empty.
-    $flaggings_after = $this->flagService->getFlagFlaggings($this->flag);
+    $flaggings_after = $this->getFlagFlaggings($this->flag);
     $this->assert(empty($flaggings_after), 'The flaggings were removed, when the flag was deleted');
 
     // Confirm the counts have been removed.
@@ -284,10 +284,10 @@ class FlagCountsTest extends FlagKernelTestBase {
 
     $auth_user->delete();
 
-    $flaggings_after = $this->flagService->getFlagFlaggings($user_flag);
+    $flaggings_after = $this->getFlagFlaggings($user_flag);
     $this->assertEmpty($flaggings_after, 'The user flaggings were removed when the user was deleted.');
 
-    $flaggings_after = $this->flagService->getFlagFlaggings($this->flag);
+    $flaggings_after = $this->getFlagFlaggings($this->flag);
     $this->assert(empty($flaggings_after), 'The node flaggings were removed when the user was deleted');
   }
 

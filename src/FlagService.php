@@ -152,31 +152,6 @@ class FlagService implements FlagServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getFlagFlaggings(FlagInterface $flag, AccountInterface $account = NULL, $session_id = NULL) {
-    $query = $this->entityQueryManager->get('flagging');
-
-    $query->condition('flag_id', $flag->id());
-
-    if (!empty($account) && !$flag->isGlobal()) {
-      $query->condition('uid', $account->id());
-
-      if ($account->isAnonymous()) {
-        if (empty($session_id)) {
-          throw new \LogicException('An anonymous user must be identifed by session ID.');
-        }
-
-        $query->condition('session_id', $session_id);
-      }
-    }
-
-    $ids = $query->execute();
-
-    return $this->getFlaggingsByIds($ids);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getEntityFlaggings(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL, $session_id = NULL) {
     $query = $this->entityQueryManager->get('flagging');
 
