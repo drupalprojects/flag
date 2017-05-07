@@ -289,7 +289,6 @@ abstract class FlagFormBase extends EntityForm {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     parent::validateForm($form, $form_state);
 
-    // @todo Move this to the validation method for the confirm form plugin
     $flag = $this->entity;
     $flag->getFlagTypePlugin()->validateConfigurationForm($form, $form_state);
     $flag->getLinkTypePlugin()->validateConfigurationForm($form, $form_state);
