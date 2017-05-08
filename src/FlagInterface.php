@@ -265,11 +265,6 @@ interface FlagInterface extends ConfigEntityInterface, EntityWithPluginCollectio
   public function setUnflagDeniedText($unflag_denied_text);
 
   /**
-   * {@inheritdoc}
-   */
-  public function getPluginCollections();
-
-  /**
    * Checks whether a user has permission to flag/unflag or not.
    *
    * @param string $action
