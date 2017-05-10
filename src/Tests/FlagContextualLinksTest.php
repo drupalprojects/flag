@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\flag\Tests\FlagContextualLinksTest.
- */
 
 namespace Drupal\flag\Tests;
 
