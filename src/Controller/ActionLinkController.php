@@ -9,9 +9,11 @@ use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\EventSubscriber\MainContentViewSubscriber;
 use Drupal\Core\Render\RendererInterface;
+use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagServiceInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -150,11 +152,17 @@ class ActionLinkController extends ControllerBase implements ContainerInjectionI
 
       return $response;
     }
-    else {
+    elseif ($entity->hasLinkTemplate('canonical')) {
       // Redirect back to the entity. A passed in destination query parameter
       // will automatically override this.
       $url_info = $entity->toUrl();
       return $this->redirect($url_info->getRouteName(), $url_info->getRouteParameters());
+    }
+    else {
+      // For entities that don't have a canonical URL (like paragraphs),
+      // redirect to the front page.
+      $front = Url::fromUri('internal:/');
+      return new RedirectResponse($front);
     }
 
   }
