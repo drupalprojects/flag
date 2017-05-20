@@ -217,4 +217,48 @@ class FlagServiceTest extends FlagKernelTestBase {
     }
   }
 
+  /**
+   * Tests global flags in combination with retrieval of all entity flaggings.
+   */
+  public function testGlobalFlaggingRetrieval() {
+    // Create a global flag.
+    $flag = Flag::create([
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'node',
+      'bundles' => ['article'],
+      'flag_type' => 'entity:node',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+      'global' => TRUE,
+    ]);
+    $flag->save();
+
+    // Flag the node.
+    $flaggable_node = Node::create([
+      'type' => 'article',
+      'title' => $this->randomMachineName(8),
+    ]);
+    $flaggable_node->save();
+
+    $account_1 = $this->createUser();
+    $account_2 = $this->createUser();
+
+    // Flag the global flag as account 1.
+    $this->flagService->flag($flag, $flaggable_node, $account_1);
+
+    // Verify flagging is retrievable without an account.
+    $flaggings = $this->flagService->getAllEntityFlaggings($flaggable_node);
+    $this->assertEquals(1, count($flaggings));
+
+    // User that flagged should see the flagging.
+    $flaggings = $this->flagService->getAllEntityFlaggings($flaggable_node, $account_1);
+    $this->assertEquals(1, count($flaggings));
+
+    // Since this is a global flag, any user should see it returned.
+    $flaggings = $this->flagService->getAllEntityFlaggings($flaggable_node, $account_2);
+    $this->assertEquals(1, count($flaggings));
+  }
+
 }
