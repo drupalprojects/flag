@@ -91,23 +91,6 @@ class FlagService implements FlagServiceInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUsersFlags(AccountInterface $account, $entity_type = NULL, $bundle = NULL) {
-    $flags = $this->getAllFlags($entity_type, $bundle);
-
-    $filtered_flags = [];
-    foreach ($flags as $flag_id => $flag) {
-      if ($flag->actionAccess('flag', $account)->isAllowed() ||
-          $flag->actionAccess('unflag', $account)->isAllowed()) {
-        $filtered_flags[$flag_id] = $flag;
-      }
-    }
-
-    return $filtered_flags;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getFlagging(FlagInterface $flag, EntityInterface $entity, AccountInterface $account = NULL, $session_id = NULL) {
     $this->populateFlaggerDefaults($account, $session_id);
 
