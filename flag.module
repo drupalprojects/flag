@@ -134,11 +134,10 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   //  - the plugin is configured to output the flag in the entity form.
   //  - the form is considered to be an edit form.
   //  - the current user has access to the flag.
-  $filtered_flags = array_filter($flags, function(FlagInterface $flag) use ($flag_service, $object) {
+  $filtered_flags = array_filter($flags, function(FlagInterface $flag) use ($object) {
     $plugin = $flag->getFlagTypePlugin();
     $entity = $object->getEntity();
-    $flagging = $flag_service->getFlagging($flag, $entity);
-    $action = is_null($flagging) ? 'flag' : 'unflag';
+    $action = $flag->isFlagged($entity) ? 'unflag' : 'flag';
     $access = $flag->actionAccess($action, NULL, $entity);
 
     return ($plugin instanceof EntityFlagType)
@@ -155,14 +154,11 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
       '#tree' => TRUE,
     );
     foreach ($filtered_flags as $flag) {
-      // TODO: refactor so we don't check this twice per flag.
-      $flagging = $flag_service->getFlagging($flag, $entity);
-
       $form['flag'][$flag->id()] = array(
         '#type' => 'checkbox',
         '#title' => $flag->label(),
         '#description' => $flag->getLongText('flag'),
-        '#default_value' => is_null($flagging)? NULL: 1,
+        '#default_value' => $flag->isFlagged($entity) ? 1 : 0,
         '#return_value' => 1,
         // Used by our drupalSetSummary() on vertical tabs.
         '#attributes' => array('title' => $flag->label()),
