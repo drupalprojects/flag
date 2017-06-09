@@ -254,6 +254,33 @@ class FlagServiceTest extends FlagKernelTestBase {
     // Since this is a global flag, any user should see it returned.
     $flaggings = $this->flagService->getAllEntityFlaggings($flaggable_node, $account_2);
     $this->assertEquals(1, count($flaggings));
+
+    // For a non-global flag verify only the owner gets the flag.
+    $flag = Flag::create([
+      'id' => strtolower($this->randomMachineName()),
+      'label' => $this->randomString(),
+      'entity_type' => 'node',
+      'bundles' => ['article'],
+      'flag_type' => 'entity:node',
+      'link_type' => 'reload',
+      'flagTypeConfig' => [],
+      'linkTypeConfig' => [],
+      'global' => FALSE,
+    ]);
+    $flag->save();
+    $this->flagService->flag($flag, $flaggable_node, $account_2);
+
+    // Verify both flaggings are returned.
+    $flaggings = $this->flagService->getAllEntityFlaggings($flaggable_node);
+    $this->assertEquals(2, count($flaggings));
+
+    // User that flagged should see both flaggings.
+    $flaggings = $this->flagService->getAllEntityFlaggings($flaggable_node, $account_2);
+    $this->assertEquals(2, count($flaggings));
+
+    // User that hasn't used the second flag will only see the global flag.
+    $flaggings = $this->flagService->getAllEntityFlaggings($flaggable_node, $account_1);
+    $this->assertEquals(1, count($flaggings));
   }
 
 }

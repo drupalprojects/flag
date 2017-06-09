@@ -173,9 +173,10 @@ class FlagService implements FlagServiceInterface {
     if (!empty($account)) {
       // Use an OR condition group to check that either the account flagged
       // the entity, or the flag itself is a global flag.
-      $query->orConditionGroup()
+      $global_or_user = $query->orConditionGroup()
         ->condition('global', 1)
         ->condition('uid', $account->id());
+      $query->condition($global_or_user);
       if ($account->isAnonymous()) {
         if (empty($session_id)) {
           throw new \LogicException('An anonymous user must be identifed by session ID.');
