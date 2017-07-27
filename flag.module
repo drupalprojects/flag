@@ -129,10 +129,16 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $entity = $object->getEntity();
 
   $flags = $flag_service->getAllFlags($entity->getEntityTypeId(), $entity->bundle());
+  // Check the first flag and return early if the form isn't considered to be
+  // an edit form.
+  if (!empty($flags) && isset($flags[0]) && $flags[0] instanceof FlagInterface) {
+    if (!$flags[0]->getFlagTypePlugin()->isAddEditForm($object->getOperation())) {
+      return;
+    }
+  }
   // Filter the flags to those that apply here:
   //  - the flag uses the entity type plugin.
   //  - the plugin is configured to output the flag in the entity form.
-  //  - the form is considered to be an edit form.
   //  - the current user has access to the flag.
   $filtered_flags = array_filter($flags, function(FlagInterface $flag) use ($object) {
     $plugin = $flag->getFlagTypePlugin();
@@ -142,7 +148,6 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
 
     return ($plugin instanceof EntityFlagType)
       && $plugin->showOnForm()
-      && $plugin->isAddEditForm($object->getOperation())
       && $access->isAllowed();
   });
   if (!empty($filtered_flags)) {
