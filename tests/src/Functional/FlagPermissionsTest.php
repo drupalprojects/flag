@@ -1,54 +1,71 @@
 <?php
 
-namespace Drupal\flag\Tests;
+namespace Drupal\Tests\flag\Functional;
+
+use Drupal\Tests\BrowserTestBase;
+use Drupal\flag\Tests\FlagCreateTrait;
 
 /**
  * Tests Flag module permissions.
  *
  * @group flag
  */
-class FlagPermissionsTest extends FlagTestBase {
+class FlagPermissionsTest extends BrowserTestBase {
+
+  use FlagCreateTrait;
+
+  public static $modules = ['flag', 'node', 'user'];
 
   /**
    * The flag under test.
    *
-   * @var FlagInterface
+   * @var \Drupal\flag\Entity\Flag
    */
   protected $flag;
 
   /**
    * The node to flag.
    *
-   * @var EntityInterface
+   * @var \Drupal\node\Entity\Node
    */
   protected $node;
 
   /**
    * A user who can flag and unflag.
    *
-   * @var AccountInterface
+   * @var \Drupal\user\Entity\User
    */
   protected $fullFlagUser;
 
   /**
    * A user who can only flag.
    *
-   * @var AccountInterface
+   * @var \Drupal\user\Entity\User
    */
   protected $flagOnlyUser;
 
   /**
    * A user with no flag permissions.
    *
-   * @var AccountInterface
+   * @var \Drupal\user\Entity\User
    */
   protected $authUser;
+
+  /**
+   * The node type to use in the test.
+   *
+   * @var string
+   */
+  protected $nodeType = 'article';
 
   /**
    * {@inheritdoc}
    */
   public function setUp() {
     parent::setUp();
+
+    // Create content type.
+    $this->drupalCreateContentType(['type' => $this->nodeType]);
 
     // Create the flag.
     $this->flag = $this->createFlag();
@@ -65,7 +82,7 @@ class FlagPermissionsTest extends FlagTestBase {
     ]);
 
     // Create a user with no flag permissions.
-    $this->authUser = $this->createUser();
+    $this->authUser = $this->drupalCreateUser();
 
     // Create a node to test.
     $this->node = $this->drupalCreateNode(['type' => $this->nodeType]);
@@ -75,40 +92,42 @@ class FlagPermissionsTest extends FlagTestBase {
    * Test permissions.
    */
   public function testPermissions() {
+    $assert_session = $this->assertSession();
+
     // Check the full flag permission user can flag...
     $this->drupalLogin($this->fullFlagUser);
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertLink($this->flag->getShortText('flag'));
+    $assert_session->linkExists($this->flag->getShortText('flag'));
     $this->clickLink($this->flag->getShortText('flag'));
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
 
     // ...and also unflag.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertResponse(200);
-    $this->assertLink($this->flag->getShortText('unflag'));
+    $assert_session->statusCodeEquals(200);
+    $assert_session->linkExists($this->flag->getShortText('unflag'));
 
     // Check the flag only user can flag...
     $this->drupalLogin($this->flagOnlyUser);
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertLink($this->flag->getShortText('flag'));
+    $assert_session->linkExists($this->flag->getShortText('flag'));
     $this->clickLink($this->flag->getShortText('flag'));
-    $this->assertResponse(200);
+    $assert_session->statusCodeEquals(200);
 
     // ...but not unflag.
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertResponse(200);
-    $this->assertNoLink($this->flag->getShortText('flag'));
-    $this->assertNoLink($this->flag->getShortText('unflag'));
+    $assert_session->statusCodeEquals(200);
+    $assert_session->linkNotExists($this->flag->getShortText('flag'));
+    $assert_session->linkNotExists($this->flag->getShortText('unflag'));
 
     // Check an unprivileged authenticated user.
     $this->drupalLogin($this->authUser);
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertNoLink($this->flag->getShortText('flag'));
+    $assert_session->linkNotExists($this->flag->getShortText('flag'));
 
     // Check the anonymous user.
     $this->drupalLogout();
     $this->drupalGet('node/' . $this->node->id());
-    $this->assertNoLink($this->flag->getShortText('flag'));
+    $assert_session->linkNotExists($this->flag->getShortText('flag'));
   }
 
 }
