@@ -489,6 +489,7 @@ function flag_contextual_links_alter(array &$links, $group, array $route_paramet
       'route_name' => $flag_url->getRouteName(),
       'route_parameters' => $flag_url->getRouteParameters(),
       'title' => $flag_link->getText(),
+      'localized_options' => [],
     );
   }
 }
