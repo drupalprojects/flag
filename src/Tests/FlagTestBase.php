@@ -5,6 +5,7 @@ namespace Drupal\flag\Tests;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\simpletest\WebTestBase;
 use Drupal\flag\Entity\Flag;
+use Drupal\Tests\flag\Traits\FlagPermissionsTrait;
 use Drupal\Core\Template\Attribute;
 
 /**

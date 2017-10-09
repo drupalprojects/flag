@@ -3,7 +3,7 @@
 namespace Drupal\Tests\flag\Functional;
 
 use Drupal\flag\Tests\FlagCreateTrait;
-use Drupal\flag\Tests\FlagPermissionsTrait;
+use Drupal\Tests\flag\Traits\FlagPermissionsTrait;
 use Drupal\Tests\BrowserTestBase;
 
 /**

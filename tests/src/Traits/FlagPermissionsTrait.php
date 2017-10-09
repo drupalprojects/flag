@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\flag\Tests;
+namespace Drupal\Tests\flag\Traits;
 
 use Drupal\user\Entity\Role;
 use Drupal\user\RoleInterface;
