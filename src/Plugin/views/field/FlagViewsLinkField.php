@@ -152,24 +152,8 @@ class FlagViewsLinkField extends FieldPluginBase {
     $flag = $this->getFlag();
     $link_type_plugin = $flag->getLinkTypePlugin();
 
-    $link = $link_type_plugin->getAsLink($flag, $entity);
+    return $link_type_plugin->getAsFlagLink($flag, $entity);
 
-    $renderable = $link->toRenderable();
-
-    if ($link_type_plugin instanceof FormEntryInterface) {
-      // Check if form should be in a modal or dialog.
-      $configuration = $link_type_plugin->getConfiguration();
-      if ($configuration['form_behavior'] !== 'default') {
-        $renderable['#attached']['library'][] = 'core/drupal.ajax';
-        $renderable['#attributes']['class'][] = 'use-ajax';
-        $renderable['#attributes']['data-dialog-type'] = $configuration['form_behavior'];
-        $renderable['#attributes']['data-dialog-options'] = Json::encode([
-          'width' => 'auto',
-        ]);
-      }
-    }
-
-    return $renderable;
   }
 
   /**
