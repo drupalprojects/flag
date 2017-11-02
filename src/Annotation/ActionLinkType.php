@@ -10,6 +10,14 @@ use Drupal\Component\Annotation\Plugin;
  * @Annotation
  */
 class ActionLinkType extends Plugin {
+
+  /**
+   * The plugin ID.
+   *
+   * @var string
+   */
+  public $id;
+
   /**
    * The label of the plugin.
    *

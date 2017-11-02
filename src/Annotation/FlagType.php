@@ -11,6 +11,14 @@ use Drupal\Component\Annotation\Plugin;
  * @Annotation
  */
 class FlagType extends Plugin {
+
+  /**
+   * The plugin ID.
+   *
+   * @var string
+   */
+  public $id;
+
   /**
    * The title of the plugin.
    *
