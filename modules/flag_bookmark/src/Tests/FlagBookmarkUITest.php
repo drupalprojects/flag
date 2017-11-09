@@ -52,9 +52,12 @@ class FlagBookmarkUITest extends WebTestBase {
    */
   public function testUi() {
 
+    // Generate a unique title so we can find it on the page easily.
+    $title = $this->randomMachineName();
+
     // Add articles.
     $this->drupalPostForm('node/add/article', [
-      'title[0][value]' => 'Article 1',
+      'title[0][value]' => $title,
     ], t('Save'));
 
     $auth_user = $this->drupalCreateUser([
@@ -76,8 +79,7 @@ class FlagBookmarkUITest extends WebTestBase {
 
     // Check the view is shown correctly.
     $this->drupalGet('bookmarks');
-    $xpath = $this->xpath('/html/body/div/main/div/div/div/div/div/table/tbody/tr/td[1]');
-    $this->assertEqual($xpath[0]->a, 'Article');
+    $this->assertText($title);
   }
 
 }
