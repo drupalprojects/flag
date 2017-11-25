@@ -3,4 +3,6 @@ description: Create customized flags that users can set on entities.
 core: 8.x
 type: module
 package: Flags
+test_dependencies:
+ - rules:rules
 configure: entity.flag.collection
