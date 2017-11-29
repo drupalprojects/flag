@@ -88,6 +88,7 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
    *
    * @return array
    *   The form array
+   *
    * @see \Drupal\flag\Form\FlagAddForm
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
@@ -124,7 +125,7 @@ abstract class FlagTypeBase extends PluginBase implements FlagTypePluginInterfac
    * Defines options for extra permissions.
    *
    * @return array
-   *  An array of options suitable for FormAPI.
+   *   An array of options suitable for FormAPI.
    */
   protected function getExtraPermissionsOptions() {
     return [];

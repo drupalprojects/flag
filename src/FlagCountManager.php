@@ -274,12 +274,12 @@ class FlagCountManager implements FlagCountManagerInterface, EventSubscriberInte
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events = array();
-    $events[FlagEvents::ENTITY_FLAGGED][] = array('incrementFlagCounts', -100);
-    $events[FlagEvents::ENTITY_UNFLAGGED][] = array(
+    $events = [];
+    $events[FlagEvents::ENTITY_FLAGGED][] = ['incrementFlagCounts', -100];
+    $events[FlagEvents::ENTITY_UNFLAGGED][] = [
       'decrementFlagCounts',
       -100,
-    );
+    ];
     return $events;
   }
 

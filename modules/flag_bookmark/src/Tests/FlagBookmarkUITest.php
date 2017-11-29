@@ -38,12 +38,12 @@ class FlagBookmarkUITest extends WebTestBase {
     $this->drupalCreateContentType(['type' => 'article', 'name' => 'Article']);
 
     // Create a test user and log in.
-    $this->adminUser = $this->drupalCreateUser(array(
+    $this->adminUser = $this->drupalCreateUser([
       'flag bookmark',
       'unflag bookmark',
       'create article content',
       'access content overview',
-    ));
+    ]);
     $this->drupalLogin($this->adminUser);
   }
 

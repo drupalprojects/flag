@@ -57,7 +57,7 @@ class Flagging extends ContentEntityBase implements FlaggingInterface {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = array()) {
+  public function __construct(array $values, $entity_type, $bundle = FALSE, $translations = []) {
     if (isset($values['entity_id'])) {
       $values['flagged_entity'] = $values['entity_id'];
     }

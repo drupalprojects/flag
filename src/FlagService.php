@@ -2,7 +2,6 @@
 
 namespace Drupal\flag;
 
-
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -215,7 +214,7 @@ class FlagService implements FlagServiceInterface {
     // Load the flaggings.
     $flaggings = $this->getFlaggingsByIds($ids);
 
-    $user_ids = array();
+    $user_ids = [];
     foreach ($flaggings as $flagging) {
       $user_ids[] = $flagging->get('uid')->first()->getValue()['target_id'];
     }

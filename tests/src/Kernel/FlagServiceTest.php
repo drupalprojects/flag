@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\Tests\flag\Kernel;
 
 use Drupal\flag\Entity\Flag;
@@ -174,7 +175,7 @@ class FlagServiceTest extends FlagKernelTestBase {
    */
   public function testFlagServiceGetFlaggingUsers() {
     // The service methods don't check access, so our user can be anybody.
-    $accounts = array($this->createUser(), $this->createUser());
+    $accounts = [$this->createUser(), $this->createUser()];
 
     // Create a flag.
     $flag = Flag::create([

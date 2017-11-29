@@ -81,7 +81,7 @@ class ShowOnEntityFormTest extends BrowserTestBase {
         'show_as_field' => TRUE,
         'show_on_form' => TRUE,
         'show_contextual_link' => FALSE,
-        ],
+      ],
     ];
     $flag = $this->createFlagFromArray($edit);
     $this->grantFlagPermissions($flag);
@@ -105,7 +105,6 @@ class ShowOnEntityFormTest extends BrowserTestBase {
     // Check to see if the checkbox reflects the state correctly.
     $this->drupalGet($node_edit_path);
     $this->assertSession()->fieldExists($flag_checkbox_id);
-
 
     // See if unflagging on the form works.
     $edit = [

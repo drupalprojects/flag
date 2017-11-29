@@ -325,7 +325,6 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
     return $this->linkTypeCollection;
   }
 
-
   /**
    * {@inheritdoc}
    */

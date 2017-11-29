@@ -35,7 +35,7 @@ class UserFlagTypeTest extends FlagTestBase {
   }
 
   /**
-   * Tests that user can flag themselves when and only when appropiate.
+   * Tests that user can flag themselves when and only when appropriate.
    */
   public function testFlagSelf() {
 
@@ -48,10 +48,10 @@ class UserFlagTypeTest extends FlagTestBase {
       'flagTypeConfig' => [
         // Create extra permissions to self flag.
         'extra_permissions' => ['owner'],
-       ],
+      ],
     ]);
 
-     // User can flag their own work.
+    // User can flag their own work.
     $user = $this->createUser([
       'flag ' . $flag->id() . ' own user account',
       'unflag ' . $flag->id() . ' own user account',

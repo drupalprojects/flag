@@ -4,7 +4,6 @@ namespace Drupal\flag\Annotation;
 
 use Drupal\Component\Annotation\Plugin;
 
-
 /**
  * Defines a FlagType annotation object.
  *

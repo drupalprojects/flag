@@ -40,10 +40,10 @@ class FlagDisableConfirmForm extends ConfirmFormBase {
    */
   public function getQuestion() {
     if ($this->flag->status()) {
-      return t('Disable flag @name?', array('@name' => $this->flag->label()));
+      return $this->t('Disable flag @name?', ['@name' => $this->flag->label()]);
     }
 
-    return t('Enable flag @name?', array('@name' => $this->flag->label()));
+    return $this->t('Enable flag @name?', ['@name' => $this->flag->label()]);
   }
 
   /**

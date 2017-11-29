@@ -50,13 +50,13 @@ class AnonymousFlagTest extends BrowserTestBase {
       'flagTypeConfig' => [],
       'linkTypeConfig' => [],
       'flag_short' => 'switch_this_on',
-      'unflag_short' => 'switch_this_off'
+      'unflag_short' => 'switch_this_off',
     ]);
     $this->flag->save();
 
     Role::load(Role::ANONYMOUS_ID)
-      ->grantPermission('flag '. $flag_id)
-      ->grantPermission('unflag '. $flag_id)
+      ->grantPermission('flag ' . $flag_id)
+      ->grantPermission('unflag ' . $flag_id)
       ->save();
   }
 

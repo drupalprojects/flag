@@ -135,7 +135,7 @@ class AdminUITest extends FlagTestBase {
   public function doFlagEdit() {
     $this->drupalGet('admin/structure/flags/manage/' . $this->flagId);
 
-    $elements = $this->xpath('//input[@id=:id]', array(':id' => 'edit-global-0'));
+    $elements = $this->xpath('//input[@id=:id]', [':id' => 'edit-global-0']);
     $this->assertTrue(isset($elements[0]) && !empty($elements[0]['disabled']), 'The global form element is disabled when editing the flag.');
   }
 
@@ -219,7 +219,7 @@ class AdminUITest extends FlagTestBase {
       $flag_weights_to_set[$flag->id()] = -$i;
     }
 
-    $edit = array();
+    $edit = [];
     foreach ($flag_weights_to_set as $id => $weight) {
       $edit['flags[' . $id . '][weight]'] = $weight;
     }

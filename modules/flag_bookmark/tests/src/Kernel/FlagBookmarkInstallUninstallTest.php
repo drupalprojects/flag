@@ -7,7 +7,7 @@ use Drupal\Tests\flag\Kernel\FlagKernelTestBase;
 use Drupal\views\Entity\View;
 
 /**
- *  Tests that the Flag bookmark module can be installed and uninstalled.
+ * Tests that the Flag bookmark module can be installed and uninstalled.
  *
  * @group flag_bookmark
  */

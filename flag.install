@@ -70,7 +70,7 @@ function flag_uninstall() {
  */
 function flag_requirements($phase) {
 
-  $requirements = array();
+  $requirements = [];
   /*
   if ($phase == 'runtime') {
     if (\Drupal::moduleHandler()->moduleExists('translation') && !\Drupal::moduleHandler()->moduleExists('translation_helpers')) {

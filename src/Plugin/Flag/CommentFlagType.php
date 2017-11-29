@@ -37,7 +37,6 @@ class CommentFlagType extends EntityFlagType {
       foreach ($this->configuration['extra_permissions'] as $option) {
         switch ($option) {
           // The 'owner' case is handled by the parent method.
-
           case 'parent_owner':
             // Define additional permissions.
             $permissions['flag ' . $flag->id() . ' comments on own parent entities'] = [
@@ -72,5 +71,4 @@ class CommentFlagType extends EntityFlagType {
   }
 
   // TODO: actionAccess for parent_owner permissions.
-
 }

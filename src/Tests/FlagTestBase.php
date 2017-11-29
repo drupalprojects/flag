@@ -72,7 +72,7 @@ abstract class FlagTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array(
+  public static $modules = [
     'views',
     'node',
     'user',
@@ -83,7 +83,7 @@ abstract class FlagTestBase extends WebTestBase {
     'block',
     'contextual',
     'flag_event_test',
-  );
+  ];
 
   /**
    * Creates a flag entity using the admin UI.
@@ -154,7 +154,7 @@ abstract class FlagTestBase extends WebTestBase {
    *   The result of the assertion.
    */
   protected function assertContextualLinkPlaceHolder($id) {
-    return $this->assertRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+    return $this->assertRaw('<div' . new Attribute(['data-contextual-id' => $id]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
   }
 
   /**
@@ -169,7 +169,7 @@ abstract class FlagTestBase extends WebTestBase {
    *   The result of the assertion.
    */
   protected function assertNoContextualLinkPlaceholder($id) {
-    return $this->assertNoRaw('<div' . new Attribute(array('data-contextual-id' => $id)) . '></div>', format_string('Contextual link placeholder with id @id exists.', array('@id' => $id)));
+    return $this->assertNoRaw('<div' . new Attribute(['data-contextual-id' => $id]) . '></div>', format_string('Contextual link placeholder with id @id exists.', ['@id' => $id]));
   }
 
 }

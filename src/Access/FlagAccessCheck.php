@@ -9,7 +9,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagServiceInterface;
 
-
 /**
  * Provides routes with the ability to check access to the 'flag' action.
  *

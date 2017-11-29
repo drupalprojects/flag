@@ -70,7 +70,7 @@ class OutputLocationEntityFormAccessTest extends BrowserTestBase {
       ],
       'linkTypeConfig' => [],
       'flag_short' => 'Flag this',
-      'unflag_short' => 'Unflag this'
+      'unflag_short' => 'Unflag this',
     ]);
     $this->flag_granted->save();
 
@@ -86,7 +86,7 @@ class OutputLocationEntityFormAccessTest extends BrowserTestBase {
       ],
       'linkTypeConfig' => [],
       'flag_short' => 'Flag this',
-      'unflag_short' => 'Unflag this'
+      'unflag_short' => 'Unflag this',
     ]);
     $this->flag_denied->save();
 
