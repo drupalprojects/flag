@@ -4,6 +4,7 @@ namespace Drupal\flag\Plugin\views\relationship;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\PageCache\ResponsePolicy\KillSwitch;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Url;
 use Drupal\flag\FlagServiceInterface;
 use Drupal\user\RoleInterface;
@@ -32,6 +33,13 @@ class FlagViewsRelationship extends RelationshipPluginBase {
   protected $flagService;
 
   /**
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountProxyInterface
+   */
+  protected $currentUser;
+
+  /**
    * Constructs a FlagViewsRelationship object.
    *
    * @param array $configuration
@@ -45,10 +53,11 @@ class FlagViewsRelationship extends RelationshipPluginBase {
    * @param \Drupal\flag\FlagServiceInterface $flag_service
    *   The flag service.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, KillSwitch $page_cache_kill_switch, FlagServiceInterface $flag_service) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, KillSwitch $page_cache_kill_switch, FlagServiceInterface $flag_service, AccountProxyInterface $current_user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->flagService = $flag_service;
     $this->pageCacheKillSwitch = $page_cache_kill_switch;
+    $this->currentUser = $current_user;
     $this->definition = $plugin_definition + $configuration;
   }
 
@@ -58,7 +67,8 @@ class FlagViewsRelationship extends RelationshipPluginBase {
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
     $flag_service = $container->get('flag');
     $page_cache_kill_switch = $container->get('page_cache_kill_switch');
-    return new static($configuration, $plugin_id, $plugin_definition, $page_cache_kill_switch, $flag_service);
+    $current_user = $container->get('current_user');
+    return new static($configuration, $plugin_id, $plugin_definition, $page_cache_kill_switch, $flag_service, $current_user);
   }
 
   /**
@@ -134,15 +144,14 @@ class FlagViewsRelationship extends RelationshipPluginBase {
         'numeric' => TRUE,
       ];
       $flag_roles = user_roles(FALSE, "flag " . $flag->id());
-      if (isset($flag_roles[RoleInterface::ANONYMOUS_ID])) {
+      if (isset($flag_roles[RoleInterface::ANONYMOUS_ID]) && $this->currentUser->isAnonymous()) {
         // Disable page caching for anonymous users.
         $this->pageCacheKillSwitch->trigger();
 
-        // Add in the SID from Session API for anonymous users.
+        // Add a condition to the join on the PHP session id for anonymous users.
         $this->definition['extra'][] = [
-          'field' => 'sid',
+          'field' => 'session_id',
           'value' => '***FLAG_CURRENT_USER_SID***',
-          'numeric' => TRUE,
         ];
       }
     }
