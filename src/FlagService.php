@@ -18,19 +18,19 @@ class FlagService implements FlagServiceInterface {
   /**
    * The current user injected into the service.
    *
-   * @var AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   private $currentUser;
 
   /*
-   * @var EntityTypeManagerInterface
-   * */
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
   private $entityTypeManager;
 
   /*
    * The session manager.
    *
-   * @var Drupal\Core\Session\SessionManagerInterface
+   * @var \Drupal\Core\Session\SessionManagerInterface
    */
   private $sessionManager;
 

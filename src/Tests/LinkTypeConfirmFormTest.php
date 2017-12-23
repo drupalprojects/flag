@@ -22,7 +22,7 @@ class LinkTypeConfirmFormTest extends FlagTestBase {
   /**
    * The flag object.
    *
-   * @var FlagInterface
+   * @var \Drupal\flag\FlagInterface
    */
   protected $flag;
 

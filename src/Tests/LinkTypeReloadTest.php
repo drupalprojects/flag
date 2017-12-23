@@ -16,7 +16,7 @@ class LinkTypeReloadTest extends FlagTestBase {
   /**
    * The flag object.
    *
-   * @var FlagInterface
+   * @var \Drupal\flag\FlagInterface
    */
   protected $flag;
 

@@ -16,7 +16,7 @@ class LinkOwnershipAccessTest extends FlagTestBase {
   /**
    * The flaggable entity to test.
    *
-   * @var EntityInterface
+   * @var \Drupal\Core\Entity\EntityInterface
    */
   protected $node;
 
