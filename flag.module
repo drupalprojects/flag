@@ -54,6 +54,7 @@ function flag_help($route_name, RouteMatchInterface $route_match) {
     case 'flag.add_page':
       $output = '<p>' . t('Select the type of flag to create.') . '</p>';
       return $output;
+
     case 'field_ui.overview_flagging':
       // @todo: Doesn't make sense at the moment, implement when form
       // functionality is available.
