@@ -7,7 +7,6 @@
 
 use Drupal\flag\FlagInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\flag\FlaggingInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Access\AccessResult;
 

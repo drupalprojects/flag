@@ -5,7 +5,6 @@ namespace Drupal\flag;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\user\UserInterface;
-use Drupal\flag\FlagInterface;
 
 /**
  * Flag service interface.

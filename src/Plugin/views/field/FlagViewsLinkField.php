@@ -2,9 +2,7 @@
 
 namespace Drupal\flag\Plugin\views\field;
 
-use Drupal\Component\Serialization\Json;
 use Drupal\flag\FlaggingInterface;
-use Drupal\flag\Plugin\ActionLink\FormEntryInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\Core\Form\FormStateInterface;

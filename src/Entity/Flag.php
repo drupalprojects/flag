@@ -2,14 +2,12 @@
 
 namespace Drupal\flag\Entity;
 
-use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\flag\Event\FlagEvents;
 use Drupal\flag\FlagInterface;
 
 /**

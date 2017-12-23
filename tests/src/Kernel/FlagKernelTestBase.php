@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\flag\Kernel;
 
-use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\flag\Tests\FlagCreateTrait;
 use Drupal\KernelTests\KernelTestBase;

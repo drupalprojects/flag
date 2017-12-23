@@ -3,7 +3,6 @@
 namespace Drupal\Tests\flag\Kernel;
 
 use Drupal\flag\Entity\Flag;
-use Drupal\Tests\flag\Kernel\FlagKernelTestBase;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\user\Entity\Role;

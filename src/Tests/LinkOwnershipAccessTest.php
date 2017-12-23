@@ -2,10 +2,6 @@
 
 namespace Drupal\flag\Tests;
 
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\flag\Entity\Flag;
-use Drupal\flag\Tests\FlagTestBase;
-
 /**
  * Tests the current user sees links for their own flaggings, or global ones.
  *

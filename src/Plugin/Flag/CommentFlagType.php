@@ -2,8 +2,6 @@
 
 namespace Drupal\flag\Plugin\Flag;
 
-use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\flag\FlagInterface;
 
 /**

@@ -7,8 +7,6 @@
 
 define('FLAG_API_VERSION', 3);
 
-use Drupal\Core\Access\AccessResult;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity\ContentEntityFormInterface;
 use Drupal\Core\Form\ConfirmFormInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -22,7 +20,6 @@ use Drupal\system\Entity\Action;
 use Drupal\user\UserInterface;
 use Drupal\flag\FlagInterface;
 use Drupal\Core\Url;
-use Drupal\Core\Plugin\DefaultSingleLazyPluginCollection;
 
 /**
  * Implements hook_help().

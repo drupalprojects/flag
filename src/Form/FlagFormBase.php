@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\flag\ActionLink\ActionLinkPluginManager;
-use Drupal\flag\Entity\Flag;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

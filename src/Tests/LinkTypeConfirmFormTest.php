@@ -2,11 +2,6 @@
 
 namespace Drupal\flag\Tests;
 
-use Drupal\flag\FlagInterface;
-use Drupal\simpletest\WebTestBase;
-use Drupal\user\RoleInterface;
-use Drupal\user\Entity\Role;
-
 /**
  * Tests the confirm form link type.
  *

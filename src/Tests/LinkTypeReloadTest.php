@@ -2,10 +2,6 @@
 
 namespace Drupal\flag\Tests;
 
-use Drupal\flag\FlagInterface;
-use Drupal\simpletest\WebTestBase;
-use Drupal\user\Entity\Role;
-
 /**
  * Tests the reload link type.
  *

@@ -2,8 +2,6 @@
 
 namespace Drupal\flag\Tests;
 
-use Drupal\flag\Tests\FlagTestBase;
-
 /**
  * Tests the Flag admin UI.
  *
