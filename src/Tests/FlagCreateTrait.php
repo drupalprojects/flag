@@ -2,6 +2,8 @@
 
 namespace Drupal\flag\Tests;
 
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Drupal\flag\Entity\Flag;
 
 /**
@@ -84,8 +86,8 @@ trait FlagCreateTrait {
       'label' => $this->randomString(),
       'entity_type' => 'node',
       'bundles' => array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('node')),
-      'flag_short' => $this->randomString(),
-      'unflag_short' => $this->randomString(),
+      'flag_short' => $this->randomHTMLString(),
+      'unflag_short' => $this->randomHTMLString(),
       'unflag_denied_text' => $this->randomString(),
       'flag_long' => $this->randomString(16),
       'unflag_long' => $this->randomString(16),
@@ -176,6 +178,19 @@ trait FlagCreateTrait {
 
     // Return the generic entity flag type plugin ID.
     return 'entity';
+  }
+
+  /**
+   * Generates an HTML-safe random string.
+   *
+   * @param int $length
+   *   The length of the string to generate.
+   *
+   * @return string
+   *   A random string of HTML-safe characters.
+   */
+  protected function randomHTMLString($length = 8) {
+   return substr(Html::decodeEntities(Xss::filter($this->randomString($length * 2), [])), 0, $length);
   }
 
 }

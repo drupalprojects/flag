@@ -107,7 +107,8 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
         '#flaggable' => $entity,
         '#action' => $action,
         '#access' => $access->isAllowed(),
-        '#title' => $flag->getShortText($action),
+        // Use render array for title to allow limited markup in the link text.
+        '#title' => ['#markup' => $flag->getShortText($action)],
         '#attributes' => [
           'title' => $flag->getLongText($action),
         ],
