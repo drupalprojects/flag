@@ -20,7 +20,7 @@ services:
     arguments: ['@current_user', '@entity_type.manager', '@session_manager']
   flag.count:
     class: Drupal\flag\FlagCountManager
-    arguments: ['@database']
+    arguments: ['@database', '@datetime.time']
     tags:
       - { name: event_subscriber }
   flag.link_builder:
