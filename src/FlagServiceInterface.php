@@ -134,8 +134,8 @@ interface FlagServiceInterface {
    *   $flag = \Drupal::service('flag')->getFlagById('bookmark');
    * @endcode
    *
-   * @param int $flag_id
-   *   The ID of the flag to load.
+   * @param string $flag_id
+   *   The identifier of the flag to load.
    *
    * @return \Drupal\flag\FlagInterface|null
    *   The flag entity.
@@ -234,7 +234,7 @@ interface FlagServiceInterface {
    *   The flag being unflagged.
    * @param \Drupal\Core\Entity\EntityInterface $entity
    *   The entity to unflag.
-   * @param AccountInterface $account
+   * @param \Drupal\Core\Session\AccountInterface $account
    *   (optional) The account of the user that created the flagging. Defaults
    *   to the current user.
    * @param string $session_id
