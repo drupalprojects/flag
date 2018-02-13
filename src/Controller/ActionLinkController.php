@@ -14,6 +14,7 @@ use Drupal\flag\FlagInterface;
 use Drupal\flag\FlagServiceInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Drupal\Component\Utility\Html;
 
 /**
  * Provides a controller to flag and unflag when routed from a normal link.
@@ -143,7 +144,7 @@ class ActionLinkController implements ContainerInjectionInterface {
       $link = $link_type->getAsFlagLink($flag, $entity);
 
       // Generate a CSS selector to use in a JQuery Replace command.
-      $selector = '.flag-' . $flag->id() . '-' . $entity->id();
+      $selector = '.js-flag-' . Html::cleanCssIdentifier($flag->id()) . '-' . $entity->id();
 
       // Create a new JQuery Replace command to update the link display.
       $replace = new ReplaceCommand($selector, $this->renderer->renderPlain($link));
