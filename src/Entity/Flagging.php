@@ -25,6 +25,7 @@ use Drupal\user\UserInterface;
  *    plural = "@count flaggings",
  *  ),
  *  bundle_label = @Translation("Flag"),
+ *  admin_permission = "administer flaggings",
  *  handlers = {
  *    "storage" = "Drupal\flag\Entity\Storage\FlaggingStorage",
  *    "storage_schema" = "Drupal\flag\Entity\Storage\FlaggingStorageSchema",

@@ -3,13 +3,14 @@
 namespace Drupal\flag_bookmark\Tests;
 
 use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * UI Test for flag_bookmark.
  *
  * @group flag_bookmark
  */
-class FlagBookmarkUITest extends WebTestBase {
+class FlagBookmarkUITest extends BrowserTestBase {
 
   /**
    * Modules to enable.
@@ -80,6 +81,42 @@ class FlagBookmarkUITest extends WebTestBase {
     // Check the view is shown correctly.
     $this->drupalGet('bookmarks');
     $this->assertText($title);
+  }
+
+  public function testBulkDelete() {
+    // Create some nodes.
+    $nodes[] = $this->drupalCreateNode(['type' => 'article']);
+    $nodes[] = $this->drupalCreateNode(['type' => 'article']);
+
+    // Login as an auth user.
+    $auth_user = $this->drupalCreateUser([
+      'flag bookmark',
+      'unflag bookmark',
+      'administer flaggings',
+    ]);
+    $this->drupalLogin($auth_user);
+
+    // Flag the nodes.
+    $this->drupalGet('node/' . $nodes[0]->id());
+    $this->clickLink('Bookmark this');
+    $this->drupalGet('node/' . $nodes[1]->id());
+    $this->clickLink('Bookmark this');
+
+    $this->drupalGet('bookmarks');
+    $this->assertText('Delete flagging');
+    $this->assertText($nodes[0]->label());
+    $this->assertText($nodes[1]->label());
+
+    $this->drupalPostForm('bookmarks', [
+      'flagging_bulk_form[0]' => TRUE,
+      'flagging_bulk_form[1]' => TRUE,
+      'action' => 'flag_delete_flagging',
+    ], 'Apply to selected items');
+
+    $this->drupalGet('bookmarks');
+    $this->assertText('No bookmarks available.');
+    $this->assertNoText($nodes[0]->label());
+    $this->assertNoText($nodes[1]->label());
   }
 
 }
