@@ -21,9 +21,9 @@ class FlagViewsRelationship extends RelationshipPluginBase {
   /**
    * The Page Cache Kill switch.
    *
-   * @var Drupal\Core\PageCache\ResponsePolicy\KillSwitch
+   * @var \Drupal\Core\PageCache\ResponsePolicy\KillSwitch
    */
-  protected $pachCacheKillSwitch;
+  protected $pageCacheKillSwitch;
 
   /**
    * The flag service.
@@ -52,6 +52,8 @@ class FlagViewsRelationship extends RelationshipPluginBase {
    *   The kill switch.
    * @param \Drupal\flag\FlagServiceInterface $flag_service
    *   The flag service.
+   * @param \Drupal\Core\Session\AccountProxyInterface $current_user
+   *   The current user.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, KillSwitch $page_cache_kill_switch, FlagServiceInterface $flag_service, AccountProxyInterface $current_user) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
@@ -77,7 +79,7 @@ class FlagViewsRelationship extends RelationshipPluginBase {
   public function defineOptions() {
     $options = parent::defineOptions();
     $options['flag'] = ['default' => NULL];
-    $options['required'] = ['default' => 1];
+    $options['required'] = ['default' => TRUE];
     $options['user_scope'] = ['default' => 'current'];
     return $options;
   }
