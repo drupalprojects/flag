@@ -88,11 +88,11 @@ trait FlagCreateTrait {
       'bundles' => array_keys(\Drupal::service('entity_type.bundle.info')->getBundleInfo('node')),
       'flag_short' => $this->randomHTMLString(),
       'unflag_short' => $this->randomHTMLString(),
-      'unflag_denied_text' => $this->randomString(),
-      'flag_long' => $this->randomString(16),
-      'unflag_long' => $this->randomString(16),
-      'flag_message' => $this->randomString(32),
-      'unflag_message' => $this->randomString(32),
+      'unflag_denied_text' => $this->randomHTMLString(),
+      'flag_long' => $this->randomHTMLString(16),
+      'unflag_long' => $this->randomHTMLString(16),
+      'flag_message' => $this->randomHTMLString(32),
+      'unflag_message' => $this->randomHTMLString(32),
       'flag_type' => $this->getFlagType('node'),
       'link_type' => 'reload',
       'flagTypeConfig' => [
@@ -111,7 +111,7 @@ trait FlagCreateTrait {
       case 'comment':
         $default = array_merge($default, [
           'flagTypeConfig' => [
-            'access_author' => $this->randomString(),
+            'access_author' => $this->randomHTMLString(),
           ],
         ]);
         break;
@@ -119,8 +119,8 @@ trait FlagCreateTrait {
       case 'confirm':
         $default = array_merge($default, [
           'linkTypeConfig' => [
-            'flag_confirmation' => $this->randomString(),
-            'unflag_confirmation' => $this->randomString(),
+            'flag_confirmation' => $this->randomHTMLString(),
+            'unflag_confirmation' => $this->randomHTMLString(),
           ],
         ]);
         break;
@@ -128,9 +128,9 @@ trait FlagCreateTrait {
       case 'field_entry':
         $default = array_merge($default, [
           'linkTypeConfig' => [
-            'flag_confirmation' => $this->randomString(),
-            'unflag_confirmation' => $this->randomString(),
-            'edit_flagging' => $this->randomString(),
+            'flag_confirmation' => $this->randomHTMLString(),
+            'unflag_confirmation' => $this->randomHTMLString(),
+            'edit_flagging' => $this->randomHTMLString(),
           ],
         ]);
         break;
