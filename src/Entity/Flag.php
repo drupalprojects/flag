@@ -66,27 +66,12 @@ use Drupal\flag\FlagInterface;
  */
 class Flag extends ConfigEntityBundleBase implements FlagInterface {
   // @todo: Define flag reset method.
-
-  /**
-   * The flag ID.
-   *
-   * @var string
-   */
-  protected $id;
-
   /**
    * The entity type this flag works with.
    *
    * @var string
    */
   protected $entity_type = NULL;
-
-  /**
-   * The flag label.
-   *
-   * @var string
-   */
-  protected $label = '';
 
   /**
    * Whether this flag state should act as a single toggle to all users.

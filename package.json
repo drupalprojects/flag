@@ -1,0 +1,27 @@
+{
+  "name": "flag",
+  "version": "1.0.0",
+  "description": "Handles AJAX flag action links.",
+  "license": "GPL-2.0",
+  "private": true,
+  "scripts": {
+    "build:js": "node ./scripts/js/babel-es6-build.js",
+    "build:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-build.js",
+    "watch:js": "node ./scripts/js/babel-es6-watch.js",
+    "watch:js-dev": "cross-env NODE_ENV=development node ./scripts/js/babel-es6-watch.js",
+    "lint:core-js": "node ./node_modules/eslint/bin/eslint.js --ext=.es6.js . || exit 0",
+    "lint:core-js-passing": "node ./node_modules/eslint/bin/eslint.js --quiet --config=.eslintrc.passing.json --ext=.es6.js . || exit 0",
+    "lint:core-js-stats": "node ./node_modules/eslint/bin/eslint.js --format=./scripts/js/eslint-stats-by-type.js --ext=.es6.js . || exit 0",
+    "lint:css": "stylelint \"**/*.css\" || exit 0",
+    "lint:css-checkstyle": "stylelint \"**/*.css\" --custom-formatter ./node_modules/stylelint-checkstyle-formatter/index.js || exit 0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "babel-plugin-add-header-comment": "^1.0.3"
+  }
+}
