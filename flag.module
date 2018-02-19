@@ -120,13 +120,17 @@ function flag_help($route_name, RouteMatchInterface $route_match) {
  */
 function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $object = $form_state->getFormObject();
+
+  // We only want to operate on content entity forms.
   if (!($object instanceof ContentEntityFormInterface) || ($object instanceof ConfirmFormInterface)) {
     return;
   }
+
+  // Get the flags for the entity being edited by the form.
   $flag_service = \Drupal::service('flag');
   $entity = $object->getEntity();
-
   $flags = $flag_service->getAllFlags($entity->getEntityTypeId(), $entity->bundle());
+
   // Check the first flag and return early if the form isn't considered to be
   // an edit form.
   if (!empty($flags) && isset($flags[0]) && $flags[0] instanceof FlagInterface) {
@@ -134,6 +138,7 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
       return;
     }
   }
+
   // Filter the flags to those that apply here:
   //  - the flag uses the entity type plugin.
   //  - the plugin is configured to output the flag in the entity form.
@@ -148,7 +153,11 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
       && $plugin->showOnForm()
       && $access->isAllowed();
   });
+
+  // If we still have any flags...
   if (!empty($filtered_flags)) {
+
+    // Add a container to the form.
     $form['flag'] = [
       '#type' => 'details',
       '#title' => t('Flags'),
@@ -156,7 +165,10 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
       '#group' => 'advanced',
       '#tree' => TRUE,
     ];
+
+    /** @var FlagInterface $flag */
     foreach ($filtered_flags as $flag) {
+      // Add each flag to the form.
       $form['flag'][$flag->id()] = [
         '#type' => 'checkbox',
         '#title' => $flag->label(),
@@ -167,6 +179,7 @@ function flag_form_alter(&$form, FormStateInterface $form_state, $form_id) {
         '#attributes' => ['title' => $flag->label()],
       ];
     }
+
     foreach (array_keys($form['actions']) as $action) {
       if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
         $form['actions'][$action]['#submit'][] = 'flag_form_submit';
@@ -214,7 +227,7 @@ function flag_form_save(EntityInterface $entity, $values) {
   // Load all the flags for the entity.
   $flags = $flag_service->getAllFlags($entity->getEntityTypeId(), $entity->bundle());
 
-  // Iterate through each flag.
+  /** @var FlagInterface $flag */
   foreach ($flags as $flag) {
     // Get the flag_id from the Flag.
     $flag_id = $flag->id();
@@ -245,6 +258,8 @@ function flag_entity_extra_field_info() {
   $extra = [];
   $flag_service = \Drupal::service('flag');
   $flags = $flag_service->getAllFlags();
+
+  /** @var FlagInterface $flag */
   foreach ($flags as $flag) {
     // Skip flags that aren't on entities.
     $flag_type_plugin = $flag->getFlagTypePlugin();
@@ -313,6 +328,7 @@ function flag_theme_suggestions_flag(array $variables) {
  */
 function flag_node_links_alter(array &$links, NodeInterface $entity, array &$context) {
   // @todo: Define this for handling the showOnLinks() flag mode.
+  // see https://www.drupal.org/project/flag/issues/2703229
 }
 
 /**
@@ -498,7 +514,6 @@ function flag_contextual_links_alter(array &$links, $group, array $route_paramet
  */
 function flag_entity_predelete(EntityInterface $entity) {
   // User flags handle things through user entity hooks.
-  // @todo: make this configurable in the flag type definition?
   if ($entity->getEntityTypeId() == 'user') {
     return;
   }
@@ -618,15 +633,17 @@ function flag_flag_insert(FlagInterface $flag) {
  * Implements hook_ENTITY_TYPE_delete().
  */
 function flag_flag_delete(FlagInterface $flag) {
+  // Do not delete actions when config is progress of synchronization.
   if ($flag->isSyncing()) {
-    // Do not delete actions when config is progress of synchronization.
     return;
   }
-  // Remove the flag/unflag actions for this flag and entity combination.
+
   $actions = Action::loadMultiple([
     'flag_action.' . $flag->id() . '.flag',
     'flag_action.' . $flag->id() . '.unflag',
   ]);
+
+  // Remove the flag/unflag actions for this flag and entity combination.
   foreach ($actions as $action) {
     $action->delete();
   }
