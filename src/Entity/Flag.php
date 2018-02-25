@@ -490,6 +490,28 @@ class Flag extends ConfigEntityBundleBase implements FlagInterface {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public function postSave(EntityStorageInterface $storage, $update = TRUE) {
+    parent::postSave($storage, $update);
+    if (\Drupal::moduleHandler()->moduleExists('views')) {
+      // Rebuild views data to invalidate flag relationships.
+      \Drupal::service('views.views_data')->clear();
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function postDelete(EntityStorageInterface $storage, array $entities) {
+    parent::postDelete($storage, $entities);
+    if (\Drupal::moduleHandler()->moduleExists('views')) {
+      // Rebuild views data to invalidate flag relationships.
+      \Drupal::service('views.views_data')->clear();
+    }
+  }
+
+  /**
    * Sorts the flag entities, putting disabled flags at the bottom.
    *
    * @see \Drupal\Core\Config\Entity\ConfigEntityBase::sort()
