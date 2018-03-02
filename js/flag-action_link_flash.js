@@ -7,26 +7,34 @@
 
 (function (Drupal) {
   Drupal.behaviors.flagAttach = {
-    attach: context => {
-      const links = context.querySelectorAll('.flag a');
-      links.forEach(link => link.addEventListener('click', event => event.target.parentNode.classList.add('flag-waiting')));
+    attach: function attach(context) {
+      var links = context.querySelectorAll('.flag a');
+      links.forEach(function (link) {
+        return link.addEventListener('click', function (event) {
+          return event.target.parentNode.classList.add('flag-waiting');
+        });
+      });
     }
   };
 
-  Drupal.AjaxCommands.prototype.actionLinkFlash = (ajax, response, status) => {
+  Drupal.AjaxCommands.prototype.actionLinkFlash = function (ajax, response, status) {
     if (status === 'success') {
-      const t = document.createTextNode(response.message);
-      const para = document.createElement('P');
+      var t = document.createTextNode(response.message);
+      var para = document.createElement('P');
       para.appendChild(t);
 
       para.setAttribute('class', 'js-flag-message');
 
-      para.addEventListener('animationend', event => event.target.remove(), false);
+      para.addEventListener('animationend', function (event) {
+        return event.target.remove();
+      }, false);
 
       document.querySelector(response.selector).appendChild(para);
     } else {
-      const links = document.querySelectAll('.flag-waiting');
-      links.forEach(link => link.classList.remove('flag-waiting'));
+      var links = document.querySelectAll('.flag-waiting');
+      links.forEach(function (link) {
+        return link.classList.remove('flag-waiting');
+      });
     }
   };
 })(Drupal);
