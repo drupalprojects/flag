@@ -2,11 +2,14 @@
 
 namespace Drupal\flag\Plugin\views\field;
 
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\flag\FlaggingInterface;
+use Drupal\flag\FlagLinkBuilderInterface;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a views field to flag or unflag the selected content.
@@ -16,7 +19,7 @@ use Drupal\Core\Entity\EntityInterface;
  *
  * @ViewsField("flag_link")
  */
-class FlagViewsLinkField extends FieldPluginBase {
+class FlagViewsLinkField extends FieldPluginBase implements ContainerFactoryPluginInterface {
 
   /**
    * The entity type manager.
@@ -31,6 +34,33 @@ class FlagViewsLinkField extends FieldPluginBase {
    * @var \Drupal\flag\FlagInterface
    */
   protected $flag;
+
+  /**
+   * The builder for flag links.
+   *
+   * @var \Drupal\flag\FlagLinkBuilderInterface
+   */
+  protected $flagLinkBuilder;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('flag.link_builder')
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, FlagLinkBuilderInterface $flag_link_builder) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->flagLinkBuilder = $flag_link_builder;
+  }
 
   /**
    * A helper method to retrieve the flag entity from the views relationship.
@@ -147,11 +177,9 @@ class FlagViewsLinkField extends FieldPluginBase {
       return '';
     }
 
-    $flag = $this->getFlag();
-    $link_type_plugin = $flag->getLinkTypePlugin();
-
-    return $link_type_plugin->getAsFlagLink($flag, $entity);
-
+    return $this->flagLinkBuilder->build(
+      $entity->getEntityTypeId(), $entity->id(), $this->getFlag()->id()
+    );
   }
 
   /**
