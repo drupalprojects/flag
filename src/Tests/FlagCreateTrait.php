@@ -183,6 +183,10 @@ trait FlagCreateTrait {
   /**
    * Generates an HTML-safe random string.
    *
+   * To generate strings which can be located in FunctionalJavascript tests.
+   * In tests using 'css' queries that use the 'contains()' selector we need to
+   * remove all white space characters.
+   *
    * @param int $length
    *   The length of the string to generate.
    *
@@ -190,7 +194,12 @@ trait FlagCreateTrait {
    *   A random string of HTML-safe characters.
    */
   protected function randomHTMLString($length = 8) {
-   return substr(Html::decodeEntities(Xss::filter($this->randomString($length * 2), [])), 0, $length);
+    // A safe string.
+   $str = Html::decodeEntities(Xss::filter($this->randomString($length * 2), []));
+   // Remove all whitespaces.
+   $no_space = preg_replace('/\s+/', '', $str);
+   // Trim to the required length;
+   return substr($no_space, 0, $length);
   }
 
 }
