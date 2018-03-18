@@ -32,9 +32,8 @@
   Drupal.AjaxCommands.prototype.actionLinkFlash = (ajax, response, status) => {
     if (status === 'success') {
       // Prepare a message element.
-      const t = document.createTextNode(response.message);
       const para = document.createElement('P');
-      para.appendChild(t);
+      para.innerText = response.message;
       // Adding this class will initiate a CSS transition.
       para.setAttribute('class', 'js-flag-message');
       // As the transition ends delete the message from the DOM.

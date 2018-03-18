@@ -19,9 +19,8 @@
 
   Drupal.AjaxCommands.prototype.actionLinkFlash = function (ajax, response, status) {
     if (status === 'success') {
-      var t = document.createTextNode(response.message);
       var para = document.createElement('P');
-      para.appendChild(t);
+      para.innerText = response.message;
 
       para.setAttribute('class', 'js-flag-message');
 
