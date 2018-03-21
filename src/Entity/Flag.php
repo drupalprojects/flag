@@ -16,6 +16,12 @@ use Drupal\flag\FlagInterface;
  * @ConfigEntityType(
  *   id = "flag",
  *   label = @Translation("Flag"),
+ *   label_singular = @Translation("flag"),
+ *   label_plural = @Translation("flags"),
+ *   label_count = @PluralTranslation(
+ *     singular = "@count flag",
+ *     plural = "@count flags",
+ *   ),
  *   admin_permission = "administer flags",
  *   handlers = {
  *     "list_builder" = "Drupal\flag\Controller\FlagListBuilder",
