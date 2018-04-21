@@ -1,10 +1,7 @@
 {#
 /**
  * @file
- * Default theme implementation for flag links.
- *
- * Available functions:
- * - flagcount(flag, flaggable) gets the number of flaggings for the given flag and flaggable.
+ * Overriding base flag link template
  *
  * Available variables:
  * - attributes: HTML attributes for the link element.
@@ -35,8 +32,11 @@
   ]
 %}
 
+{# Attach flag count. #}
+{% set count = '[' ~ flagcount(flag, flaggable) ~ ']' %}
+
 {# Set nofollow to prevent search bots from crawling anonymous flag links #}
 {% set attributes = attributes.setAttribute('rel', 'nofollow') %}
 
-<div class="{{classes|join(' ')}}"><a{{ attributes }}>{{ title }}</a></div>
+<div class="{{classes|join(' ')}}"><a{{ attributes }}>{{ title }}</a><span>{{ count }}</span></div>
 {% endspaceless %}
