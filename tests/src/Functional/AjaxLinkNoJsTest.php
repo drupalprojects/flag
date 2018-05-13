@@ -1,23 +1,20 @@
 <?php
 
-namespace Drupal\Tests\flag\FunctionalJavascript;
+namespace Drupal\Tests\flag\Functional;
 
 use Drupal\flag\Tests\FlagCreateTrait;
-use Drupal\FunctionalJavascriptTests\JavascriptTestBase;
-use Drupal\FunctionalJavascriptTests\DrupalSelenium2Driver;
+use Drupal\Tests\BrowserTestBase;
 use Drupal\Tests\flag\Traits\FlagPermissionsTrait;
+use Drupal\Core\Url;
 
 /**
- * Javascript test for AjaxLinks.
+ * Test the NoJS responses to clicking on  AjaxLinks.
  *
- * When a user clicks on an AJAX link a salvo of AJAX commands is issued in
- * response which update the DOM with a new link and a short lived message.
- *
- * @see ActionLinkController
+ * @see ActionLinkNoJsController
  *
  * @group flag
  */
-class AjaxLinkTest extends JavascriptTestBase {
+class AjaxLinkNoJsTest extends BrowserTestBase {
 
   use FlagCreateTrait;
   use FlagPermissionsTrait;
@@ -65,11 +62,6 @@ class AjaxLinkTest extends JavascriptTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $minkDefaultDriverClass = DrupalSelenium2Driver::class;
-
-  /**
-   * {@inheritdoc}
-   */
   protected function setUp() {
     parent::setUp();
 
@@ -97,43 +89,46 @@ class AjaxLinkTest extends JavascriptTestBase {
   }
 
   /**
-   * Tests DOM update.
+   * Test nojs response to AJAX links.
+   *
+   * The response is a redirect accompanied by a message appearing at the top
+   * of the page.
    *
    * Click on flag and then unflag links verifying that the link cycles as
-   * expected and flag flash message functions.
+   * expected and flag message functions.
    */
-  public function testDomUpdate() {
+  public function testNoJsMessage() {
     // Get Page.
-    $node_path = '/node/' . $this->node->id();
-    $this->drupalGet($node_path);
+    $this->drupalGet(Url::fromRoute('entity.node.canonical', ['node' => $this->node->id()]));
     $session = $this->getSession();
 
     // Verify initially flag link is on the page.
     $page = $session->getPage();
     $flag_link = $page->findLink($this->flag->getShortText('flag'));
-    $this->assertTrue($flag_link->isVisible(), 'flag link exists.');
+    $this->assertNotNull($flag_link, 'flag link exists.');
 
+    // Since this test is BrowserTestBase, and not JavascriptTestBase, this
+    // simulates a noJS interaction.
     $flag_link->click();
 
     // Verify flags message appears.
     $flag_message = $this->flag->getMessage('flag');
-    $p_flash = $this->assertSession()->waitForElementVisible('css', 'p.js-flag-message');
-    $this->assertEquals($flag_message, $p_flash->getText(), 'DOM update: The flag message is flashed.');
+    $this->assertSession()->pageTextContains($flag_message);
 
     // Verify new link.
     $unflag_link = $session->getPage()->findLink($this->flag->getShortText('unflag'));
-    $this->assertTrue($unflag_link->isVisible(), 'unflag link exists.');
+    $this->assertNotNull($unflag_link, 'unflag link exists.');
 
+    // Simulate a noJs ActionLink (unflag).
     $unflag_link->click();
 
     // Verfy unflag message appears.
     $unflag_message = $this->flag->getMessage('unflag');
-    $p_flash2 = $this->assertSession()->waitForElementVisible('css', 'p.js-flag-message');
-    $this->assertEquals($unflag_message, $p_flash2->getText(), 'DOM update: The unflag message is flashed.');
+    $this->assertSession()->pageTextContains($unflag_message);
 
     // Verify the cycle completes and flag returns.
     $flag_link2 = $session->getPage()->findLink($this->flag->getShortText('flag'));
-    $this->assertTrue($flag_link2->isVisible(), 'flag cycle return to start.');
+    $this->assertNotNull($flag_link2, 'flag cycle return to start.');
 
   }
 
